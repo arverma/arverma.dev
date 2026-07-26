@@ -28,6 +28,6 @@ CI builds and deploys on every push to `main` via [`.github/workflows/deploy.yml
 
 1. Push this repo to GitHub.
 2. **Settings → Pages → Build and deployment → Source:** GitHub Actions.
-3. Optional custom domain: `public/CNAME` is set to `arverma.dev` — point DNS (A/AAAA or CNAME) at GitHub Pages, then enable the domain in repo Pages settings.
+3. Site URL: `https://arverma.github.io/arverma.dev/` (`base` is set in `astro.config.mjs`).
 
-Preview without a custom domain: `https://<user>.github.io/arverma.dev/` — if you use that URL long-term, set `base: '/arverma.dev/'` in `astro.config.mjs`.
+When you attach a root custom domain later, set `site` to that domain and `base` to `"/"`, and add `public/CNAME`.

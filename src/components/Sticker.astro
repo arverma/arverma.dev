@@ -1,4 +1,6 @@
 ---
+import { withBase } from "../lib/paths";
+
 interface Props {
   src: string;
   alt?: string;
@@ -38,12 +40,14 @@ const inferred =
         : src.includes("cloud")
           ? "spin"
           : "peel");
+
+const resolvedSrc = withBase(src);
 ---
 
 <img
   class:list={["sticker", sizeClass, tiltClass, className]}
   data-motion={inferred}
-  src={src}
+  src={resolvedSrc}
   alt={alt}
   width="160"
   height="160"

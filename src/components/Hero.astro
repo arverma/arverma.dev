@@ -1,6 +1,7 @@
 ---
 import { profile } from "../content/profile";
 import Sticker from "./Sticker.astro";
+import { withBase } from "../lib/paths";
 ---
 
 <section class="hero section is-visible" aria-labelledby="hero-name">
@@ -27,7 +28,7 @@ import Sticker from "./Sticker.astro";
           <img
             class="desk-photo sticker"
             data-motion="drop"
-            src="/stickers/me.png"
+            src={withBase("stickers/me.png")}
             alt={profile.name}
             width="2856"
             height="2572"
