@@ -21,9 +21,7 @@ pnpm-debug.log*
 # macOS / editors
 .DS_Store
 .idea/
-.vscode/*
-!.vscode/extensions.json
-!.vscode/launch.json
+.vscode/
 
 # local / oversized exports
 public/stickers/me.svg
