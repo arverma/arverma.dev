@@ -1,0 +1,52 @@
+---
+interface Props {
+  src: string;
+  alt?: string;
+  class?: string;
+  size?: "sm" | "md" | "lg";
+  tilt?: "left" | "right" | "none";
+  /** Entrance + idle personality */
+  motion?: "peel" | "drop" | "pop" | "spin" | "sway";
+}
+
+const {
+  src,
+  alt = "",
+  class: className = "",
+  size = "md",
+  tilt = "none",
+  motion,
+} = Astro.props;
+
+const sizeClass =
+  size === "lg" ? "sticker-lg" : size === "sm" ? "sticker-sm" : "";
+const tiltClass =
+  tilt === "left"
+    ? "sticker--tilt-left"
+    : tilt === "right"
+      ? "sticker--tilt-right"
+      : "";
+
+const inferred =
+  motion ??
+  (src.includes("coffee") || src.includes("tea")
+    ? "sway"
+    : src.includes("music") || src.includes("speaker")
+      ? "pop"
+      : src.includes("laptop") || src.includes("monitor") || src.includes("keyboard")
+        ? "drop"
+        : src.includes("cloud")
+          ? "spin"
+          : "peel");
+---
+
+<img
+  class:list={["sticker", sizeClass, tiltClass, className]}
+  data-motion={inferred}
+  src={src}
+  alt={alt}
+  width="160"
+  height="160"
+  loading="lazy"
+  decoding="async"
+/>

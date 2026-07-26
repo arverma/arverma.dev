@@ -1,0 +1,204 @@
+---
+import { profile } from "../content/profile";
+import Sticker from "./Sticker.astro";
+---
+
+<section class="hero section is-visible" aria-labelledby="hero-name">
+  <div class="hero-grid">
+    <div class="hero-copy">
+      <h1 id="hero-name">{profile.name}</h1>
+      <p class="hero-title">{profile.title}</p>
+      <p class="hero-tagline">{profile.tagline}</p>
+      <div class="btn-row hero-ctas">
+        <a class="btn btn-primary" href="#contact">Get in touch</a>
+        <a
+          class="btn btn-ghost"
+          href={profile.links.medium}
+          target="_blank"
+          rel="noopener noreferrer">Read on Medium</a
+        >
+      </div>
+      <p class="hero-meta mono">{profile.location}</p>
+    </div>
+
+    <div class="hero-desk">
+      <div class="desk-plane">
+        <div class="desk-sticker desk-sticker--me-wrap">
+          <img
+            class="desk-photo sticker"
+            data-motion="drop"
+            src="/stickers/me.png"
+            alt={profile.name}
+            width="2856"
+            height="2572"
+            decoding="async"
+          />
+        </div>
+        <Sticker
+          src="/stickers/laptop.svg"
+          size="md"
+          tilt="left"
+          class="desk-sticker desk-sticker--main"
+        />
+        <Sticker
+          src="/stickers/keyboard.svg"
+          size="md"
+          tilt="right"
+          class="desk-sticker desk-sticker--note"
+        />
+        <Sticker
+          src="/stickers/coffee.svg"
+          size="sm"
+          tilt="left"
+          class="desk-sticker desk-sticker--cup"
+        />
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-top: clamp(2rem, 5vw, 3.25rem);
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: end;
+  }
+
+  h1 {
+    margin: 0;
+    font-size: clamp(2.6rem, 7vw, 4.4rem);
+    letter-spacing: -0.04em;
+    max-width: 12ch;
+  }
+
+  .hero-title {
+    margin: 1rem 0 0;
+    font-family: var(--font-mono);
+    font-size: clamp(0.9rem, 1.8vw, 1.05rem);
+    color: var(--ink-muted);
+    max-width: 36rem;
+  }
+
+  .hero-tagline {
+    margin: 1rem 0 0;
+    max-width: 34rem;
+    color: var(--ink);
+  }
+
+  .hero-ctas {
+    margin-top: 1.75rem;
+  }
+
+  .hero-meta {
+    margin: 1.25rem 0 0;
+    font-size: 0.78rem;
+    color: var(--ink-muted);
+  }
+
+  .hero-desk {
+    min-height: 22rem;
+  }
+
+  .desk-plane {
+    position: relative;
+    height: 100%;
+    min-height: 22rem;
+    border-radius: 1.25rem 1.25rem 0.35rem 0.35rem;
+    background:
+      linear-gradient(180deg, rgba(232, 223, 208, 0.55), rgba(243, 236, 224, 0.2)),
+      repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 11px,
+        rgba(28, 26, 22, 0.03) 11px,
+        rgba(28, 26, 22, 0.03) 12px
+      );
+    border: 1.5px solid var(--rule);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
+    overflow: visible;
+  }
+
+  .desk-sticker {
+    position: absolute;
+    z-index: 2;
+  }
+
+  .desk-sticker--me-wrap {
+    left: 50%;
+    bottom: 0;
+    top: auto;
+    transform: translateX(-50%);
+    width: clamp(10rem, 68%, 14.5rem);
+    z-index: 1;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .desk-sticker--me-wrap .desk-photo {
+    pointer-events: auto;
+  }
+
+  .desk-photo {
+    --tilt: -2deg;
+    --sticker-delay: 40ms;
+    width: 100%;
+    height: auto;
+    max-height: min(17rem, 46vh);
+    object-fit: contain;
+    object-position: bottom center;
+    background: transparent;
+    border-radius: 0;
+  }
+
+  .desk-sticker--main {
+    top: auto;
+    bottom: 6%;
+    left: 2%;
+  }
+
+  .desk-sticker--note {
+    top: 8%;
+    right: 2%;
+  }
+
+  .desk-sticker--cup {
+    bottom: 5%;
+    right: 4%;
+    left: auto;
+  }
+
+  @media (max-width: 800px) {
+    .hero-grid {
+      grid-template-columns: 1fr;
+    }
+
+    h1 {
+      max-width: none;
+    }
+
+    .hero-desk {
+      min-height: 16rem;
+      order: -1;
+    }
+
+    .desk-plane {
+      min-height: 16rem;
+    }
+
+    .desk-sticker--me-wrap {
+      width: clamp(9rem, 58%, 12rem);
+    }
+
+    .desk-photo {
+      max-height: min(13rem, 40vh);
+    }
+  }
+</style>

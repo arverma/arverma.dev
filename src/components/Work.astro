@@ -1,0 +1,93 @@
+---
+import { profile } from "../content/profile";
+import Sticker from "./Sticker.astro";
+---
+
+<section class="section work" id="work" aria-labelledby="work-title">
+  <div class="section-head">
+    <div>
+      <p class="section-label">Work</p>
+      <h2 class="section-title" id="work-title">Where I've built</h2>
+      <p class="section-lede">
+        Impact over titles — platforms that stay up and teams that ship.
+      </p>
+    </div>
+    <Sticker src="/stickers/monitor.svg" size="sm" tilt="left" />
+  </div>
+
+  <ol class="timeline">
+    {
+      profile.work.map((job) => (
+        <li class="timeline-item">
+          <div class="timeline-meta">
+            <h3 class="job-company">{job.company}</h3>
+            <p class="job-role">{job.role}</p>
+            <p class="job-period mono">{job.period}</p>
+          </div>
+          <ul class="job-bullets">
+            {job.bullets.map((b) => (
+              <li>{b}</li>
+            ))}
+          </ul>
+        </li>
+      ))
+    }
+  </ol>
+</section>
+
+<style>
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .timeline-item {
+    display: grid;
+    grid-template-columns: minmax(10rem, 0.85fr) 1.4fr;
+    gap: clamp(1rem, 3vw, 2.5rem);
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--rule);
+  }
+
+  .timeline-item:last-child {
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .job-company {
+    margin: 0;
+    font-size: 1.35rem;
+  }
+
+  .job-role {
+    margin: 0.35rem 0 0;
+    color: var(--ink-muted);
+  }
+
+  .job-period {
+    margin: 0.55rem 0 0;
+    font-size: 0.78rem;
+    color: var(--teal-deep);
+  }
+
+  .job-bullets {
+    margin: 0;
+    padding-left: 1.1rem;
+    color: var(--ink-muted);
+  }
+
+  .job-bullets li {
+    margin-bottom: 0.45rem;
+  }
+
+  .job-bullets li:last-child {
+    margin-bottom: 0;
+  }
+
+  @media (max-width: 720px) {
+    .timeline-item {
+      grid-template-columns: 1fr;
+      gap: 0.75rem;
+    }
+  }
+</style>
