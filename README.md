@@ -22,6 +22,12 @@ Resume CTA currently points at the [Google Sites CV](https://sites.google.com/vi
 1. Add `public/resume.pdf`
 2. Set `links.resume` in `profile.ts` to `/resume.pdf`
 
-## Deploy
+## Deploy (GitHub Pages)
 
-Static output in `dist/`. Point `arverma.dev` at any static host (Cloudflare Pages, Vercel, GitHub Pages, Netlify).
+CI builds and deploys on every push to `main` via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+
+1. Push this repo to GitHub.
+2. **Settings → Pages → Build and deployment → Source:** GitHub Actions.
+3. Optional custom domain: `public/CNAME` is set to `arverma.dev` — point DNS (A/AAAA or CNAME) at GitHub Pages, then enable the domain in repo Pages settings.
+
+Preview without a custom domain: `https://<user>.github.io/arverma.dev/` — if you use that URL long-term, set `base: '/arverma.dev/'` in `astro.config.mjs`.
