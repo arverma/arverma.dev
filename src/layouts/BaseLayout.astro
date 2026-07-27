@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import { profile } from "../content/profile";
 import { withBase } from "../lib/paths";
+import SocialRail from "../components/SocialRail.astro";
 
 interface Props {
   title?: string;
@@ -49,11 +50,11 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
+    <SocialRail />
     <div class="site-wrap">
       <header class="site-header">
         <a class="site-logo" href={home}>{profile.name.split(" ")[0].toLowerCase()}.dev</a>
         <nav class="site-nav" aria-label="Primary">
-          <a href="#about">about</a>
           <a href="#work">work</a>
           <a href="#projects">projects</a>
           <a href="#skills">skills</a>

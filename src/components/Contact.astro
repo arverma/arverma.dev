@@ -1,6 +1,7 @@
 ---
 import { profile } from "../content/profile";
 import Sticker from "./Sticker.astro";
+import ResumeModal from "./ResumeModal.astro";
 ---
 
 <section class="section contact" id="contact" aria-labelledby="contact-title">
@@ -22,32 +23,14 @@ import Sticker from "./Sticker.astro";
     <a class="contact-email" href={`mailto:${profile.email}`}>{profile.email}</a>
     <div class="btn-row contact-actions">
       <a class="btn btn-primary" href={`mailto:${profile.email}`}>Email me</a>
-      <a
-        class="btn btn-ghost"
-        href={profile.links.resume}
-        target="_blank"
-        rel="noopener noreferrer">View resume</a
-      >
+      <button type="button" class="btn btn-ghost" data-resume-open>
+        View resume
+      </button>
     </div>
-    <ul class="contact-links mono">
-      <li>
-        <a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer"
-          >LinkedIn</a
-        >
-      </li>
-      <li>
-        <a href={profile.links.github} target="_blank" rel="noopener noreferrer"
-          >GitHub</a
-        >
-      </li>
-      <li>
-        <a href={profile.links.medium} target="_blank" rel="noopener noreferrer"
-          >Medium</a
-        >
-      </li>
-    </ul>
   </div>
 </section>
+
+<ResumeModal />
 
 <style>
   .contact-panel {
@@ -74,24 +57,8 @@ import Sticker from "./Sticker.astro";
     margin-top: 1.5rem;
   }
 
-  .contact-links {
-    list-style: none;
-    margin: 1.5rem 0 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem 1.5rem;
-    font-size: 0.85rem;
-  }
-
-  .contact-links a {
-    text-decoration: none;
-    color: var(--ink-muted);
-    border-bottom: 1px solid transparent;
-  }
-
-  .contact-links a:hover {
-    color: var(--teal-deep);
-    border-bottom-color: var(--teal);
+  .contact-actions .btn {
+    cursor: pointer;
+    font: inherit;
   }
 </style>

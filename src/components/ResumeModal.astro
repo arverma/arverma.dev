@@ -1,0 +1,203 @@
+---
+import { profile } from "../content/profile";
+---
+
+<dialog class="resume-modal" id="resume-modal" aria-labelledby="resume-modal-title">
+  <div class="resume-modal__panel">
+    <header class="resume-modal__header">
+      <div>
+        <p class="resume-modal__eyebrow mono">Resume</p>
+        <h2 id="resume-modal-title" class="resume-modal__title">{profile.name}</h2>
+      </div>
+      <div class="resume-modal__actions">
+        <a
+          class="btn btn-primary resume-modal__download"
+          href={profile.links.resumeDownload}
+          download
+          target="_blank"
+          rel="noopener noreferrer">Download PDF</a
+        >
+        <a
+          class="btn btn-ghost"
+          href={profile.links.resumeOpen}
+          target="_blank"
+          rel="noopener noreferrer">Open in Docs</a
+        >
+        <button
+          type="button"
+          class="resume-modal__close"
+          data-resume-close
+          aria-label="Close resume preview">×</button
+        >
+      </div>
+    </header>
+
+    <div class="resume-modal__frame-wrap">
+      <iframe
+        class="resume-modal__frame"
+        title={`${profile.name} resume preview`}
+        src={profile.links.resumePreview}
+        loading="lazy"
+      ></iframe>
+    </div>
+  </div>
+</dialog>
+
+<script>
+  function initResumeModal() {
+    const modal = document.getElementById("resume-modal");
+    if (!(modal instanceof HTMLDialogElement)) return;
+
+    const openers = document.querySelectorAll("[data-resume-open]");
+    const closers = modal.querySelectorAll("[data-resume-close]");
+
+    const open = () => {
+      if (!modal.open) modal.showModal();
+      document.body.classList.add("resume-modal-open");
+    };
+
+    const close = () => {
+      if (modal.open) modal.close();
+      document.body.classList.remove("resume-modal-open");
+    };
+
+    openers.forEach((el) => {
+      el.addEventListener("click", (event) => {
+        event.preventDefault();
+        open();
+      });
+    });
+
+    closers.forEach((el) => el.addEventListener("click", close));
+
+    modal.addEventListener("click", (event) => {
+      if (event.target === modal) close();
+    });
+
+    modal.addEventListener("close", () => {
+      document.body.classList.remove("resume-modal-open");
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && modal.open) close();
+    });
+  }
+
+  initResumeModal();
+</script>
+
+<style is:global>
+  body.resume-modal-open {
+    overflow: hidden;
+  }
+
+  .resume-modal {
+    padding: 0;
+    border: none;
+    background: transparent;
+    max-width: min(52rem, calc(100vw - 2rem));
+    width: 100%;
+    max-height: calc(100vh - 2rem);
+    color: var(--ink);
+  }
+
+  .resume-modal::backdrop {
+    background: rgba(28, 26, 22, 0.55);
+    backdrop-filter: blur(2px);
+  }
+
+  .resume-modal__panel {
+    display: flex;
+    flex-direction: column;
+    background: var(--paper);
+    border: 1.5px solid var(--rule);
+    border-radius: 0.35rem;
+    box-shadow: 0 18px 50px rgba(28, 26, 22, 0.28);
+    max-height: calc(100vh - 2rem);
+    overflow: hidden;
+  }
+
+  .resume-modal__header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.15rem;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper-deep);
+  }
+
+  .resume-modal__eyebrow {
+    margin: 0;
+    font-size: 0.72rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--teal-deep);
+  }
+
+  .resume-modal__title {
+    margin: 0.2rem 0 0;
+    font-family: var(--font-display);
+    font-size: 1.35rem;
+    font-weight: 600;
+  }
+
+  .resume-modal__actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.55rem;
+  }
+
+  .resume-modal__close {
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1.5px solid var(--ink);
+    border-radius: 0.2rem;
+    background: transparent;
+    color: var(--ink);
+    font-size: 1.35rem;
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.2s ease, color 0.2s ease;
+  }
+
+  .resume-modal__close:hover {
+    background: var(--ink);
+    color: var(--paper);
+  }
+
+  .resume-modal__frame-wrap {
+    flex: 1;
+    min-height: min(70vh, 40rem);
+    overflow: auto;
+    -webkit-overflow-scrolling: touch;
+    background: #fff;
+  }
+
+  .resume-modal__frame {
+    display: block;
+    width: 100%;
+    height: min(70vh, 40rem);
+    border: 0;
+    background: #fff;
+  }
+
+  @media (max-width: 640px) {
+    .resume-modal__header {
+      padding: 0.85rem;
+    }
+
+    .resume-modal__actions .btn {
+      padding: 0.55rem 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    .resume-modal__frame-wrap,
+    .resume-modal__frame {
+      min-height: 60vh;
+      height: 60vh;
+    }
+  }
+</style>

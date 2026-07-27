@@ -80,6 +80,38 @@ h3 {
 .site-wrap {
   width: min(100% - 2 * var(--space), var(--max));
   margin-inline: auto;
+  padding-inline: 0;
+}
+
+@media (min-width: 801px) {
+  .site-wrap {
+    padding-right: 3rem;
+  }
+}
+
+@media (max-width: 800px) {
+  .site-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+  }
+
+  .site-nav {
+    gap: 0.55rem 0.85rem;
+    max-width: 100%;
+  }
+
+  .section-head {
+    flex-wrap: wrap;
+  }
+
+  .section-stickers .sticker {
+    width: clamp(2.75rem, 12vw, 3.75rem);
+  }
+
+  .site-wrap {
+    padding-right: 2.75rem;
+  }
 }
 
 .site-header {
@@ -191,6 +223,9 @@ h3 {
   text-decoration: none;
   border: 1.5px solid var(--ink);
   border-radius: 0.2rem;
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
   transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease,
     box-shadow 0.2s ease;
 }

@@ -15,12 +15,11 @@ npm run preview
 
 All copy lives in [`src/content/profile.ts`](src/content/profile.ts) — work, projects, skills, writing, and links.
 
-## Resume PDF
+## Resume
 
-Resume CTA currently points at the [Google Sites CV](https://sites.google.com/view/arverma/home). To use a local PDF:
+“View resume” opens an in-page preview of the Google Doc (see `links.resumePreview` in [`src/content/profile.ts`](src/content/profile.ts)), with **Download PDF** via Google’s export URL.
 
-1. Add `public/resume.pdf`
-2. Set `links.resume` in `profile.ts` to `/resume.pdf`
+Sharing on the Doc must allow **Anyone with the link → Viewer** for the iframe preview to load.
 
 ## Deploy (GitHub Pages)
 

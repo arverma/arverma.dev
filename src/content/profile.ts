@@ -9,7 +9,14 @@ export const profile = {
     github: "https://github.com/arverma",
     linkedin: "https://www.linkedin.com/in/ar-verma/",
     medium: "https://amanranjanverma.medium.com/",
-    resume: "https://sites.google.com/view/arverma/home",
+    /** Google Doc — anyone with the link can view */
+    resumeDocId: "17e0dTqfSZH0syi9xp2PPE92C-wao8rFMy7IWRJZw0mo",
+    resumePreview:
+      "https://docs.google.com/document/d/17e0dTqfSZH0syi9xp2PPE92C-wao8rFMy7IWRJZw0mo/preview",
+    resumeDownload:
+      "https://docs.google.com/document/d/17e0dTqfSZH0syi9xp2PPE92C-wao8rFMy7IWRJZw0mo/export?format=pdf",
+    resumeOpen:
+      "https://docs.google.com/document/d/17e0dTqfSZH0syi9xp2PPE92C-wao8rFMy7IWRJZw0mo/view",
   },
   about: {
     paragraphs: [
