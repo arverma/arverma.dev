@@ -3,6 +3,7 @@ import "../styles/global.css";
 import { profile } from "../content/profile";
 import { withBase } from "../lib/paths";
 import SocialRail from "../components/SocialRail.astro";
+import ResumeModal from "../components/ResumeModal.astro";
 
 interface Props {
   title?: string;
@@ -11,11 +12,10 @@ interface Props {
 
 const {
   title = `${profile.name} · Senior Data Engineer`,
-  description = profile.tagline,
+  description = "Senior Data Engineer specializing in data platforms, pipelines, and infrastructure.",
 } = Astro.props;
 
 const home = withBase("/");
-const canonical = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
@@ -23,128 +23,75 @@ const canonical = new URL(Astro.url.pathname, Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="author" content={profile.name} />
-    <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href={withBase("favicon.svg")} />
-
-    <meta property="og:type" content="website" />
-    <meta property="og:url" content={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:site_name" content={profile.name} />
-
-    <meta name="twitter:card" content="summary" />
-    <meta name="twitter:title" content={title} />
-    <meta name="twitter:description" content={description} />
-
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;1,9..40,400&family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,650&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap"
       rel="stylesheet"
     />
-
     <title>{title}</title>
+    <!-- Apply saved theme before render to prevent flash -->
+    <script is:inline>
+      (function() {
+        const saved = localStorage.getItem('theme');
+        document.documentElement.setAttribute('data-theme', saved || 'dark');
+      })();
+    </script>
   </head>
   <body>
     <a class="skip-link" href="#main">Skip to content</a>
-    <SocialRail />
-    <div class="site-wrap">
-      <header class="site-header">
-        <a class="site-logo" href={home}>{profile.name.split(" ")[0].toLowerCase()}.dev</a>
-        <nav class="site-nav" aria-label="Primary">
-          <a href="#work">work</a>
-          <a href="#projects">projects</a>
-          <a href="#skills">skills</a>
-          <a href="#writing">writing</a>
-          <a href="#contact">contact</a>
-        </nav>
-      </header>
+    <div class="page">
+      <nav class="nav">
+        <a class="nav-logo" href={home}>arverma.dev</a>
+        <div class="nav-right">
+          <div class="nav-links">
+            <a href="#work">Work</a>
+            <a href="#skills">Skills</a>
+            <a href="#writing">Writing</a>
+          </div>
+          <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode">
+            <span class="theme-icon"></span>
+          </button>
+        </div>
+      </nav>
 
       <main id="main">
         <slot />
       </main>
 
-      <footer class="site-footer">
+      <footer class="footer">
         <span>© {new Date().getFullYear()} {profile.name}</span>
-        <span class="mono">built with care · arverma.dev</span>
+        <span>Remote · India</span>
       </footer>
     </div>
 
+    <ResumeModal />
+
     <script>
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      const sections = document.querySelectorAll(".section");
-      const entranceNames = new Set([
-        "sticker-peel",
-        "sticker-drop",
-        "sticker-pop",
-        "sticker-spin",
-        "sticker-sway-in",
-      ]);
+      const toggle = document.getElementById('theme-toggle');
+      const icon = toggle?.querySelector('.theme-icon');
 
-      function wakeStickers(root) {
-        const stickers = root.querySelectorAll(".sticker:not(.is-alive)");
-        stickers.forEach((sticker, i) => {
-          if (!sticker.style.getPropertyValue("--sticker-delay")) {
-            sticker.style.setProperty("--sticker-delay", `${i * 90}ms`);
-          }
-
-          const finish = () => {
-            sticker.classList.add("is-alive");
-            sticker.removeEventListener("animationend", onEnd);
-          };
-
-          const onEnd = (event) => {
-            if (entranceNames.has(event.animationName)) finish();
-          };
-
-          sticker.addEventListener("animationend", onEnd);
-          window.setTimeout(finish, 1100 + i * 90);
-        });
+      function getTheme() {
+        return document.documentElement.getAttribute('data-theme') || 'dark';
       }
 
-      if (reduce || !("IntersectionObserver" in window)) {
-        sections.forEach((el) => {
-          el.classList.add("is-visible");
-          wakeStickers(el);
-        });
-      } else {
-        const io = new IntersectionObserver(
-          (entries) => {
-            entries.forEach((entry) => {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("is-visible");
-                wakeStickers(entry.target);
-                io.unobserve(entry.target);
-              }
-            });
-          },
-          { rootMargin: "0px 0px -8% 0px", threshold: 0.12 },
-        );
-        sections.forEach((el) => io.observe(el));
+      function setTheme(theme) {
+        document.documentElement.setAttribute('data-theme', theme);
+        localStorage.setItem('theme', theme);
+        if (icon) icon.textContent = theme === 'dark' ? '☀' : '☾';
       }
+
+      if (icon) icon.textContent = getTheme() === 'dark' ? '☀' : '☾';
+
+      toggle?.addEventListener('click', () => {
+        const next = getTheme() === 'dark' ? 'light' : 'dark';
+        setTheme(next);
+      });
     </script>
-
-    <style is:global>
-      .skip-link {
-        position: absolute;
-        left: 1rem;
-        top: -3rem;
-        z-index: 100;
-        padding: 0.5rem 0.85rem;
-        background: var(--ink);
-        color: var(--paper);
-        font-family: var(--font-mono);
-        font-size: 0.8rem;
-        text-decoration: none;
-        border-radius: 0.2rem;
-      }
-
-      .skip-link:focus {
-        top: 1rem;
-      }
-    </style>
   </body>
 </html>

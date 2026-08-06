@@ -1,0 +1,18 @@
+---
+import { profile } from "../content/profile";
+---
+
+<section class="section" id="work">
+  <p class="section-label">Experience</p>
+  <ul class="work-list">
+    {profile.work.map((job) => (
+      <li class="work-item">
+        <div>
+          <div class="work-company">{job.company}</div>
+          <div class="work-role">{job.role}</div>
+        </div>
+        <div class="work-period">{job.period}</div>
+      </li>
+    ))}
+  </ul>
+</section>

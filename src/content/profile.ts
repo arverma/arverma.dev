@@ -2,7 +2,7 @@ export const profile = {
   name: "Aman Ranjan Verma",
   title: "Senior Data Engineer · QuillBot · building data platforms",
   tagline:
-    "7+ years shipping production data platforms and pipelines — clear systems, measurable impact, calm ownership.",
+    "I'm a Senior Data Engineer at QuillBot (ex-Flipkart, Sigmoid) with 7+ years architecting production-grade data platforms — clear systems, measurable impact, calm ownership. B.Tech (Gold Medalist) and Executive MBA ('27). I write weekly for the data community and mentor aspiring engineers.",
   location: "Remote · India!",
   email: "aman.ranjanverma@gmail.com",
   links: {
@@ -18,19 +18,7 @@ export const profile = {
     resumeOpen:
       "https://docs.google.com/document/d/17e0dTqfSZH0syi9xp2PPE92C-wao8rFMy7IWRJZw0mo/view",
   },
-  about: {
-    paragraphs: [
-      "I am a Senior Data Engineer at QuillBot with 7+ years building production-grade data platforms and pipelines (ex-Flipkart, ex-Sigmoid).",
-      "Gold Medalist (B.Tech), IIIT Manipur · Executive MBA, IIM Bodh Gaya ('27). I write weekly for the data engineering community and mentor when I can.",
-      "When I am not at the keyboard: traveling, trekking, cooking, or staying close to home.",
-    ],
-    highlights: [
-      "Event tracking, governance, and analytics platforms at scale",
-      "Backend services and workflows with low-latency performance (p99 < 10 ms, 5K+ QPS)",
-      "Promoted within a year at Flipkart for ownership on high-impact fintech work",
-      "Consistently rated Exceeds Expectations across performance reviews",
-    ],
-  },
+
   work: [
     {
       company: "QuillBot",

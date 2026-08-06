@@ -1,72 +1,14 @@
 ---
 import { profile } from "../content/profile";
-import Sticker from "./Sticker.astro";
+
+const allSkills = Object.values(profile.skills).flat();
 ---
 
-<section class="section skills" id="skills" aria-labelledby="skills-title">
-  <div class="section-head">
-    <div>
-      <p class="section-label">Skills</p>
-      <h2 class="section-title" id="skills-title">Tools on the blotter</h2>
-      <p class="section-lede">
-        Grouped by how I actually use them — not an endless keyword dump.
-      </p>
-    </div>
-    <Sticker src="/stickers/speaker.svg" size="sm" tilt="left" />
-  </div>
-
-  <div class="skill-groups">
-    {
-      Object.entries(profile.skills).map(([group, items]) => (
-        <div class="skill-group">
-          <h3 class="skill-group-title mono">{group}</h3>
-          <ul class="skill-list">
-            {items.map((skill) => (
-              <li>{skill}</li>
-            ))}
-          </ul>
-        </div>
-      ))
-    }
+<section class="section" id="skills">
+  <p class="section-label">Skills</p>
+  <div class="skills-flat">
+    {allSkills.map((skill) => (
+      <span class="skill-chip">{skill}</span>
+    ))}
   </div>
 </section>
-
-<style>
-  .skill-groups {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: clamp(1.25rem, 3vw, 2rem);
-  }
-
-  .skill-group-title {
-    margin: 0 0 0.75rem;
-    font-size: 0.75rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--teal-deep);
-    font-weight: 500;
-  }
-
-  .skill-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
-  }
-
-  .skill-list li {
-    font-family: var(--font-mono);
-    font-size: 0.8rem;
-    padding: 0.35rem 0.65rem;
-    border-bottom: 1.5px solid var(--rule);
-    color: var(--ink);
-  }
-
-  @media (max-width: 640px) {
-    .skill-groups {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>

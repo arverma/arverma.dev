@@ -1,228 +1,156 @@
 ---
 import { profile } from "../content/profile";
-import Sticker from "./Sticker.astro";
-import { withBase } from "../lib/paths";
 ---
 
-<section class="hero section is-visible" aria-labelledby="hero-name">
-  <div class="hero-grid">
-    <div class="hero-copy">
-      <h1 id="hero-name">{profile.name}</h1>
-      <p class="hero-title">{profile.title}</p>
-      <p class="hero-tagline">{profile.tagline}</p>
-      <div class="btn-row hero-ctas">
-        <button type="button" class="btn btn-primary" data-resume-open>
-          Let's work Together!
-        </button>
-      </div>
-      <p class="hero-meta mono">{profile.location}</p>
-    </div>
-
-    <div class="hero-desk">
-      <div class="desk-plane">
-        {/* Stickers behind the portrait — peek at edges only */}
-        <Sticker
-          src="/stickers/laptop.svg"
-          size="sm"
-          tilt="left"
-          class="desk-sticker desk-sticker--main"
-        />
-        <Sticker
-          src="/stickers/keyboard.svg"
-          size="sm"
-          tilt="right"
-          class="desk-sticker desk-sticker--note"
-        />
-        <Sticker
-          src="/stickers/coffee.svg"
-          size="sm"
-          tilt="left"
-          class="desk-sticker desk-sticker--cup"
-        />
-        <div class="desk-sticker desk-sticker--me-wrap">
-          <img
-            class="desk-photo sticker"
-            data-motion="drop"
-            src={withBase("stickers/me.png")}
-            alt={profile.name}
-            width="2856"
-            height="2572"
-            decoding="async"
-          />
-        </div>
-      </div>
-    </div>
+<section class="hero">
+  <h1 class="hero-name">{profile.name}</h1>
+  <p class="hero-role">Senior Data Engineer(SDE-III)</p>
+  <p class="hero-bio">
+    7+ Years building Data and AI Platforms. Currently at QuillBot, previously
+    Flipkart and Sigmoid. B.Tech (Gold Medalist) · Executive MBA IIM Bodh Gaya '27.
+    I write weekly on data engineering and mentor aspiring engineers.
+  </p>
+  <div class="hero-links">
+    <button type="button" class="hero-link primary" data-resume-open>Resume</button>
+    <a class="hero-link" href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
+    <a class="hero-link" href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+    <a class="hero-link" href={profile.links.medium} target="_blank" rel="noopener noreferrer">Writing</a>
+    <button type="button" class="hero-link" id="copy-email" data-email={profile.email}>Email</button>
   </div>
 </section>
 
+<!-- Toast notification -->
+<div class="toast" id="copy-toast" role="status" aria-live="polite">
+  <span class="toast-icon">✓</span> Copied to clipboard
+</div>
+
+<script>
+  const btn = document.getElementById('copy-email') as HTMLButtonElement;
+  const toast = document.getElementById('copy-toast') as HTMLElement;
+
+  btn?.addEventListener('click', async () => {
+    const email = btn.dataset.email || '';
+    try {
+      await navigator.clipboard.writeText(email);
+    } catch {
+      // Fallback for older browsers
+      const ta = document.createElement('textarea');
+      ta.value = email;
+      ta.style.cssText = 'position:fixed;opacity:0;pointer-events:none';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+
+    // Show toast
+    toast.classList.add('is-visible');
+    setTimeout(() => toast.classList.remove('is-visible'), 2200);
+  });
+</script>
+
 <style>
   .hero {
-    padding-top: clamp(1.5rem, 4vw, 3.25rem);
+    padding-block: 4rem;
     border-bottom: 1px solid var(--rule);
   }
 
-  .hero-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    gap: clamp(1.25rem, 4vw, 3rem);
-    align-items: end;
-  }
-
-  h1 {
-    margin: 0;
-    font-size: clamp(2.2rem, 6.5vw, 4.4rem);
-    letter-spacing: -0.04em;
-    max-width: 12ch;
-  }
-
-  .hero-title {
-    margin: 1rem 0 0;
-    font-family: var(--font-mono);
-    font-size: clamp(0.85rem, 1.8vw, 1.05rem);
-    color: var(--ink-muted);
-    max-width: 36rem;
-  }
-
-  .hero-tagline {
-    margin: 1rem 0 0;
-    max-width: 34rem;
+  .hero-name {
+    font-size: clamp(1.6rem, 5vw, 2rem);
+    font-weight: 600;
+    letter-spacing: -0.03em;
+    line-height: 1.15;
     color: var(--ink);
+    margin-bottom: 0.5rem;
   }
 
-  .hero-ctas {
-    margin-top: 1.75rem;
-  }
-
-  .hero-meta {
-    margin: 1.25rem 0 0;
+  .hero-role {
+    font-family: var(--mono);
     font-size: 0.78rem;
-    color: var(--ink-muted);
+    color: var(--accent);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
   }
 
-  .hero-desk {
-    min-height: clamp(16rem, 42vw, 22rem);
-    width: 100%;
+  .hero-bio {
+    color: var(--ink-2);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    max-width: 520px;
+    margin-bottom: 1.75rem;
   }
 
-  .desk-plane {
-    position: relative;
-    height: 100%;
-    min-height: clamp(16rem, 42vw, 22rem);
-    aspect-ratio: 1.05 / 1;
-    max-height: 26rem;
-    border-radius: 1.25rem 1.25rem 0.35rem 0.35rem;
-    background:
-      linear-gradient(180deg, rgba(232, 223, 208, 0.55), rgba(243, 236, 224, 0.2)),
-      repeating-linear-gradient(
-        90deg,
-        transparent,
-        transparent 11px,
-        rgba(28, 26, 22, 0.03) 11px,
-        rgba(28, 26, 22, 0.03) 12px
-      );
-    border: 1.5px solid var(--rule);
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.45);
-    overflow: visible;
-  }
-
-  /* Sticker imgs come from <Sticker />, so they never carry this
-     component's scope hash and must be targeted globally. */
-  .desk-plane :global(.desk-sticker) {
-    position: absolute;
-    z-index: 1;
-  }
-
-  /* Portrait ~95% of desk, above stickers */
-  .desk-sticker--me-wrap {
-    position: absolute;
-    left: 2.5%;
-    bottom: 0;
-    top: auto;
-    width: 95%;
-    height: 95%;
-    z-index: 2;
+  .hero-links {
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    pointer-events: none;
+    flex-wrap: wrap;
+    gap: 0.5rem;
   }
 
-  .desk-sticker--me-wrap .desk-photo {
-    pointer-events: auto;
-  }
-
-  .desk-photo {
-    --tilt: -2deg;
-    --sticker-delay: 40ms;
-    width: 100%;
-    height: 100%;
-    max-height: none;
-    object-fit: contain;
-    object-position: bottom center;
+  .hero-link {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    padding: 0.35rem 0.8rem;
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    color: var(--ink-2);
+    text-decoration: none;
     background: transparent;
-    border-radius: 0;
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    line-height: inherit;
+    font-family: var(--mono);
   }
 
-  /* Edge peeks behind the portrait */
-  .desk-plane :global(.desk-sticker--main) {
-    top: -6%;
-    left: -6%;
-    right: auto;
-    bottom: auto;
-    width: clamp(5.25rem, 13.5vw, 7.5rem);
+  .hero-link:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
   }
 
-  .desk-plane :global(.desk-sticker--note) {
-    top: -5%;
-    right: -6%;
-    left: auto;
-    bottom: auto;
-    width: clamp(5.25rem, 13.5vw, 7.5rem);
+  .hero-link.primary {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--bg);
   }
 
-  .desk-plane :global(.desk-sticker--cup) {
-    bottom: -4%;
-    left: -6%;
-    right: auto;
-    top: auto;
-    z-index: 3;
+  .hero-link.primary:hover {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+</style>
+
+<style is:global>
+  /* ── Toast ────────────────────────────────────────── */
+  .toast {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%) translateY(0.5rem);
+    background: var(--ink);
+    color: var(--bg);
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    padding: 0.55rem 1.1rem;
+    border-radius: 100px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    z-index: 1000;
+    white-space: nowrap;
   }
 
-  @media (max-width: 900px) {
-    .hero-grid {
-      grid-template-columns: 1fr;
-    }
-
-    h1 {
-      max-width: none;
-    }
-
-    .hero-desk {
-      order: -1;
-      min-height: 0;
-    }
-
-    .desk-plane {
-      min-height: 0;
-      aspect-ratio: 1.15 / 1;
-      max-height: 22rem;
-      width: min(100%, 28rem);
-      margin-inline: auto;
-    }
+  .toast.is-visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
   }
 
-  @media (max-width: 480px) {
-    .desk-plane {
-      max-height: 18rem;
-    }
-
-    .desk-plane :global(.desk-sticker--cup) {
-      width: clamp(2.4rem, 15vw, 3.25rem);
-    }
-
-    .desk-plane :global(.desk-sticker--main),
-    .desk-plane :global(.desk-sticker--note) {
-      width: clamp(3.6rem, 22.5vw, 4.875rem);
-    }
+  .toast-icon {
+    color: #4ade80;
+    font-size: 0.8rem;
   }
 </style>

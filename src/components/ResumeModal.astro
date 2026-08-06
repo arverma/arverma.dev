@@ -2,202 +2,388 @@
 import { profile } from "../content/profile";
 ---
 
-<dialog class="resume-modal" id="resume-modal" aria-labelledby="resume-modal-title">
-  <div class="resume-modal__panel">
-    <header class="resume-modal__header">
-      <div>
-        <p class="resume-modal__eyebrow mono">Resume</p>
-        <h2 id="resume-modal-title" class="resume-modal__title">{profile.name}</h2>
-      </div>
-      <div class="resume-modal__actions">
-        <a
-          class="btn btn-primary resume-modal__download"
-          href={profile.links.resumeDownload}
-          download
-          target="_blank"
-          rel="noopener noreferrer">Download PDF</a
-        >
-        <a
-          class="btn btn-ghost"
-          href={profile.links.resumeOpen}
-          target="_blank"
-          rel="noopener noreferrer">Open in Docs</a
-        >
-        <button
-          type="button"
-          class="resume-modal__close"
-          data-resume-close
-          aria-label="Close resume preview">×</button
-        >
-      </div>
-    </header>
+<dialog class="lp-dialog" id="lp-dialog" aria-modal="true" aria-labelledby="lp-title">
+  <div class="lp-panel">
 
-    <div class="resume-modal__frame-wrap">
-      <iframe
-        class="resume-modal__frame"
-        title={`${profile.name} resume preview`}
-        src={profile.links.resumePreview}
-        loading="lazy"
-      ></iframe>
+    <!-- Header -->
+    <div class="lp-header">
+      <div class="lp-meta">
+        <span class="lp-label" id="lp-label"></span>
+      </div>
+      <div class="lp-controls">
+        <a class="lp-btn" id="lp-download" href="#" download>Download PDF</a>
+        <button class="lp-close" id="lp-close" aria-label="Close">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+            <path d="M1 1l10 10M11 1L1 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
     </div>
+
+    <!-- Iframe body (for resume) -->
+    <div class="lp-frame-wrap" id="lp-frame-wrap">
+      <div class="lp-loading" id="lp-loading">
+        <div class="lp-spinner"></div>
+      </div>
+      <iframe class="lp-frame" id="lp-frame" title="Preview" src="" loading="lazy"></iframe>
+    </div>
+
+    <!-- Card body (for external links that block iframes) -->
+    <div class="lp-card-body" id="lp-card-body">
+      <div class="lp-card-icon" id="lp-card-icon"></div>
+      <p class="lp-card-url" id="lp-card-url"></p>
+      <p class="lp-card-desc" id="lp-card-desc"></p>
+      <a class="lp-card-cta" id="lp-card-cta" href="#" target="_blank" rel="noopener noreferrer">
+        Open page ↗
+      </a>
+    </div>
+
   </div>
 </dialog>
 
 <script>
-  function initResumeModal() {
-    const modal = document.getElementById("resume-modal");
-    if (!(modal instanceof HTMLDialogElement)) return;
+  const isMobile = () => window.innerWidth < 640;
 
-    const openers = document.querySelectorAll("[data-resume-open]");
-    const closers = modal.querySelectorAll("[data-resume-close]");
+  const dialog   = document.getElementById('lp-dialog') as HTMLDialogElement;
+  const frame    = document.getElementById('lp-frame') as HTMLIFrameElement;
+  const frameWrap = document.getElementById('lp-frame-wrap') as HTMLElement;
+  const cardBody = document.getElementById('lp-card-body') as HTMLElement;
+  const labelEl  = document.getElementById('lp-label') as HTMLElement;
+  const dlBtn    = document.getElementById('lp-download') as HTMLAnchorElement;
+  const closeBtn = document.getElementById('lp-close') as HTMLButtonElement;
+  const loadingEl = document.getElementById('lp-loading') as HTMLElement;
+  const cardIcon = document.getElementById('lp-card-icon') as HTMLElement;
+  const cardUrl  = document.getElementById('lp-card-url') as HTMLElement;
+  const cardDesc = document.getElementById('lp-card-desc') as HTMLElement;
+  const cardCta  = document.getElementById('lp-card-cta') as HTMLAnchorElement;
 
-    const open = () => {
-      if (!modal.open) modal.showModal();
-      document.body.classList.add("resume-modal-open");
-    };
-
-    const close = () => {
-      if (modal.open) modal.close();
-      document.body.classList.remove("resume-modal-open");
-    };
-
-    openers.forEach((el) => {
-      el.addEventListener("click", (event) => {
-        event.preventDefault();
-        open();
-      });
-    });
-
-    closers.forEach((el) => el.addEventListener("click", close));
-
-    modal.addEventListener("click", (event) => {
-      if (event.target === modal) close();
-    });
-
-    modal.addEventListener("close", () => {
-      document.body.classList.remove("resume-modal-open");
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && modal.open) close();
-    });
+  interface ModalOptions {
+    mode: 'iframe' | 'card';
+    label: string;
+    url: string;
+    downloadUrl?: string;
+    icon?: string;
+    description?: string;
   }
 
-  initResumeModal();
+  function openModal(opts: ModalOptions) {
+    labelEl.textContent = opts.label;
+    if (opts.downloadUrl) {
+      dlBtn.href = opts.downloadUrl;
+      dlBtn.style.display = '';
+    } else {
+      dlBtn.style.display = 'none';
+    }
+
+    if (opts.mode === 'iframe') {
+      frameWrap.style.display = '';
+      cardBody.style.display  = 'none';
+      loadingEl.style.display = 'flex';
+      frame.src = '';
+      requestAnimationFrame(() => { frame.src = opts.url; });
+      frame.onload = () => { loadingEl.style.display = 'none'; };
+    } else {
+      frameWrap.style.display = 'none';
+      cardBody.style.display  = 'flex';
+      cardIcon.textContent   = opts.icon || '🔗';
+      cardUrl.textContent    = opts.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
+      cardDesc.textContent   = opts.description || '';
+      cardCta.href           = opts.url;
+    }
+
+    document.body.classList.add('lp-open');
+    dialog.showModal();
+  }
+
+  function closeModal() {
+    dialog.close();
+    document.body.classList.remove('lp-open');
+    setTimeout(() => { frame.src = ''; }, 300);
+  }
+
+  closeBtn.addEventListener('click', closeModal);
+  dialog.addEventListener('click', (e) => { if (e.target === dialog) closeModal(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dialog.open) closeModal(); });
+
+  // Resume
+  document.querySelectorAll('[data-resume-open]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      e.preventDefault();
+      openModal({
+        mode: 'iframe',
+        label: 'Resume',
+        url: 'https://docs.google.com/document/d/17e0dTqfSZH0syi9xp2PPE92C-wao8rFMy7IWRJZw0mo/preview',
+        downloadUrl: 'https://docs.google.com/document/d/17e0dTqfSZH0syi9xp2PPE92C-wao8rFMy7IWRJZw0mo/export?format=pdf',
+      });
+    });
+  });
+
+  // External preview links
+  document.querySelectorAll('[data-preview]').forEach(el => {
+    el.addEventListener('click', (e) => {
+      const anchor = el as HTMLAnchorElement;
+
+      if (isMobile()) return; // let it open naturally on mobile
+
+      e.preventDefault();
+
+      openModal({
+        mode: 'card',
+        label: anchor.dataset.previewLabel || 'Link',
+        title: anchor.dataset.previewTitle || anchor.href,
+        url: anchor.href,
+        icon: anchor.dataset.previewIcon || '🔗',
+        description: anchor.dataset.previewDesc || '',
+      });
+    });
+  });
 </script>
 
 <style is:global>
-  body.resume-modal-open {
-    overflow: hidden;
-  }
+  body.lp-open { overflow: hidden; }
 
-  .resume-modal {
+  /* ── Dialog centering ───────────────────────────────── */
+  .lp-dialog {
     padding: 0;
     border: none;
     background: transparent;
-    max-width: min(52rem, calc(100vw - 2rem));
-    width: 100%;
-    max-height: calc(100vh - 2rem);
-    color: var(--ink);
+    width: calc(100% - 2rem);
+    max-width: 43rem;
+    max-height: calc(100dvh - 4rem);
+    overflow: visible;
+    /* DO NOT set display here — browser hides dialog by default */
   }
 
-  .resume-modal::backdrop {
-    background: rgba(28, 26, 22, 0.55);
-    backdrop-filter: blur(2px);
+  /* Center the dialog when it's open */
+  .lp-dialog[open] {
+    position: fixed;
+    inset: 0;
+    margin: auto;
   }
 
-  .resume-modal__panel {
+  .lp-dialog::backdrop {
+    background:
+      radial-gradient(ellipse 70% 40% at 50% 0%, rgba(124, 106, 255, 0.1), transparent),
+      rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+
+  /* ── Panel ──────────────────────────────────────────── */
+  .lp-panel {
     display: flex;
     flex-direction: column;
-    background: var(--paper);
-    border: 1.5px solid var(--rule);
-    border-radius: 0.35rem;
-    box-shadow: 0 18px 50px rgba(28, 26, 22, 0.28);
-    max-height: calc(100vh - 2rem);
+    background: var(--bg);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    box-shadow:
+      0 0 0 1px rgba(255,255,255,0.04) inset,
+      0 32px 72px rgba(0,0,0,0.6),
+      0 8px 20px rgba(0,0,0,0.3);
     overflow: hidden;
+    animation: lp-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
-  .resume-modal__header {
+  @keyframes lp-enter {
+    from { opacity: 0; transform: translateY(12px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  /* ── Header ─────────────────────────────────────────── */
+  .lp-header {
     display: flex;
-    flex-wrap: wrap;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
     gap: 1rem;
-    padding: 1rem 1.15rem;
+    padding: 0.8rem 1rem;
     border-bottom: 1px solid var(--rule);
-    background: var(--paper-deep);
+    flex-shrink: 0;
   }
 
-  .resume-modal__eyebrow {
-    margin: 0;
-    font-size: 0.72rem;
-    letter-spacing: 0.1em;
+  .lp-meta { min-width: 0; }
+
+  .lp-label {
+    display: block;
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--teal-deep);
+    color: var(--accent);
+    margin-bottom: 0.1rem;
   }
 
-  .resume-modal__title {
-    margin: 0.2rem 0 0;
-    font-family: var(--font-display);
-    font-size: 1.35rem;
-    font-weight: 600;
-  }
-
-  .resume-modal__actions {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.55rem;
-  }
-
-  .resume-modal__close {
-    width: 2.25rem;
-    height: 2.25rem;
-    border: 1.5px solid var(--ink);
-    border-radius: 0.2rem;
-    background: transparent;
+  .lp-title {
+    font-size: 0.88rem;
+    font-weight: 500;
     color: var(--ink);
-    font-size: 1.35rem;
-    line-height: 1;
+    margin: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .lp-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    flex-shrink: 0;
+  }
+
+  .lp-btn {
+    font-family: var(--mono);
+    font-size: 0.7rem;
+    padding: 0.28rem 0.65rem;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    color: var(--ink-2);
+    text-decoration: none;
+    background: transparent;
     cursor: pointer;
-    transition: background 0.2s ease, color 0.2s ease;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    white-space: nowrap;
   }
 
-  .resume-modal__close:hover {
-    background: var(--ink);
-    color: var(--paper);
+  .lp-btn:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--accent-dim);
+    opacity: 1;
   }
 
-  .resume-modal__frame-wrap {
+  .lp-close {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border: 1px solid var(--rule);
+    border-radius: 6px;
+    background: transparent;
+    color: var(--ink-3);
+    cursor: pointer;
+    transition: border-color 0.15s, color 0.15s, background 0.15s;
+    flex-shrink: 0;
+  }
+
+  .lp-close:hover {
+    border-color: var(--ink-2);
+    color: var(--ink);
+    background: var(--bg-hover);
+  }
+
+  /* ── Iframe body ─────────────────────────────────────── */
+  .lp-frame-wrap {
+    position: relative;
     flex: 1;
-    min-height: min(70vh, 40rem);
-    overflow: auto;
-    -webkit-overflow-scrolling: touch;
     background: #fff;
+    min-height: min(70vh, 42rem);
   }
 
-  .resume-modal__frame {
+  .lp-frame {
     display: block;
     width: 100%;
-    height: min(70vh, 40rem);
+    height: 100%;
+    min-height: min(70vh, 42rem);
     border: 0;
-    background: #fff;
   }
 
+  .lp-loading {
+    position: absolute;
+    inset: 0;
+    display: none; /* shown via JS when iframe is loading */
+    align-items: center;
+    justify-content: center;
+    background: var(--bg);
+  }
+
+  .lp-spinner {
+    width: 1.4rem;
+    height: 1.4rem;
+    border: 2px solid var(--rule);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: lp-spin 0.65s linear infinite;
+  }
+
+  @keyframes lp-spin { to { transform: rotate(360deg); } }
+
+  /* ── Card body (for sites that block iframes) ────────── */
+  .lp-card-body {
+    flex: 1;
+    display: none; /* shown via JS for external links */
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  .lp-card-icon {
+    font-size: 2.5rem;
+    line-height: 1;
+    filter: grayscale(0.2);
+  }
+
+  .lp-card-url {
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--ink-3);
+    margin: 0;
+    word-break: break-all;
+  }
+
+  .lp-card-desc {
+    font-size: 0.88rem;
+    color: var(--ink-2);
+    max-width: 32rem;
+    line-height: 1.6;
+    margin: 0;
+  }
+
+  .lp-card-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    margin-top: 0.5rem;
+    padding: 0.6rem 1.4rem;
+    border: 1px solid var(--rule);
+    border-radius: 100px;
+    font-family: var(--mono);
+    font-size: 0.78rem;
+    color: var(--ink);
+    text-decoration: none;
+    background: var(--bg-hover);
+    transition: border-color 0.15s, background 0.15s, color 0.15s;
+  }
+
+  .lp-card-cta:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+    color: var(--accent);
+    opacity: 1;
+  }
+
+  /* ── Mobile: bottom sheet ────────────────────────────── */
   @media (max-width: 640px) {
-    .resume-modal__header {
-      padding: 0.85rem;
+    .lp-dialog {
+      width: 100%;
+      max-width: 100%;
+      max-height: 90dvh;
+      inset: auto 0 0 0;
+      margin: 0;
     }
 
-    .resume-modal__actions .btn {
-      padding: 0.55rem 0.75rem;
-      font-size: 0.75rem;
+    .lp-panel {
+      border-radius: 16px 16px 0 0;
+      animation: lp-sheet-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
 
-    .resume-modal__frame-wrap,
-    .resume-modal__frame {
-      min-height: 60vh;
-      height: 60vh;
+    @keyframes lp-sheet-up {
+      from { transform: translateY(100%); opacity: 0.6; }
+      to   { transform: translateY(0); opacity: 1; }
     }
+
+    .lp-frame-wrap, .lp-frame { min-height: 60dvh; height: 60dvh; }
   }
 </style>
