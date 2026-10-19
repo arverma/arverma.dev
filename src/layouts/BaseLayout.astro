@@ -15,7 +15,8 @@ const {
   description = "Senior Data Engineer specializing in data platforms, pipelines, and infrastructure.",
 } = Astro.props;
 
-const home = withBase("/");
+const home = Astro.site!.href;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
@@ -24,10 +25,12 @@ const home = withBase("/");
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonicalURL} />
     <meta name="author" content={profile.name} />
     <link rel="icon" type="image/svg+xml" href={withBase("favicon.svg")} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonicalURL} />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -44,15 +47,15 @@ const home = withBase("/");
     </script>
   </head>
   <body>
-    <a class="skip-link" href="#main">Skip to content</a>
+    <a class="skip-link" href={`${canonicalURL}#main`}>Skip to content</a>
     <div class="page">
       <nav class="nav">
         <a class="nav-logo" href={home}>arverma.dev</a>
         <div class="nav-right">
           <div class="nav-links">
-            <a href="#work">Work</a>
-            <a href="#skills">Skills</a>
-            <a href="#writing">Writing</a>
+            <a href={`${home}#work`}>Work</a>
+            <a href={`${home}#skills`}>Skills</a>
+            <a href={`${home}#writing`}>Writing</a>
           </div>
           <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme" title="Toggle light/dark mode">
             <span class="theme-icon"></span>
