@@ -1,0 +1,80 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+import { profile } from "../../content/profile";
+
+export function getStaticPaths() {
+  return profile.liveProjects.map((project) => ({
+    params: { slug: project.slug },
+    props: { project },
+  }));
+}
+
+const { project } = Astro.props;
+const pageUrl = new URL(`/projects/${project.slug}/`, Astro.site).href;
+const isExtension = project.kind === "Chrome extension";
+
+const title = `${project.name}: ${project.kind} by ${profile.name}`;
+// Pack whole sentences into a search-snippet-sized description (<= ~175 chars).
+const description = project.overview
+  .split(/(?<=\.)\s+/)
+  .reduce((acc, sentence) => {
+    const next = acc ? `${acc} ${sentence}` : sentence;
+    return next.length <= 175 ? next : acc || sentence;
+  }, "");
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": isExtension || project.kind === "Web app" ? "SoftwareApplication" : "WebSite",
+    name: project.name,
+    url: project.url,
+    description: project.overview,
+    ...(isExtension || project.kind === "Web app"
+      ? {
+          applicationCategory: isExtension ? "BrowserApplication" : "WebApplication",
+          operatingSystem: "Web",
+        }
+      : {}),
+    author: { "@type": "Person", name: profile.name, url: "https://arverma.dev/" },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: profile.name, item: "https://arverma.dev/" },
+      { "@type": "ListItem", position: 2, name: "Hobby Projects", item: "https://arverma.dev/#projects" },
+      { "@type": "ListItem", position: 3, name: project.name, item: pageUrl },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <article class="section project-page">
+    <p class="section-label"><Icon name="rocket" size={14} />Hobby Project · {project.kind}</p>
+    <div class="project-page__head">
+      <span class="project-card__icon"><Icon name={project.icon} size={22} /></span>
+      <h1 class="project-page__title">{project.name}</h1>
+    </div>
+    <p class="project-page__lead">{project.overview}</p>
+    <h2 class="project-page__h"><Icon name="users" size={14} />Who it's for</h2>
+    <p class="project-page__text">{project.audience}</p>
+    <h2 class="project-page__h"><Icon name="layers" size={14} />Features</h2>
+    <ul class="project-page__list">
+      {project.features.map((f) => (
+        <li><Icon name="check" size={15} /><span><strong>{f.title}.</strong> {f.text}</span></li>
+      ))}
+    </ul>
+    <div class="hero-links">
+      <a class="hero-link primary" href={project.url} target="_blank" rel="noopener noreferrer">
+        {isExtension ? "Open in Chrome Web Store" : `Visit ${project.name}`}
+        <Icon name="arrow-up-right" size={13} class="hint" />
+        <span class="sr-only">(opens in new tab)</span>
+      </a>
+      <a class="hero-link" href="/#projects">
+        <Icon name="arrow-right" size={14} class="flip" />All projects
+      </a>
+    </div>
+  </article>
+</BaseLayout>

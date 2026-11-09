@@ -1,5 +1,6 @@
 ---
 import { profile } from "../content/profile";
+import Icon from "./Icon.astro";
 import Parser from "rss-parser";
 
 type Post = { title: string; url: string };
@@ -32,18 +33,26 @@ try {
 ---
 
 <section class="section" id="writing">
-  <p class="section-label">Writing</p>
+  <h2 class="section-label"><Icon name="pen-line" size={14} />Writing</h2>
   <ul class="writing-list">
     {posts.map((post) => (
       <li>
         <a class="writing-row" href={post.url} target="_blank" rel="noopener noreferrer">
+          <Icon name="file-text" size={16} class="writing-lead" />
           <span class="writing-row-title">{post.title}</span>
-          <span class="writing-arrow">↗</span>
+          <Icon name="arrow-up-right" size={16} class="ext" />
+          <span class="sr-only">(opens in new tab)</span>
         </a>
       </li>
     ))}
   </ul>
-  <a class="writing-all" href={profile.links.medium} target="_blank" rel="noopener noreferrer">
-    All posts →
-  </a>
+  <div class="writing-actions">
+    <a class="writing-all" href="/writing/">
+      All writing <Icon name="arrow-right" size={14} />
+    </a>
+    <a class="writing-all" href={profile.links.medium} target="_blank" rel="noopener noreferrer">
+      Medium profile <Icon name="arrow-up-right" size={14} />
+      <span class="sr-only">(opens in new tab)</span>
+    </a>
+  </div>
 </section>

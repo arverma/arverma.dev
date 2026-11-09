@@ -1,14 +1,31 @@
 ---
 import { profile } from "../content/profile";
+import Icon from "./Icon.astro";
+import type { IconName } from "./Icon.astro";
 
-const allSkills = Object.values(profile.skills).flat();
+const groupIcons: Record<string, IconName> = {
+  Languages: "code",
+  Data: "database",
+  "Cloud & Infra": "cloud",
+  Practices: "shield",
+};
 ---
 
 <section class="section" id="skills">
-  <p class="section-label">Skills</p>
-  <div class="skills-flat">
-    {allSkills.map((skill) => (
-      <span class="skill-chip">{skill}</span>
+  <h2 class="section-label"><Icon name="layers" size={14} />Skills</h2>
+  <div class="skill-groups">
+    {Object.entries(profile.skills).map(([group, skills]) => (
+      <div class="skill-group">
+        <h3 class="skill-group__title">
+          <Icon name={groupIcons[group] ?? "layers"} size={15} />
+          {group}
+        </h3>
+        <ul class="skills-flat">
+          {skills.map((skill) => (
+            <li class="skill-chip">{skill}</li>
+          ))}
+        </ul>
+      </div>
     ))}
   </div>
 </section>

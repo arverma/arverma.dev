@@ -22,10 +22,24 @@ async function checkDirectory(directory) {
     if (entry.name.endsWith(".html")) {
       const pagePath = relative("dist", path).split(sep).join("/").replace(/index\.html$/, "");
       const expected = new URL(pagePath, origin).href;
+      if (entry.name === "404.html") {
+        // Error page: must stay out of the index and carry no canonical.
+        assert.match(content, /<meta name="robots" content="noindex"/, `${path}: 404 must be noindex`);
+        assert.doesNotMatch(content, /rel="canonical"/, `${path}: 404 must not have a canonical`);
+        continue;
+      }
       const canonicals = [...content.matchAll(/<link\b[^>]*rel="canonical"[^>]*href="([^"]+)"[^>]*>/g)];
       assert.equal(canonicals.length, 1, `${path}: expected one canonical tag`);
       assert.equal(canonicals[0][1], expected, `${path}: incorrect canonical`);
       canonicalPages.add(expected);
+      assert.match(content, /<meta property="og:image" content="https:\/\/arverma\.dev\/[^"]+"/, `${path}: missing og:image`);
+      assert.match(content, /<meta name="twitter:card"/, `${path}: missing twitter:card`);
+      for (const [, json] of content.matchAll(/<script type="application\/ld\+json">([^<]*)<\/script>/g)) {
+        JSON.parse(json); // throws on invalid JSON-LD
+      }
+      for (const [, anchor] of content.matchAll(/<a\b[^>]*target="_blank"[^>]*>([\s\S]*?)<\/a>/g)) {
+        assert.match(anchor, /opens in new tab/, `${path}: external link without new-tab hint: ${anchor.slice(0, 60)}`);
+      }
       for (const [, href] of content.matchAll(/<a\b[^>]*href="([^"]*)"/g)) {
         const url = new URL(href, expected);
         if (["arverma.dev", "www.arverma.dev"].includes(url.hostname)) {

@@ -2,13 +2,29 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Hero from "../components/Hero.astro";
 import Experience from "../components/Experience.astro";
+import Projects from "../components/Projects.astro";
 import Skills from "../components/Skills.astro";
 import Writing from "../components/Writing.astro";
+import { profile } from "../content/profile";
+
+const title = `${profile.name}, ${profile.jobTitle}`;
+const description = `${profile.name} is a ${profile.jobTitle} at QuillBot with 7+ years building data and AI platforms. Writes on data engineering at Towards Data Engineering.`;
+
+const person = {
+  "@context": "https://schema.org",
+  "@type": "Person",
+  name: profile.name,
+  url: "https://arverma.dev/",
+  jobTitle: profile.jobTitle,
+  image: "https://arverma.dev/og-image.png",
+  sameAs: [profile.links.medium, profile.links.github, profile.links.linkedin],
+};
 ---
 
-<BaseLayout>
+<BaseLayout title={title} description={description} jsonLd={person}>
   <Hero />
   <Experience />
+  <Projects />
   <Skills />
   <Writing />
 </BaseLayout>

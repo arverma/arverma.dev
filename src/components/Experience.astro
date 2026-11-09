@@ -1,17 +1,24 @@
 ---
 import { profile } from "../content/profile";
+import Icon from "./Icon.astro";
+import type { IconName } from "./Icon.astro";
+
+const companyIcons: Record<string, IconName> = {
+  "Towards Data Engineering": "users",
+};
 ---
 
 <section class="section" id="work">
-  <p class="section-label">Experience</p>
+  <h2 class="section-label"><Icon name="briefcase" size={14} />Experience</h2>
   <ul class="work-list">
     {profile.work.map((job) => (
       <li class="work-item">
-        <div>
+        <span class="work-icon"><Icon name={companyIcons[job.company] ?? "building"} size={18} /></span>
+        <div class="work-main">
           <div class="work-company">{job.company}</div>
           <div class="work-role">{job.role}</div>
         </div>
-        <div class="work-period">{job.period}</div>
+        <div class="work-period"><Icon name="calendar" size={12} />{job.period}</div>
       </li>
     ))}
   </ul>

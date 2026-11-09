@@ -1,27 +1,53 @@
 ---
 import { profile } from "../content/profile";
+import { withBase } from "../lib/paths";
+import Icon from "./Icon.astro";
 ---
 
 <section class="hero">
-  <h1 class="hero-name">{profile.name}</h1>
-  <p class="hero-role">Senior Data Engineer(SDE-III)</p>
+  <div class="hero-top">
+    <img class="hero-avatar" src={withBase("stickers/me.png")} alt={`Illustrated portrait of ${profile.name}`} width="88" height="88" />
+    <div>
+      <h1 class="hero-name">{profile.name}</h1>
+      <p class="hero-role"><Icon name="briefcase" size={14} />Senior Data Engineer (SDE-III)</p>
+    </div>
+  </div>
+  <ul class="hero-meta">
+    <li><Icon name="building" size={14} />QuillBot</li>
+    <li><Icon name="map-pin" size={14} />Remote · India</li>
+    <li><Icon name="graduation-cap" size={14} />B.Tech Gold Medalist · Exec MBA IIM Bodh Gaya '27</li>
+  </ul>
   <p class="hero-bio">
     7+ Years building Data and AI Platforms. Currently at QuillBot, previously
-    Flipkart and Sigmoid. B.Tech (Gold Medalist) · Executive MBA IIM Bodh Gaya '27.
-    I write weekly on data engineering and mentor aspiring engineers.
+    Flipkart and Sigmoid. I write weekly on data engineering and mentor aspiring engineers.
   </p>
   <div class="hero-links">
-    <button type="button" class="hero-link primary" data-resume-open>Resume</button>
-    <a class="hero-link" href={profile.links.github} target="_blank" rel="noopener noreferrer">GitHub</a>
-    <a class="hero-link" href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
-    <a class="hero-link" href={profile.links.medium} target="_blank" rel="noopener noreferrer">Writing</a>
-    <button type="button" class="hero-link" id="copy-email" data-email={profile.email}>Email</button>
+    <button type="button" class="hero-link primary" data-resume-open aria-haspopup="dialog">
+      <Icon name="file-text" size={15} />Resume<Icon name="app-window" size={13} class="hint" />
+      <span class="sr-only">(opens a preview dialog)</span>
+    </button>
+    <a class="hero-link" href={profile.links.github} target="_blank" rel="noopener noreferrer">
+      <Icon name="github" size={15} />GitHub<Icon name="arrow-up-right" size={13} class="hint" />
+      <span class="sr-only">(opens in new tab)</span>
+    </a>
+    <a class="hero-link" href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">
+      <Icon name="linkedin" size={15} />LinkedIn<Icon name="arrow-up-right" size={13} class="hint" />
+      <span class="sr-only">(opens in new tab)</span>
+    </a>
+    <a class="hero-link" href={profile.links.medium} target="_blank" rel="noopener noreferrer">
+      <Icon name="pen-line" size={15} />Medium<Icon name="arrow-up-right" size={13} class="hint" />
+      <span class="sr-only">(opens in new tab)</span>
+    </a>
+    <button type="button" class="hero-link" id="copy-email" data-email={profile.email}>
+      <Icon name="mail" size={15} />Email<Icon name="copy" size={13} class="hint" />
+      <span class="sr-only">(copies address to clipboard)</span>
+    </button>
   </div>
 </section>
 
 <!-- Toast notification -->
 <div class="toast" id="copy-toast" role="status" aria-live="polite">
-  <span class="toast-icon">✓</span> Copied to clipboard
+  <Icon name="check" size={14} class="toast-icon" /> Email address copied
 </div>
 
 <script>
@@ -48,78 +74,6 @@ import { profile } from "../content/profile";
     setTimeout(() => toast.classList.remove('is-visible'), 2200);
   });
 </script>
-
-<style>
-  .hero {
-    padding-block: 4rem;
-    border-bottom: 1px solid var(--rule);
-  }
-
-  .hero-name {
-    font-size: clamp(1.6rem, 5vw, 2rem);
-    font-weight: 600;
-    letter-spacing: -0.03em;
-    line-height: 1.15;
-    color: var(--ink);
-    margin-bottom: 0.5rem;
-  }
-
-  .hero-role {
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--accent);
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    margin-bottom: 1.25rem;
-  }
-
-  .hero-bio {
-    color: var(--ink-2);
-    font-size: 0.95rem;
-    line-height: 1.75;
-    max-width: 520px;
-    margin-bottom: 1.75rem;
-  }
-
-  .hero-links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .hero-link {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    padding: 0.35rem 0.8rem;
-    border: 1px solid var(--rule);
-    border-radius: 100px;
-    color: var(--ink-2);
-    text-decoration: none;
-    background: transparent;
-    cursor: pointer;
-    transition: border-color 0.15s, color 0.15s, background 0.15s;
-    line-height: inherit;
-    font-family: var(--mono);
-  }
-
-  .hero-link:hover {
-    border-color: var(--accent);
-    color: var(--accent);
-    background: var(--accent-dim);
-  }
-
-  .hero-link.primary {
-    background: var(--ink);
-    border-color: var(--ink);
-    color: var(--bg);
-  }
-
-  .hero-link.primary:hover {
-    background: var(--accent);
-    border-color: var(--accent);
-    color: #fff;
-  }
-</style>
 
 <style is:global>
   /* ── Toast ────────────────────────────────────────── */
