@@ -1,51 +1,79 @@
 # arverma.dev
 
-Personal site for **Aman Ranjan Verma** — soft retro desk aesthetic, text-forward, sticker clip-art. Built with [Astro](https://astro.build).
+Personal site for **Aman Ranjan Verma**, a Data Platform Engineer. Static, text-first, light/dark themed. Built with [Astro](https://astro.build) and deployed to GitHub Pages.
 
 ## Commands
 
 ```bash
 npm install
-npm run dev      # http://localhost:4321
+npm run dev        # http://localhost:4321
 npm run build
-npm run check:seo # Build and validate canonical URLs, links, and sitemaps
+npm run check:seo  # build + validate canonicals, links, sitemaps, meta, JSON-LD
 npm run preview
 ```
 
-## Edit content
+`make help` lists the same commands.
 
-All copy lives in [`src/content/profile.ts`](src/content/profile.ts) — work, projects, skills, writing, and links.
+## Pages
+
+| URL | Source |
+| --- | --- |
+| `/` | `src/pages/index.astro` (hero, experience, hobby projects, skills, recent articles) |
+| `/projects/` | `src/pages/projects/index.astro` |
+| `/projects/<slug>/` | `src/pages/projects/[slug].astro`, one per entry in `liveProjects` |
+| `/writing/` | `src/pages/writing.astro` |
+| 404 | `src/pages/404.astro` (`noindex`, not in the sitemap) |
+
+## Editing content
+
+Copy lives in [`src/content/profile.ts`](src/content/profile.ts): links, work history, hobby projects (`liveProjects`), skills, and the curated fallback article list.
+
+Add a hobby project by adding an entry to `liveProjects` (with a unique `slug`, an `icon` name from `src/components/Icon.astro`, `overview`, `audience`, and `features`). Its page, card, sitemap entry, and JSON-LD are generated automatically.
+
+Articles are read from the Medium RSS feed at build time (`src/lib/medium.ts`) and fall back to `profile.writing` if the feed is unreachable. A weekly scheduled deploy keeps "Recent Articles" fresh.
 
 ## Resume
 
-“View resume” opens an in-page preview of the Google Doc (see `links.resumePreview` in [`src/content/profile.ts`](src/content/profile.ts)), with **Download PDF** via Google’s export URL.
+The resume's source of truth is a Google Doc. `scripts/fetch-resume.mjs` (run automatically before `dev` and `build`) exports it to `public/resume.pdf`. If Google is unreachable the last copy is kept, so a deploy never breaks. The Doc must be shared as **Anyone with the link: Viewer**. To change the resume, edit the Doc and redeploy. Commit the refreshed `public/resume.pdf` if you want the fallback copy to stay current.
 
-Sharing on the Doc must allow **Anyone with the link → Viewer** for the iframe preview to load.
+## Structure
+
+- `src/components/Icon.astro`: the single icon set (inline SVG). Add icons there rather than using ad-hoc SVG or images.
+- `src/layouts/BaseLayout.astro`: head tags (canonical, Open Graph, Twitter, JSON-LD), nav with scroll-spy, theme toggle, scroll reveal.
+- `src/components/ResumeModal.astro`: resume dialog. It draws `public/resume.pdf` page by page with PDF.js (full-screen on phones, pinch-zoomable).
+- `src/styles/global.css`: design tokens, layout, print styles.
+- `scripts/check-seo.mjs`: the SEO gate (see below).
+
+### Link conventions
+
+External links use `target="_blank" rel="noopener noreferrer"`, an `arrow-up-right` icon, and a visually hidden "(opens in new tab)". Links that open the dialog use `aria-haspopup="dialog"` and the `app-window` icon. `check:seo` fails if a new-tab link has no hint.
+
+## SEO checks
+
+`npm run check:seo` builds the site and fails if:
+
+- a page lacks exactly one self-referencing canonical (the 404 must instead be `noindex` with no canonical);
+- `og:image` or `twitter:card` is missing, or any JSON-LD is invalid;
+- a breadcrumb, internal link, or sitemap URL is not a generated canonical page;
+- any non-canonical `http://` or `www` form of the site URL appears;
+- an external link has no new-tab hint;
+- `CNAME` or the `robots.txt` sitemap line is wrong.
+
+CI runs it before every deploy.
 
 ## Deploy (GitHub Pages)
 
-CI builds and deploys on every push to `main` via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
+CI builds and deploys on every push to `main`, and weekly (Mondays 03:00 UTC), via [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml).
 
-1. Push this repo to GitHub.
-2. **Settings → Pages → Build and deployment → Source:** GitHub Actions.
-3. Custom domain: `arverma.dev` (see `public/CNAME`). In Pages settings, set the custom domain and enable HTTPS.
-4. `astro.config.mjs` uses `site: "https://arverma.dev/"` and `base: "/"`.
+1. **Settings → Pages → Build and deployment → Source:** GitHub Actions.
+2. Custom domain `arverma.dev` (see `public/CNAME`), with **Enforce HTTPS** on.
+3. `astro.config.mjs` sets `site: "https://arverma.dev"` and `base: "/"`.
 
 ## Canonical URLs and redirects
 
-The preferred origin is `https://arverma.dev/`. The shared layout uses it for
-canonical tags, Open Graph URLs, and internal navigation. The sitemap integration
-uses the same Astro `site` setting; `public/robots.txt` advertises its index.
-CI runs `npm run check:seo` before uploading the deployment artifact.
+The preferred origin is `https://arverma.dev/`. The layout derives each page's canonical and Open Graph URL from the Astro `site` setting; the sitemap integration uses the same setting and `public/robots.txt` advertises its index.
 
-GitHub Pages handles redirects before serving this static application. Keep
-**Settings → Pages → Custom domain** set to `arverma.dev` and **Enforce HTTPS**
-enabled. Configure the apex DNS for GitHub Pages and `www` as a CNAME to
-`arverma.github.io` (see [GitHub's custom domain guide](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)).
-Astro redirects, JavaScript redirects, and meta refreshes cannot configure these
-host-level HTTP 301 responses.
-
-After deployment, check each response without following redirects:
+Host-level redirects (`http` to `https`, `www` to apex) are handled by GitHub Pages, not by this code. Set the apex DNS for GitHub Pages and `www` as a CNAME to `arverma.github.io` ([guide](https://docs.github.com/en/pages/configuring-a-custom-domain-for-your-github-pages-site/managing-a-custom-domain-for-your-github-pages-site)). After a deploy, confirm without following redirects:
 
 ```bash
 curl -I http://arverma.dev/
@@ -54,36 +82,6 @@ curl -I https://www.arverma.dev/
 curl -I https://arverma.dev/
 ```
 
-The first three must return `301` with `Location: https://arverma.dev/`; the
-canonical URL must return `200`. Also check a path and query string, such as
-`http://www.arverma.dev/robots.txt?check=1`, to confirm they survive the redirect.
-If an old response is cached, retry with a unique query string and verify the
-plain URL again after the cache expires.
+The first three must return `301` with `Location: https://arverma.dev/`; the last must return `200`.
 
-In Search Console, submit `https://arverma.dev/sitemap-index.xml` and inspect the
-HTTPS apex homepage. “Page with redirect” is expected for alternate URLs that
-redirect; those URLs should stay excluded from indexing ([Google's report guide](https://support.google.com/webmasters/answer/7440203?hl=en)).
-
-## Alternate pages
-
-This site currently generates one responsive page (`/`), shared by desktop and
-mobile. There are no separate mobile, AMP, or localized routes. Its canonical
-is `https://arverma.dev/`; query strings do not change the canonical. The static
-`/index.html` file also declares `/` as its canonical. Navigation and the page
-sitemap use only `/`, without query parameters or `/index.html` aliases.
-The SEO check verifies that page links and sitemap entries resolve to generated,
-self-canonical pages, rather than merely checking their domain.
-
-“Alternate page with proper canonical tag” is expected when Google associates
-a duplicate with the intended primary page. Inspect each reported URL in Search
-Console and compare the user-declared and Google-selected canonical with the
-intended page. The report's affected URLs are needed to confirm individual cases.
-Keep duplicates crawlable so Google can read their canonical tags; do not add
-`noindex` or robots exclusions to try to clear this status.
-
-If separate variants are introduced, duplicate mobile pages should canonicalize
-to their equivalent primary page. Distinct translations generally need their own
-self-canonical URLs and reciprocal `hreflang` annotations; do not canonicalize
-all languages to the English homepage. See Google's guides for
-[canonical URLs](https://developers.google.com/search/docs/crawling-indexing/consolidate-duplicate-urls)
-and [localized pages](https://developers.google.com/search/docs/specialty/international/localized-versions).
+In Search Console, submit `https://arverma.dev/sitemap-index.xml`. "Page with redirect" and "Alternate page with proper canonical tag" are expected for alternate URLs; keep those URLs crawlable and do not add `noindex` to clear them.

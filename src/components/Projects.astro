@@ -31,4 +31,10 @@ import Icon from "./Icon.astro";
       </li>
     ))}
   </ul>
+  <div class="writing-actions">
+    <a class="writing-all" href={profile.links.githubRepos} target="_blank" rel="noopener noreferrer">
+      <Icon name="github" size={14} />See all projects on GitHub<Icon name="arrow-up-right" size={14} />
+      <span class="sr-only">(opens in new tab)</span>
+    </a>
+  </div>
 </section>

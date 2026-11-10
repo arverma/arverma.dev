@@ -1,0 +1,48 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+import { profile } from "../../content/profile";
+
+const title = `Hobby Projects by ${profile.name}`;
+const description = `Web apps, a publication and Chrome extensions built by ${profile.name}: Towards Data Engineering, a private Markdown editor, WiFi Hammer and Dev ToolBox Pro.`;
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "CollectionPage",
+  name: title,
+  url: "https://arverma.dev/projects/",
+  hasPart: profile.liveProjects.map((p) => ({
+    "@type": "WebPage",
+    name: p.name,
+    url: `https://arverma.dev/projects/${p.slug}/`,
+  })),
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <section class="section" id="projects">
+    <h1 class="section-label"><Icon name="rocket" size={14} />Hobby Projects</h1>
+    <ul class="project-grid">
+      {profile.liveProjects.map((p) => (
+        <li>
+          <a class="project-card" href={`/projects/${p.slug}/`}>
+            <span class="project-card__icon"><Icon name={p.icon} size={20} /></span>
+            <span class="project-card__body">
+              <span class="project-card__head">
+                <span class="project-card__name">{p.name}</span>
+                <span class="project-card__kind">{p.kind}</span>
+              </span>
+              <span class="project-card__desc">{p.description}</span>
+            </span>
+            <Icon name="arrow-right" size={16} class="ext" />
+          </a>
+        </li>
+      ))}
+    </ul>
+    <div class="writing-actions">
+      <a class="writing-all" href={profile.links.githubRepos} target="_blank" rel="noopener noreferrer">
+        <Icon name="github" size={14} />See all projects on GitHub<Icon name="arrow-up-right" size={14} />
+        <span class="sr-only">(opens in new tab)</span>
+      </a>
+    </div>
+  </section>
+</BaseLayout>

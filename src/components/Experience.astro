@@ -16,7 +16,21 @@ const companyIcons: Record<string, IconName> = {
         <span class="work-icon"><Icon name={companyIcons[job.company] ?? "building"} size={18} /></span>
         <div class="work-main">
           <div class="work-company">{job.company}</div>
-          <div class="work-role">{job.role}</div>
+          <div class="work-role">
+            <span class="sr-only">Roles: </span>
+            {job.roles.map((role, i) => (
+              <>
+                {i > 0 && <Icon name="arrow-right" size={12} class="work-promo" />}
+                <span class:list={["work-role-name", i === job.roles.length - 1 && job.roles.length > 1 && "is-current"]}>{role}</span>
+              </>
+            ))}
+          </div>
+          <div class="work-team"><Icon name="users" size={12} />{job.team}</div>
+          {"clients" in job && (
+            <ul class="work-clients" aria-label="Clients worked with">
+              {job.clients.map((c) => <li>{c}</li>)}
+            </ul>
+          )}
         </div>
         <div class="work-period"><Icon name="calendar" size={12} />{job.period}</div>
       </li>

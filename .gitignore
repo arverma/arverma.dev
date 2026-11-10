@@ -23,6 +23,5 @@ pnpm-debug.log*
 .idea/
 .vscode/
 
-# local / oversized exports
-public/stickers/me.svg
+# local overrides
 *.local

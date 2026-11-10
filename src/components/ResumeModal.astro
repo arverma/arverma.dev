@@ -1,139 +1,106 @@
 ---
-import { profile } from "../content/profile";
 import Icon from "./Icon.astro";
 ---
 
-<dialog class="lp-dialog" id="lp-dialog" aria-modal="true" aria-labelledby="lp-title">
+<dialog class="lp-dialog" id="lp-dialog" aria-modal="true" aria-label="Resume">
   <div class="lp-panel">
-
-    <!-- Header -->
     <div class="lp-header">
-      <div class="lp-meta">
-        <span class="lp-label" id="lp-label"></span>
-      </div>
+      <span class="lp-label">Resume</span>
       <div class="lp-controls">
-        <a class="lp-btn" id="lp-download" href="#" download><Icon name="download" size={13} />Download PDF</a>
-        <button class="lp-close" id="lp-close" aria-label="Close dialog" title="Close">
+        <a class="lp-btn" href="/resume.pdf" download="Aman-Ranjan-Verma-Resume.pdf">
+          <Icon name="download" size={13} />Download<span class="lp-btn-long">&nbsp;PDF</span>
+        </a>
+        <button class="lp-close" id="lp-close" type="button" aria-label="Close dialog" title="Close">
           <Icon name="x" size={14} />
         </button>
       </div>
     </div>
 
-    <!-- Iframe body (for resume) -->
-    <div class="lp-frame-wrap" id="lp-frame-wrap">
-      <div class="lp-loading" id="lp-loading">
+    <!-- Pages are drawn here as canvases, sized to the available width. -->
+    <div class="lp-scroll" id="lp-scroll" tabindex="0" aria-label="Resume pages. Pinch or use browser zoom to enlarge.">
+      <div class="lp-loading" id="lp-loading" role="status">
         <div class="lp-spinner"></div>
+        <span class="sr-only">Loading resume</span>
       </div>
-      <iframe class="lp-frame" id="lp-frame" title="Preview" src="" loading="lazy"></iframe>
+      <p class="lp-error" id="lp-error" hidden>
+        The preview could not load.
+        <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">
+          Open the PDF<Icon name="arrow-up-right" size={13} /><span class="sr-only">(opens in new tab)</span>
+        </a>
+      </p>
     </div>
-
-    <!-- Card body (for external links that block iframes) -->
-    <div class="lp-card-body" id="lp-card-body">
-      <div class="lp-card-icon" id="lp-card-icon"></div>
-      <p class="lp-card-url" id="lp-card-url"></p>
-      <p class="lp-card-desc" id="lp-card-desc"></p>
-      <a class="lp-card-cta" id="lp-card-cta" href="#" target="_blank" rel="noopener noreferrer">
-        Open page <Icon name="arrow-up-right" size={14} /><span class="sr-only">(opens in new tab)</span>
-      </a>
-    </div>
-
   </div>
 </dialog>
 
 <script>
-  const isMobile = () => window.innerWidth < 640;
-
-  const dialog   = document.getElementById('lp-dialog') as HTMLDialogElement;
-  const frame    = document.getElementById('lp-frame') as HTMLIFrameElement;
-  const frameWrap = document.getElementById('lp-frame-wrap') as HTMLElement;
-  const cardBody = document.getElementById('lp-card-body') as HTMLElement;
-  const labelEl  = document.getElementById('lp-label') as HTMLElement;
-  const dlBtn    = document.getElementById('lp-download') as HTMLAnchorElement;
-  const closeBtn = document.getElementById('lp-close') as HTMLButtonElement;
+  const dialog = document.getElementById('lp-dialog') as HTMLDialogElement;
+  const scroller = document.getElementById('lp-scroll') as HTMLElement;
   const loadingEl = document.getElementById('lp-loading') as HTMLElement;
-  const cardIcon = document.getElementById('lp-card-icon') as HTMLElement;
-  const cardUrl  = document.getElementById('lp-card-url') as HTMLElement;
-  const cardDesc = document.getElementById('lp-card-desc') as HTMLElement;
-  const cardCta  = document.getElementById('lp-card-cta') as HTMLAnchorElement;
+  const errorEl = document.getElementById('lp-error') as HTMLElement;
+  const closeBtn = document.getElementById('lp-close') as HTMLButtonElement;
 
-  interface ModalOptions {
-    mode: 'iframe' | 'card';
-    label: string;
-    url: string;
-    downloadUrl?: string;
-    icon?: string;
-    description?: string;
+  const PDF_URL = '/resume.pdf';
+  let rendered: Promise<void> | undefined;
+
+  // PDF.js is ~1 MB, so it is only fetched the first time the dialog opens.
+  async function renderPdf() {
+    const [pdfjs, worker] = await Promise.all([
+      import('pdfjs-dist'),
+      import('pdfjs-dist/build/pdf.worker.min.mjs?url'),
+    ]);
+    pdfjs.GlobalWorkerOptions.workerSrc = worker.default;
+
+    const pdf = await pdfjs.getDocument({ url: PDF_URL }).promise;
+    // Oversample so pages stay sharp when the reader pinch-zooms (capped for memory).
+    const quality = Math.min(Math.max(window.devicePixelRatio || 1, 2) * 1.5, 4);
+
+    for (let n = 1; n <= pdf.numPages; n++) {
+      const page = await pdf.getPage(n);
+      const base = page.getViewport({ scale: 1 });
+      const pad = parseFloat(getComputedStyle(scroller).paddingLeft) * 2;
+      const cssWidth = scroller.clientWidth - pad;
+      const viewport = page.getViewport({ scale: (cssWidth / base.width) * quality });
+
+      const canvas = document.createElement('canvas');
+      canvas.className = 'lp-page';
+      canvas.width = Math.floor(viewport.width);
+      canvas.height = Math.floor(viewport.height);
+      canvas.setAttribute('role', 'img');
+      canvas.setAttribute('aria-label', `Resume page ${n} of ${pdf.numPages}`);
+      await page.render({ canvas, viewport }).promise;
+      scroller.appendChild(canvas);
+      loadingEl.hidden = true;
+    }
   }
 
-  function openModal(opts: ModalOptions) {
-    labelEl.textContent = opts.label;
-    if (opts.downloadUrl) {
-      dlBtn.href = opts.downloadUrl;
-      dlBtn.style.display = '';
-    } else {
-      dlBtn.style.display = 'none';
-    }
-
-    if (opts.mode === 'iframe') {
-      frameWrap.style.display = '';
-      cardBody.style.display  = 'none';
-      loadingEl.style.display = 'flex';
-      frame.src = '';
-      requestAnimationFrame(() => { frame.src = opts.url; });
-      frame.onload = () => { loadingEl.style.display = 'none'; };
-    } else {
-      frameWrap.style.display = 'none';
-      cardBody.style.display  = 'flex';
-      cardIcon.textContent   = opts.icon || '🔗';
-      cardUrl.textContent    = opts.url.replace(/^https?:\/\//, '').replace(/\/$/, '');
-      cardDesc.textContent   = opts.description || '';
-      cardCta.href           = opts.url;
-    }
-
+  function openModal() {
     document.body.classList.add('lp-open');
     dialog.showModal();
+    if (!rendered) {
+      loadingEl.hidden = false;
+      errorEl.hidden = true;
+      rendered = renderPdf().catch((error) => {
+        console.error('Resume preview failed:', error);
+        rendered = undefined; // allow a retry next time
+        loadingEl.hidden = true;
+        errorEl.hidden = false;
+      });
+    }
   }
 
   function closeModal() {
-    dialog.close();
-    document.body.classList.remove('lp-open');
-    setTimeout(() => { frame.src = ''; }, 300);
+    if (dialog.open) dialog.close();
   }
 
+  // 'close' fires for every route (button, backdrop, native Esc), keeping state in sync.
+  dialog.addEventListener('close', () => document.body.classList.remove('lp-open'));
   closeBtn.addEventListener('click', closeModal);
   dialog.addEventListener('click', (e) => { if (e.target === dialog) closeModal(); });
-  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && dialog.open) closeModal(); });
 
-  // Resume
-  document.querySelectorAll('[data-resume-open]').forEach(el => {
+  document.querySelectorAll('[data-resume-open]').forEach((el) => {
     el.addEventListener('click', (e) => {
       e.preventDefault();
-      openModal({
-        mode: 'iframe',
-        label: 'Resume',
-        url: 'https://docs.google.com/document/d/17e0dTqfSZH0syi9xp2PPE92C-wao8rFMy7IWRJZw0mo/preview',
-        downloadUrl: 'https://docs.google.com/document/d/17e0dTqfSZH0syi9xp2PPE92C-wao8rFMy7IWRJZw0mo/export?format=pdf',
-      });
-    });
-  });
-
-  // External preview links
-  document.querySelectorAll('[data-preview]').forEach(el => {
-    el.addEventListener('click', (e) => {
-      const anchor = el as HTMLAnchorElement;
-
-      if (isMobile()) return; // let it open naturally on mobile
-
-      e.preventDefault();
-
-      openModal({
-        mode: 'card',
-        label: anchor.dataset.previewLabel || 'Link',
-        title: anchor.dataset.previewTitle || anchor.href,
-        url: anchor.href,
-        icon: anchor.dataset.previewIcon || '🔗',
-        description: anchor.dataset.previewDesc || '',
-      });
+      openModal();
     });
   });
 </script>
@@ -180,6 +147,7 @@ import Icon from "./Icon.astro";
       0 32px 72px rgba(0,0,0,0.6),
       0 8px 20px rgba(0,0,0,0.3);
     overflow: hidden;
+    max-height: calc(100dvh - 4rem);
     animation: lp-enter 0.2s cubic-bezier(0.16, 1, 0.3, 1) both;
   }
 
@@ -211,15 +179,6 @@ import Icon from "./Icon.astro";
     margin-bottom: 0.1rem;
   }
 
-  .lp-title {
-    font-size: 0.88rem;
-    font-weight: 500;
-    color: var(--ink);
-    margin: 0;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
 
   .lp-controls {
     display: flex;
@@ -273,30 +232,39 @@ import Icon from "./Icon.astro";
     background: var(--bg-hover);
   }
 
-  /* ── Iframe body ─────────────────────────────────────── */
-  .lp-frame-wrap {
-    position: relative;
+  /* ── Pages ───────────────────────────────────────────── */
+  .lp-scroll {
     flex: 1;
-    background: #fff;
-    min-height: min(70vh, 42rem);
+    min-height: 0;
+    overflow: auto;
+    overscroll-behavior: contain;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y pinch-zoom;
+    background: color-mix(in srgb, var(--ink) 8%, var(--bg));
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    position: relative;
   }
-
-  .lp-frame {
+  .lp-page {
     display: block;
     width: 100%;
-    height: 100%;
-    min-height: min(70vh, 42rem);
-    border: 0;
+    height: auto;
+    background: #fff;
+    border-radius: 4px;
+    box-shadow: 0 2px 14px rgba(0,0,0,0.25);
   }
-
   .lp-loading {
-    position: absolute;
-    inset: 0;
-    display: none; /* shown via JS when iframe is loading */
+    display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--bg);
+    min-height: 40vh;
   }
+  .lp-loading[hidden], .lp-error[hidden] { display: none; }
+  .lp-error { color: var(--ink-2); text-align: center; padding: 2rem 1rem; }
+  .lp-error a { display: inline-flex; align-items: center; gap: 0.3rem; color: var(--accent); }
+  .lp-btn-long { display: inline; }
 
   .lp-spinner {
     width: 1.4rem;
@@ -306,86 +274,31 @@ import Icon from "./Icon.astro";
     border-radius: 50%;
     animation: lp-spin 0.65s linear infinite;
   }
-
   @keyframes lp-spin { to { transform: rotate(360deg); } }
 
-  /* ── Card body (for sites that block iframes) ────────── */
-  .lp-card-body {
-    flex: 1;
-    display: none; /* shown via JS for external links */
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    padding: 3rem 2rem;
-    text-align: center;
-  }
-
-  .lp-card-icon {
-    font-size: 2.5rem;
-    line-height: 1;
-    filter: grayscale(0.2);
-  }
-
-  .lp-card-url {
-    font-family: var(--mono);
-    font-size: 0.75rem;
-    color: var(--ink-3);
-    margin: 0;
-    word-break: break-all;
-  }
-
-  .lp-card-desc {
-    font-size: 0.88rem;
-    color: var(--ink-2);
-    max-width: 32rem;
-    line-height: 1.6;
-    margin: 0;
-  }
-
-  .lp-card-cta {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    margin-top: 0.5rem;
-    padding: 0.6rem 1.4rem;
-    border: 1px solid var(--rule);
-    border-radius: 100px;
-    font-family: var(--mono);
-    font-size: 0.78rem;
-    color: var(--ink);
-    text-decoration: none;
-    background: var(--bg-hover);
-    transition: border-color 0.15s, background 0.15s, color 0.15s;
-  }
-
-  .lp-card-cta:hover {
-    border-color: var(--accent);
-    background: var(--accent-dim);
-    color: var(--accent);
-    opacity: 1;
-  }
-
-  /* ── Mobile: bottom sheet ────────────────────────────── */
+  /* ── Mobile: full-screen so the A4 page gets the whole width ── */
   @media (max-width: 640px) {
     .lp-dialog {
       width: 100%;
       max-width: 100%;
-      max-height: 90dvh;
-      inset: auto 0 0 0;
+      height: 100dvh;
+      max-height: 100dvh;
+      inset: 0;
       margin: 0;
     }
-
     .lp-panel {
-      border-radius: 16px 16px 0 0;
+      height: 100dvh;
+      max-height: 100dvh;
+      border: 0;
+      border-radius: 0;
       animation: lp-sheet-up 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
     }
-
+    .lp-scroll { padding: 8px; gap: 8px; }
+    .lp-btn-long { display: none; }
     @keyframes lp-sheet-up {
       from { transform: translateY(100%); opacity: 0.6; }
       to   { transform: translateY(0); opacity: 1; }
     }
-
-    .lp-frame-wrap, .lp-frame { min-height: 60dvh; height: 60dvh; }
   }
 </style>
+

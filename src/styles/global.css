@@ -35,7 +35,7 @@
   --ink-3:      #686872;
   --rule:       rgba(0, 0, 0, 0.1);
   --accent:     #5b4fcf;
-  --accent-2:   #0a84b8;
+  --accent-2:   #0a6f9a;
   --accent-dim: rgba(91, 79, 207, 0.1);
   --glow-a:     rgba(91,79,207,0.14);
   --glow-b:     rgba(10,132,184,0.1);
@@ -289,7 +289,12 @@ a:hover { color: var(--ink); }
   flex-shrink: 0;
 }
 .work-company { font-size: 0.92rem; font-weight: 550; color: var(--ink); }
-.work-role { font-size: 0.82rem; color: var(--ink-2); margin-top: 0.1rem; }
+.work-role { display: flex; flex-wrap: wrap; align-items: center; gap: 0.35rem; font-size: 0.82rem; color: var(--ink-2); margin-top: 0.1rem; }
+.work-role-name.is-current { color: var(--accent); font-weight: 550; }
+.work-promo { color: var(--ink-3); }
+.work-team { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--ink-3); margin-top: 0.2rem; }
+.work-clients { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
+.work-clients li { font-family: var(--mono); font-size: 0.68rem; padding: 0.1rem 0.5rem; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink-2); }
 .work-period {
   display: inline-flex;
   align-items: center;
@@ -523,3 +528,8 @@ a:hover { color: var(--ink); }
 /* ─── Touch targets (WCAG 2.2 AA: >= 24px, aiming for ~40px on text links) ─── */
 .nav-logo, .project-details, .writing-all { min-height: 2.5rem; }
 .nav-logo, .project-details, .writing-all { display: inline-flex; align-items: center; }
+
+/* Gradient-clipped text is dropped in forced-colors mode, which would hide the name. */
+@media (forced-colors: active) {
+  .hero-name, .not-found__code { background: none; -webkit-text-fill-color: CanvasText; color: CanvasText; }
+}

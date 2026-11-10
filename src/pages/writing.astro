@@ -2,16 +2,18 @@
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Icon from "../components/Icon.astro";
 import { profile } from "../content/profile";
+import { getPosts } from "../lib/medium";
 
+const posts = await getPosts();
 const title = `Writing on Data Engineering by ${profile.name}`;
-const description = `Articles by ${profile.name} on Apache Iceberg, DataHub, Airbyte and data platform engineering, published on Towards Data Engineering.`;
+const description = `Articles by ${profile.name} on data engineering, data platforms, Apache Iceberg and building developer tools, published on Medium and Towards Data Engineering.`;
 ---
 
 <BaseLayout title={title} description={description}>
   <section class="section" id="writing">
     <h1 class="section-label"><Icon name="pen-line" size={14} />Writing</h1>
     <ul class="writing-list">
-      {profile.writing.map((post) => (
+      {posts.map((post) => (
         <li>
           <a class="writing-row" href={post.url} target="_blank" rel="noopener noreferrer">
             <Icon name="file-text" size={16} class="writing-lead" />

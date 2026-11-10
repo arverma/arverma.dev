@@ -27,7 +27,6 @@ const {
   noindex = false,
 } = Astro.props;
 
-const home = Astro.site!.href;
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const path = Astro.url.pathname;
 const isWriting = path.startsWith("/writing");
@@ -79,8 +78,8 @@ const structuredData = jsonLd
       (function() {
         let saved = null;
         try { saved = localStorage.getItem('theme'); } catch {}
-        document.documentElement.setAttribute('data-theme', saved || 'dark');
-        if (!matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js');
+        document.documentElement.setAttribute('data-theme', saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+        if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js');
       })();
     </script>
   </head>
@@ -88,13 +87,13 @@ const structuredData = jsonLd
     <a class="skip-link" href={`${canonicalURL}#main`}>Skip to content</a>
     <div class="page">
       <nav class="nav" aria-label="Primary">
-        <a class="nav-logo" href={home}><Icon name="code" size={15} />arverma.dev</a>
+        <a class="nav-logo" href="/"><Icon name="code" size={15} />arverma.dev</a>
         <div class="nav-right">
           <div class="nav-links">
-            <a href={`${home}#work`} data-spy="work"><Icon name="briefcase" size={14} /><span>Work</span></a>
-            <a href={`${home}#projects`} data-spy="projects" aria-current={isProject ? "true" : undefined}><Icon name="rocket" size={14} /><span>Hobby Projects</span></a>
-            <a href={`${home}#skills`} data-spy="skills"><Icon name="layers" size={14} /><span>Skills</span></a>
-            <a href={`${home}writing/`} data-spy="writing" aria-current={isWriting ? "page" : undefined}><Icon name="pen-line" size={14} /><span>Writing</span></a>
+            <a href="/#work" data-spy="work"><Icon name="briefcase" size={14} /><span>Work</span></a>
+            <a href="/#projects" data-spy="projects" aria-current={isProject ? "true" : undefined}><Icon name="rocket" size={14} /><span>Hobby Projects</span></a>
+            <a href="/#skills" data-spy="skills"><Icon name="layers" size={14} /><span>Skills</span></a>
+            <a href="/writing/" data-spy="writing" aria-current={isWriting ? "page" : undefined}><Icon name="pen-line" size={14} /><span>Writing</span></a>
           </div>
           <button class="theme-toggle" id="theme-toggle" type="button" aria-label="Switch to light theme" title="Switch to light theme">
             <Icon name="sun" size={16} class="theme-toggle__sun" />

@@ -43,7 +43,7 @@ const jsonLd = [
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: profile.name, item: "https://arverma.dev/" },
-      { "@type": "ListItem", position: 2, name: "Hobby Projects", item: "https://arverma.dev/#projects" },
+      { "@type": "ListItem", position: 2, name: "Hobby Projects", item: "https://arverma.dev/projects/" },
       { "@type": "ListItem", position: 3, name: project.name, item: pageUrl },
     ],
   },
@@ -72,7 +72,7 @@ const jsonLd = [
         <Icon name="arrow-up-right" size={13} class="hint" />
         <span class="sr-only">(opens in new tab)</span>
       </a>
-      <a class="hero-link" href="/#projects">
+      <a class="hero-link" href="/projects/">
         <Icon name="arrow-right" size={14} class="flip" />All projects
       </a>
     </div>

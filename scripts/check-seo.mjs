@@ -36,6 +36,8 @@ async function checkDirectory(directory) {
       assert.match(content, /<meta name="twitter:card"/, `${path}: missing twitter:card`);
       for (const [, json] of content.matchAll(/<script type="application\/ld\+json">([^<]*)<\/script>/g)) {
         JSON.parse(json); // throws on invalid JSON-LD
+        // Breadcrumb/list targets must be real indexable pages, not #fragments.
+        for (const [, item] of json.matchAll(/"item":"([^"]+)"/g)) pageReferences.push({ path, url: item });
       }
       for (const [, anchor] of content.matchAll(/<a\b[^>]*target="_blank"[^>]*>([\s\S]*?)<\/a>/g)) {
         assert.match(anchor, /opens in new tab/, `${path}: external link without new-tab hint: ${anchor.slice(0, 60)}`);
