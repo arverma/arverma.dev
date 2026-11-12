@@ -10,11 +10,14 @@
   --ink-2:      rgba(255,255,255,0.62);
   --ink-3:      rgba(255,255,255,0.55);
   --rule:       rgba(255,255,255,0.09);
-  --accent:     #8b7cff;
-  --accent-2:   #4cc9f0;
-  --accent-dim: rgba(139,124,255,0.16);
-  --glow-a:     rgba(139,124,255,0.22);
-  --glow-b:     rgba(76,201,240,0.12);
+  --brand:      #FFC700;           /* fills only: buttons, markers */
+  --on-brand:   #17171a;           /* text/icons placed on --brand (13:1) */
+  --btn-shadow: rgba(255,199,0,0.38);
+  --accent:     #FFC700;           /* text-safe accent (dark theme) */
+  --accent-2:   #ffe27a;
+  --accent-dim: rgba(255,199,0,0.14);
+  --glow-a:     rgba(255,199,0,0.14);
+  --glow-b:     rgba(255,199,0,0);
   --shadow:     0 1px 0 rgba(255,255,255,0.04) inset, 0 12px 32px -12px rgba(0,0,0,0.6);
   --radius:     14px;
   --font:       "Inter Variable", "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
@@ -34,11 +37,13 @@
   --ink-2:      #4a4a52;
   --ink-3:      #686872;
   --rule:       rgba(0, 0, 0, 0.1);
-  --accent:     #5b4fcf;
-  --accent-2:   #0a6f9a;
-  --accent-dim: rgba(91, 79, 207, 0.1);
-  --glow-a:     rgba(91,79,207,0.14);
-  --glow-b:     rgba(10,132,184,0.1);
+  /* #FFC700 is ~1.5:1 on this background: fill-only here, never text. */
+  --btn-shadow: #17171a;
+  --accent:     #17171a;
+  --accent-2:   #4a4a52;
+  --accent-dim: rgba(255,199,0,0.32);
+  --glow-a:     rgba(255,199,0,0.2);
+  --glow-b:     rgba(255,199,0,0);
   --shadow:     0 1px 2px rgba(0,0,0,0.04), 0 12px 28px -14px rgba(30,30,60,0.18);
 }
 
@@ -75,6 +80,7 @@ a {
   transition: color 0.15s;
 }
 a:hover { color: var(--ink); }
+::selection { background: var(--brand); color: var(--on-brand); }
 :focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 6px; }
 
 /* ─── Wrapper ───────────────────────────────────── */
@@ -231,16 +237,22 @@ a:hover { color: var(--ink); }
 }
 .hero-link .hint { color: var(--ink-3); transition: color 0.15s, transform 0.15s; }
 .hero-link:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: var(--accent-dim);
+  border-color: var(--brand);
+  color: var(--on-brand);
+  background: var(--brand);
   transform: translateY(-1px);
 }
 .hero-link:hover .hint { color: currentColor; transform: translate(1px, -1px); }
-.hero-link.primary { background: var(--ink); border-color: var(--ink); color: var(--bg); }
-.hero-link.primary .hint { color: color-mix(in srgb, var(--bg) 60%, transparent); }
-.hero-link.primary:hover { background: var(--accent); border-color: var(--accent); color: #fff; }
-.hero-link.primary:hover .hint { color: #fff; }
+.hero-link.primary {
+  background: var(--brand); border-color: var(--on-brand); color: var(--on-brand);
+  font-weight: 600;
+  box-shadow: 3px 3px 0 var(--btn-shadow);
+}
+.hero-link.primary .hint { color: color-mix(in srgb, var(--on-brand) 65%, transparent); }
+.hero-link.primary:hover { background: var(--brand); border-color: var(--on-brand); color: var(--on-brand); transform: translate(2px, 2px); box-shadow: 1px 1px 0 var(--btn-shadow); }
+.hero-link.primary:active { transform: translate(3px, 3px); box-shadow: 0 0 0 var(--btn-shadow); }
+.hero-link.primary:hover .hint { color: var(--on-brand); }
+@media (prefers-reduced-motion: reduce) { .hero-link.primary:hover, .hero-link.primary:active { transform: none; } }
 
 /* ─── Section ───────────────────────────────────── */
 .section { padding-block: 3rem; border-bottom: 1px solid var(--rule); }
@@ -493,6 +505,7 @@ a:hover { color: var(--ink); }
     --bg: #fff; --bg-2: #fff; --bg-hover: transparent; --surface: #fff; --surface-2: #fff;
     --ink: #000; --ink-2: #222; --ink-3: #444; --rule: #bbb;
     --accent: #000; --accent-2: #000; --accent-dim: transparent;
+    --brand: #fff; --on-brand: #000; --btn-shadow: transparent;
     --shadow: none;
   }
   body { background: #fff; font-size: 10.5pt; line-height: 1.5; min-height: 0; }
