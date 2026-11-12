@@ -33,7 +33,12 @@ async function checkDirectory(directory) {
       assert.equal(canonicals[0][1], expected, `${path}: incorrect canonical`);
       canonicalPages.add(expected);
       assert.match(content, /<meta property="og:image" content="https:\/\/arverma\.dev\/[^"]+"/, `${path}: missing og:image`);
-      assert.match(content, /<meta name="twitter:card"/, `${path}: missing twitter:card`);
+      assert.match(content, /<meta name="twitter:card" content="summary_large_image"/, `${path}: twitter:card must be summary_large_image`);
+      assert.match(content, /<meta property="og:image:type" content="image\/png"/, `${path}: missing og:image:type`);
+      assert.match(content, /<meta property="og:image:width" content="1200"/, `${path}: og:image:width must be 1200`);
+      assert.match(content, /<meta property="og:image:height" content="630"/, `${path}: og:image:height must be 630`);
+      assert.match(content, /<meta property="og:image:alt" content="[^"]+"/, `${path}: missing og:image:alt`);
+      assert.match(content, /<meta name="twitter:image:alt" content="[^"]+"/, `${path}: missing twitter:image:alt`);
       for (const [, json] of content.matchAll(/<script type="application\/ld\+json">([^<]*)<\/script>/g)) {
         JSON.parse(json); // throws on invalid JSON-LD
         // Breadcrumb/list targets must be real indexable pages, not #fragments.
