@@ -212,6 +212,9 @@ a:hover { color: var(--ink); }
   color: var(--ink-2);
 }
 .hero-meta .icon { color: var(--accent-2); }
+/* Light theme: dark pills with yellow text and icons (yellow on #17171a is ~13:1). */
+[data-theme="light"] .hero-meta li { background: #17171a; border-color: #17171a; color: var(--brand); }
+[data-theme="light"] .hero-meta .icon { color: var(--brand); }
 .hero-bio {
   color: var(--ink-2);
   font-size: 1rem;
