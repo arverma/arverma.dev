@@ -430,13 +430,6 @@ a:hover { color: var(--ink); }
   transition: color 0.15s, gap 0.15s;
 }
 .writing-all:hover { color: var(--ink); gap: 0.6rem; }
-.writing-all:hover, .writing-row:hover .writing-row-title {
-  text-decoration: underline;
-  text-decoration-color: var(--brand);
-  text-decoration-thickness: 0.45em;
-  text-underline-offset: -0.28em;
-  text-decoration-skip-ink: none;
-}
 .flip { transform: scaleX(-1); }
 
 /* ─── Footer ────────────────────────────────────── */
