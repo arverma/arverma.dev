@@ -64,17 +64,28 @@ body {
   min-height: 100vh;
   transition: background-color 0.25s ease, color 0.25s ease;
 }
-/* Light theme backdrop: a clear sky with soft clouds at the top that warms to cosmos pink and
-   a hint of meadow green at the foot of the page. Colour only, no image. The gradient is sized
-   to the whole document, so the sky stays at the top and the flowers sit at the bottom. */
-[data-theme="light"] body {
+/* Light theme backdrop: a clear sky with soft clouds at the top that warms to cosmos pink and a
+   hint of meadow green at the bottom of the screen. Colour only, no image. It lives on a
+   viewport-pinned layer, so it stays put while the page scrolls (a fixed layer rather than
+   background-attachment: fixed, which iOS Safari ignores). */
+[data-theme="light"] { background-color: #fcfcfe; }
+[data-theme="light"] body { background: transparent; }
+[data-theme="light"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
   background:
     radial-gradient(52rem 26rem at 10% -8%, rgba(255, 228, 150, 0.5), transparent 62%),
-    /* sky and soft cloud, pinned to the top */
-    linear-gradient(180deg, #c6e3fa 0%, #d9ecfb 22%, #eaf5fd 50%, rgba(246, 250, 254, 0) 100%) top / 100% 1150px no-repeat,
-    /* cosmos pink fading into meadow green, pinned to the bottom */
-    linear-gradient(180deg, rgba(253, 247, 251, 0) 0%, #fae7f2 38%, #f5d8e8 68%, #e3eed6 100%) bottom / 100% 1000px no-repeat,
-    #fcfcfe;
+    linear-gradient(180deg,
+      #c6e3fa 0%,
+      #d9ecfb 24%,
+      #eef6fd 46%,
+      #fbf8fc 64%,
+      #f9e4f0 82%,
+      #f1d6e6 92%,
+      #e3eed6 100%);
 }
 img { max-width: 100%; display: block; }
 ul { list-style: none; }
@@ -554,7 +565,8 @@ a:hover { color: var(--ink); }
 
 /* ─── Print ─────────────────────────────────────── */
 @media print {
-  [data-theme="light"] body { background: #fff; }
+  [data-theme="light"] { background-color: #fff; }
+  [data-theme="light"] body::before { display: none; }
   :root, [data-theme] {
     color-scheme: light;
     --bg: #fff; --bg-2: #fff; --bg-hover: transparent; --surface: #fff; --surface-2: #fff;
