@@ -221,7 +221,6 @@ a:hover { color: var(--ink); }
   color: var(--ink-2);
   font-size: 1rem;
   line-height: 1.75;
-  max-width: 560px;
   margin-bottom: 1.75rem;
 }
 .hero-bio a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
