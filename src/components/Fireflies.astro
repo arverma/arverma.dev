@@ -1,8 +1,9 @@
 ---
 // Dark theme only: three to six fireflies (jugnu) on one canvas, behaving like the butterfly does in
-// light mode. While the page scrolls they take off and wander the whole screen, flashing as they
-// go; shortly after scrolling stops each one settles on the top edge of a visible card, where it
-// keeps a slow, calm glow and the card picks up a faint aurora tint. Drawn with gradients and
+// light mode, but unhurried, as fireflies are. They float and weave around the screen, blinking
+// as they go; when scrolling stops, one of them (never more than one) drifts in and settles on
+// the top edge of a visible card, keeps a slow, calm glow, and tints the card faintly. The
+// others carry on floating. The next scroll sends it back up. Drawn with gradients and
 // canvas paths only. aria-hidden, no pointer events, off for reduced motion and print.
 ---
 
@@ -142,31 +143,33 @@
         );
     };
 
-    // Each firefly picks its own spot along a card edge, in pairs per card.
-    const assignPerches = (): boolean => {
+    // One firefly lands on the top edge of a visible card near where it already is, so nobody
+    // has to cross the screen. Everyone else keeps flying.
+    const assignPerch = (): boolean => {
       let boxes = visibleBoxes(PERCH_SELECTOR);
       if (!boxes.length) boxes = visibleBoxes(FALLBACK_SELECTOR);
       if (!boxes.length) return false;
-      const pool = [...boxes].sort(() => Math.random() - 0.5);
-      flies.forEach((f, i) => {
-        // Fireflies like company: they settle two to a card, so only a few cards glow at once.
-        const { box, r } = pool[Math.floor(i / 2) % pool.length];
-        const left = Math.max(r.left, 24) + 14;
-        const right = Math.min(r.right, w - 24) - 14;
-        const px = rand(left, Math.max(left, right));
-        f.tx = px;
-        f.ty = r.top - 4;
-        f.box = box;
-        f.rx = clamp(((px - r.left) / r.width) * 100, 8, 92);
-        f.state = "landing";
-      });
+      const flyers = flies.filter((f) => f.state === "flying");
+      if (!flyers.length) return true;
+      const f = flyers[Math.floor(Math.random() * flyers.length)];
+      const dist = (r: DOMRect) => Math.hypot((r.left + r.right) / 2 - f.x, r.top - f.y);
+      const nearest = [...boxes].sort((p, q) => dist(p.r) - dist(q.r)).slice(0, 2);
+      const { box, r } = nearest[Math.floor(Math.random() * nearest.length)];
+      const left = Math.max(r.left, 24) + 14;
+      const right = Math.min(r.right, w - 24) - 14;
+      const px = rand(left, Math.max(left, right));
+      f.tx = px;
+      f.ty = r.top - 4;
+      f.box = box;
+      f.rx = clamp(((px - r.left) / r.width) * 100, 8, 92);
+      f.state = "landing";
       return true;
     };
 
-    // After scrolling stops: land. If nothing suitable is on screen yet, keep drifting and look
+    // After scrolling stops: one lands. If nothing suitable is on screen yet, keep drifting and look
     // again shortly, rather than ever settling over running text.
     const settle = (tries: number) => {
-      if (!assignPerches() && tries < 6) settleTimer = window.setTimeout(() => settle(tries + 1), 700);
+      if (!assignPerch() && tries < 6) settleTimer = window.setTimeout(() => settle(tries + 1), 700);
     };
 
     const takeOff = () => {
@@ -175,8 +178,8 @@
           unmarkBox(f.state === "perched" ? f.box : null);
           f.state = "flying";
           f.box = null;
-          f.vy = -rand(30, 55); // a small push upward as it lifts off
-          f.vx = rand(-30, 30);
+          f.vy = -rand(12, 24); // a gentle lift as it leaves the edge
+          f.vx = rand(-12, 12);
           f.turnAt = 0;
         }
       }
@@ -199,9 +202,9 @@
       const next = Math.random() < 0.7 ? others[Math.floor(Math.random() * others.length)] : here;
       f.tx = 40 + ((next + Math.random()) / 3) * span;
       f.ty = rand(120, Math.max(200, h - 110));
-      f.turnAt = now + rand(1100, 2300);
-      // Fireflies are unhurried; wider screens get a little more speed so they can cross the page.
-      f.speed = rand(55, 105) * clamp(w / 900, 0.85, 1.5);
+      f.turnAt = now + rand(2000, 3800);
+      // Fireflies are unhurried: a slow float, a touch quicker on wide screens.
+      f.speed = rand(24, 46) * clamp(w / 900, 0.85, 1.3);
     };
 
     // ── Update ─────────────────────────────────────────────
@@ -210,7 +213,7 @@
       for (const f of flies) {
         let desiredVx = 0;
         let desiredVy = 0;
-        let accel = 2.2;
+        let accel = 1.3;
         if (f.state === "flying") {
           if (now > f.turnAt) nextWaypoint(f, now);
           const dx = f.tx - f.x;
@@ -219,9 +222,9 @@
           desiredVx = (dx / dist) * f.speed;
           desiredVy = (dy / dist) * f.speed;
           // Meandering lilt: a slow sideways weave plus a gentle bob, as they float rather than dash.
-          const weave = Math.sin(t * 1.3 + f.ph1) * 26;
+          const weave = Math.sin(t * 0.9 + f.ph1) * 12;
           desiredVx += (-dy / dist) * weave;
-          desiredVy += (dx / dist) * weave + Math.sin(t * 2.6 + f.ph2) * 20;
+          desiredVy += (dx / dist) * weave + Math.sin(t * 1.9 + f.ph2) * 9;
           f.x += f.vx * dt;
           f.y += f.vy * dt;
         } else if (f.state === "landing") {
@@ -229,11 +232,11 @@
           const dy = f.ty - f.y;
           const dist = Math.hypot(dx, dy) || 1;
           // Drift in, slowing as it nears, with a little hover-sway on the approach.
-          const sp = clamp(26 + dist * 1.1, 20, 150);
-          const sway = Math.sin(t * 3 + f.ph1) * 22 * Math.min(dist / 90, 1);
+          const sp = clamp(12 + dist * 0.9, 10, 95);
+          const sway = Math.sin(t * 2.2 + f.ph1) * 10 * Math.min(dist / 90, 1);
           desiredVx = (dx / dist) * sp + (-dy / dist) * sway;
           desiredVy = (dy / dist) * sp + (dx / dist) * sway;
-          accel = 3.2;
+          accel = 1.8;
           f.x += f.vx * dt;
           f.y += f.vy * dt;
           if (dist < 2) {
@@ -248,7 +251,7 @@
           f.vx += (desiredVx - f.vx) * Math.min(1, accel * dt);
           f.vy += (desiredVy - f.vy) * Math.min(1, accel * dt);
           if (Math.abs(f.vx) > 8) f.face = f.vx > 0 ? 1 : -1;
-          const tiltTarget = clamp((f.vy / 90) * f.face, -0.5, 0.5);
+          const tiltTarget = clamp((f.vy / 60) * f.face, -0.4, 0.4);
           f.tilt += (tiltTarget - f.tilt) * Math.min(1, 6 * dt);
         } else {
           f.tilt += (0 - f.tilt) * Math.min(1, 4 * dt);
