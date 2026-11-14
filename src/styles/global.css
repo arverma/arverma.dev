@@ -35,7 +35,7 @@
   --surface-2:  #ffffff;
   --ink:        #17171a;
   --ink-2:      #4a4a52;
-  --ink-3:      #686872;
+  --ink-3:      #5b5b65;
   --rule:       rgba(0, 0, 0, 0.1);
   /* #FFC700 is ~1.5:1 on this background: fill-only here, never text. */
   --btn-shadow: #17171a;
@@ -63,6 +63,18 @@ body {
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   transition: background-color 0.25s ease, color 0.25s ease;
+}
+/* Light theme backdrop: a clear sky with soft clouds at the top that warms to cosmos pink and
+   a hint of meadow green at the foot of the page. Colour only, no image. The gradient is sized
+   to the whole document, so the sky stays at the top and the flowers sit at the bottom. */
+[data-theme="light"] body {
+  background:
+    radial-gradient(52rem 26rem at 10% -8%, rgba(255, 228, 150, 0.5), transparent 62%),
+    /* sky and soft cloud, pinned to the top */
+    linear-gradient(180deg, #c6e3fa 0%, #d9ecfb 22%, #eaf5fd 50%, rgba(246, 250, 254, 0) 100%) top / 100% 1150px no-repeat,
+    /* cosmos pink fading into meadow green, pinned to the bottom */
+    linear-gradient(180deg, rgba(253, 247, 251, 0) 0%, #fae7f2 38%, #f5d8e8 68%, #e3eed6 100%) bottom / 100% 1000px no-repeat,
+    #fcfcfe;
 }
 img { max-width: 100%; display: block; }
 ul { list-style: none; }
@@ -542,6 +554,7 @@ a:hover { color: var(--ink); }
 
 /* ─── Print ─────────────────────────────────────── */
 @media print {
+  [data-theme="light"] body { background: #fff; }
   :root, [data-theme] {
     color-scheme: light;
     --bg: #fff; --bg-2: #fff; --bg-hover: transparent; --surface: #fff; --surface-2: #fff;
