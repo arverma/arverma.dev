@@ -184,7 +184,6 @@
     let vy = 0;
     let angle = 0; // tilt, degrees
     let face = 1; // 1 = facing right, -1 = facing left
-    let heading = rand(0, Math.PI * 2);
     let target: Perch = { x, y, box: null, rx: 50 };
     let mode: "perched" | "flying" | "landing" = "perched";
     let perchBox: HTMLElement | null = null;
@@ -233,23 +232,22 @@
       return { x: px, y: r.top - 19, box, rx: clamp(((px - r.left) / r.width) * 100, 8, 92) };
     };
 
-    // Next waypoint: a short hop in a loosely held direction, nudged back on screen.
+    // Next waypoint: somewhere across the whole viewport, favouring a different third of the
+    // width than the one it is in, so it roams the wide margins and not just the text column.
     const nextWaypoint = (now: number) => {
-      heading += rand(-1.4, 1.4);
-      const dist = rand(90, 240);
-      let tx = x + Math.cos(heading) * dist;
-      let ty = y + Math.sin(heading) * dist * 0.7;
-      if (tx < 40 || tx > innerWidth - 40) {
-        heading = Math.PI - heading;
-        tx = clamp(tx, 40, innerWidth - 40);
-      }
-      if (ty < 100 || ty > innerHeight - 70) {
-        heading = -heading;
-        ty = clamp(ty, 100, innerHeight - 70);
-      }
+      const w = innerWidth - 80;
+      const band = (px: number) => clamp(Math.floor(((px - 40) / w) * 3), 0, 2);
+      const here = band(x);
+      const choices = [0, 1, 2].filter((b) => b !== here);
+      const next = Math.random() < 0.75 ? choices[Math.floor(Math.random() * choices.length)] : here;
+      let tx = 40 + ((next + Math.random()) / 3) * w;
+      let ty = rand(110, Math.max(180, innerHeight - 80));
+      if (Math.hypot(tx - x, ty - y) < 140) ty = clamp(y + (y > innerHeight / 2 ? -1 : 1) * rand(140, 260), 110, innerHeight - 80);
       target = { x: tx, y: ty, box: null, rx: 50 };
-      turnAt = now + rand(550, 1300);
-      speedBase = rand(1.6, 3.4);
+      turnAt = now + rand(900, 1800);
+      // Wider screens, longer hops: fly a little faster so it can cross the page.
+      const scale = clamp(innerWidth / 900, 0.85, 1.7);
+      speedBase = rand(2.2, 4.2) * scale;
       if (now > nextGlide) {
         glideUntil = now + rand(260, 520);
         nextGlide = now + rand(1800, 3800);
