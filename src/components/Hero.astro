@@ -19,16 +19,23 @@ import Icon from "./Icon.astro";
     <li><Icon name="award" size={14} />B.Tech Gold Medalist · IIIT Manipur</li>
     <li><Icon name="graduation-cap" size={14} />MBA · IIM Bodh Gaya '27</li>
   </ul>
-  <p class="hero-bio">
-    7+ years building PB-scale data platforms for 100M+ users. Before QuillBot I worked on
-    payments data at Flipkart and built platforms for high-stakes clients at Sigmoid. Recently I
-    fixed a{" "}<a href={profile.aboutLinks.kafka} target="_blank" rel="noopener noreferrer">Kafka Connect rebalance<span class="sr-only"> (opens in new tab)</span></a>{" "}that
-    skipped 2.5 billion messages, repaired{" "}<a href={profile.aboutLinks.iceberg} target="_blank" rel="noopener noreferrer">corrupted Iceberg partitions<span class="sr-only"> (opens in new tab)</span></a>{" "}without
-    data loss, and{" "}<a href={profile.aboutLinks.opensearch} target="_blank" rel="noopener noreferrer">downscaled a production OpenSearch cluster<span class="sr-only"> (opens in new tab)</span></a>{" "}without
-    losing data. I write about these every week at Towards Data Engineering and mentor
-    engineers getting into the field.
-  </p>
-  <div class="hero-links">
+  <div class="hero-bio-wrap" id="hero-bio-wrap">
+    <p class="hero-bio" id="hero-bio">
+      7+ years building PB-scale data platforms for 100M+ users. Before QuillBot I worked on
+      payments data at Flipkart and built platforms for high-stakes clients at Sigmoid. Recently I
+      fixed a{" "}<a href={profile.aboutLinks.kafka} target="_blank" rel="noopener noreferrer">Kafka Connect rebalance<span class="sr-only"> (opens in new tab)</span></a>{" "}that
+      skipped 2.5 billion messages, repaired{" "}<a href={profile.aboutLinks.iceberg} target="_blank" rel="noopener noreferrer">corrupted Iceberg partitions<span class="sr-only"> (opens in new tab)</span></a>{" "}without
+      data loss, and{" "}<a href={profile.aboutLinks.opensearch} target="_blank" rel="noopener noreferrer">downscaled a production OpenSearch cluster<span class="sr-only"> (opens in new tab)</span></a>{" "}without
+      losing data. I write about these every week at Towards Data Engineering and mentor
+      engineers getting into the field.
+    </p>
+    <button type="button" class="bio-toggle" id="bio-toggle" aria-expanded="false" aria-controls="hero-bio">Read more</button>
+  </div>
+  <!-- Phones only: start collapsed. Runs before first paint so the full text never flashes. -->
+  <script is:inline>
+    if (matchMedia('(max-width: 640px)').matches) document.getElementById('hero-bio-wrap').dataset.bioState = 'collapsed';
+  </script>
+  <div class="hero-links hero-links--home">
     <button type="button" class="hero-link primary" data-resume-open aria-haspopup="dialog">
       <Icon name="file-text" size={15} />Resume<Icon name="app-window" size={13} class="hint" />
       <span class="sr-only">(opens a preview dialog)</span>
@@ -75,6 +82,39 @@ import Icon from "./Icon.astro";
     toast.classList.add('is-visible');
     setTimeout(() => toast.classList.remove('is-visible'), 2200);
   }));
+</script>
+
+<script>
+  const wrap = document.getElementById('hero-bio-wrap');
+  const bio = document.getElementById('hero-bio');
+  const toggle = document.getElementById('bio-toggle') as HTMLButtonElement | null;
+  const phone = window.matchMedia('(max-width: 640px)');
+  let expanded = false;
+
+  const apply = () => {
+    if (!wrap || !toggle) return;
+    if (!phone.matches) {
+      delete wrap.dataset.bioState; // desktop: always the full paragraph, no button
+      return;
+    }
+    wrap.dataset.bioState = expanded ? 'expanded' : 'collapsed';
+    toggle.setAttribute('aria-expanded', String(expanded));
+    toggle.textContent = expanded ? 'Read less' : 'Read more';
+  };
+
+  toggle?.addEventListener('click', () => {
+    expanded = !expanded;
+    apply();
+  });
+  // Keyboard users tabbing into a clipped link get the whole paragraph.
+  bio?.addEventListener('focusin', () => {
+    if (phone.matches && !expanded) {
+      expanded = true;
+      apply();
+    }
+  });
+  phone.addEventListener('change', apply);
+  apply();
 </script>
 
 <style is:global>
