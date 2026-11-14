@@ -1,0 +1,397 @@
+---
+// Decorative butterfly. While the page scrolls it flutters in loose, bobbing
+// curves with the odd glide; when scrolling stops it flares in, settles on the
+// top edge of a visible card and that card picks up a soft meadow tint.
+// Purely cosmetic: aria-hidden, no pointer events, off for reduced motion and print.
+// Drawn side-on facing right; JS mirrors it to face its direction of travel.
+---
+
+<div class="butterfly" id="butterfly" aria-hidden="true">
+  <svg class="butterfly__svg" id="butterfly-svg" viewBox="0 0 120 108" width="56" height="50" focusable="false">
+    <defs>
+      <radialGradient id="bf-fore" cx="0.92" cy="0.95" r="1.05">
+        <stop offset="0" stop-color="#fff0b0" />
+        <stop offset="0.3" stop-color="#ffd62e" />
+        <stop offset="0.75" stop-color="#f9b400" />
+        <stop offset="1" stop-color="#e08a00" />
+      </radialGradient>
+      <radialGradient id="bf-hind" cx="0.95" cy="0.08" r="1.1">
+        <stop offset="0" stop-color="#fff6cf" />
+        <stop offset="0.38" stop-color="#ffe27a" />
+        <stop offset="0.8" stop-color="#fbbd0a" />
+        <stop offset="1" stop-color="#e9960a" />
+      </radialGradient>
+      <linearGradient id="bf-far" x1="0" y1="1" x2="0.4" y2="0">
+        <stop offset="0" stop-color="#f7b500" />
+        <stop offset="1" stop-color="#ffe24d" />
+      </linearGradient>
+    </defs>
+
+    <!-- far wing, raised behind the body -->
+    <g class="bf-wing bf-wing--far">
+      <path class="bf-edge" fill="url(#bf-far)" d="M90 58 C93 40 99 22 107 10 C111 5 116 9 114 21 C111 38 101 52 93 62 Z" />
+      <path class="bf-vein" d="M91 58 C98 42 104 26 110 14 M92 60 C101 46 108 32 113 20" />
+    </g>
+
+    <!-- legs and abdomen -->
+    <g class="bf-legs">
+      <path d="M92 70 L99 78 L105 90 M91 72 L96 83 L97 94 M89 74 L91 86 L89 97" />
+    </g>
+    <ellipse class="bf-abdomen" cx="86" cy="76" rx="2.7" ry="10" transform="rotate(14 86 76)" />
+
+    <!-- near wings -->
+    <g class="bf-wing bf-wing--near">
+      <path class="bf-edge" fill="url(#bf-fore)" d="M88 60 C82 38 58 16 25 18 C14 19 9 29 14 41 C20 53 52 63 88 62 Z" />
+      <path class="bf-edge" fill="url(#bf-hind)" d="M88 62 C60 57 25 62 17 77 C12 90 22 99 34 100 C42 103 50 101 56 98 C72 94 84 78 88 62 Z" />
+      <path class="bf-vein" d="M87 60 C70 44 44 28 21 24 M87 60 C66 49 38 40 15 36 M87 61 C66 55 36 53 14 47 M87 62 C62 66 34 72 19 83 M87 63 C64 73 40 89 31 99 M87 63 C70 77 58 90 54 98" />
+    </g>
+
+    <!-- thorax, head, antennae -->
+    <ellipse class="bf-thorax" cx="91" cy="64" rx="4.6" ry="6.2" />
+    <circle class="bf-head" cx="96.5" cy="56.5" r="3.7" />
+    <circle class="bf-eye" cx="97.6" cy="55.6" r="1.5" />
+    <g class="bf-antennae">
+    <path class="bf-feeler" d="M98 53.5 C103 46 108 41 112.5 38 M100 54.5 C103 48 106 43 108.5 40.5" />
+    <circle class="bf-club" cx="112.8" cy="37.8" r="1.5" />
+    <circle class="bf-club" cx="108.7" cy="40.3" r="1.4" />
+    </g>
+  </svg>
+</div>
+
+<style is:global>
+  .butterfly {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 40;
+    width: 56px;
+    height: 50px;
+    margin: -25px 0 0 -28px; /* transform origin = centre of the wings */
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+    will-change: transform;
+  }
+  .butterfly.is-ready { opacity: 1; }
+  .butterfly__svg { display: block; overflow: visible; transition: transform 0.3s ease; filter: drop-shadow(0 1px 1px rgba(23, 23, 26, 0.18)); }
+
+  .bf-edge { stroke: #7a4a12; stroke-width: 1.1; stroke-linejoin: round; }
+  .bf-vein { fill: none; stroke: #b86f00; stroke-width: 0.6; stroke-linecap: round; opacity: 0.55; }
+  .bf-legs path { fill: none; stroke: #6b4a14; stroke-width: 0.8; stroke-linecap: round; stroke-linejoin: round; }
+  .bf-abdomen { fill: #f2c230; stroke: #7a4a12; stroke-width: 0.6; }
+  .bf-thorax { fill: #e9b520; stroke: #7a4a12; stroke-width: 0.6; }
+  .bf-head { fill: #f0c43a; stroke: #7a4a12; stroke-width: 0.6; }
+  .bf-eye { fill: #17171a; }
+  .bf-feeler { fill: none; stroke: #3b2412; stroke-width: 0.7; stroke-linecap: round; }
+  .bf-club { fill: #6b3f1d; }
+
+  /* Wings hinge at the body (88, 60). Near wings sweep up and down; the far wing counter-moves. */
+  .bf-wing { transform-box: view-box; transform-origin: 88px 60px; }
+  .bf-antennae { transform-box: view-box; transform-origin: 98px 54px; }
+
+  /* Flying: a wingbeat of ~3 per second, so it flaps unhurriedly like a real butterfly. */
+  .bf-wing--near { animation: bf-near 0.17s ease-in-out infinite alternate; }
+  .bf-wing--far { animation: bf-far 0.17s ease-in-out infinite alternate; }
+  @keyframes bf-near { from { transform: rotate(30deg); } to { transform: rotate(-16deg); } }
+  @keyframes bf-far { from { transform: rotate(-6deg); } to { transform: rotate(18deg); } }
+
+  /* Gliding: wings held open, no flapping. */
+  .butterfly.is-gliding .bf-wing--near { animation: none; transform: rotate(6deg); }
+  .butterfly.is-gliding .bf-wing--far { animation: none; transform: rotate(6deg); }
+
+  /* Landing flare: short, shallow, fast beats while it drops onto the perch. */
+  .butterfly.is-flaring .bf-wing--near { animation: bf-near-flare 0.11s ease-in-out infinite alternate; }
+  .butterfly.is-flaring .bf-wing--far { animation: bf-far-flare 0.11s ease-in-out infinite alternate; }
+  @keyframes bf-near-flare { from { transform: rotate(34deg); } to { transform: rotate(6deg); } }
+  @keyframes bf-far-flare { from { transform: rotate(-4deg); } to { transform: rotate(10deg); } }
+
+  /* Touchdown: wings sweep up and come together once, then idle. */
+  .butterfly.is-settling .bf-wing--near { animation: bf-near-settle 1s cubic-bezier(0.3, 0, 0.3, 1) forwards; }
+  .butterfly.is-settling .bf-wing--far { animation: bf-far-settle 1s cubic-bezier(0.3, 0, 0.3, 1) forwards; }
+  @keyframes bf-near-settle { 0% { transform: rotate(30deg); } 35% { transform: rotate(66deg); } 65% { transform: rotate(44deg); } 100% { transform: rotate(50deg); } }
+  @keyframes bf-far-settle { 0% { transform: rotate(-4deg); } 35% { transform: rotate(-10deg); } 100% { transform: rotate(-8deg); } }
+
+  /* Perched: wings up and together, an occasional slow open, and a twitch of the antennae. */
+  .butterfly.is-resting .bf-wing--near { animation: bf-near-rest 5s ease-in-out infinite; transform: rotate(50deg); }
+  .butterfly.is-resting .bf-wing--far { animation: bf-far-rest 5s ease-in-out infinite; transform: rotate(-8deg); }
+  .butterfly.is-resting .bf-antennae { animation: bf-twitch 3.7s ease-in-out infinite; }
+  @keyframes bf-near-rest {
+    0%, 60%, 100% { transform: rotate(50deg); }
+    68% { transform: rotate(38deg); }
+    76% { transform: rotate(52deg); }
+    86% { transform: rotate(30deg); }
+    96% { transform: rotate(50deg); }
+  }
+  @keyframes bf-far-rest {
+    0%, 60%, 100% { transform: rotate(-8deg); }
+    68% { transform: rotate(-2deg); }
+    76% { transform: rotate(-8deg); }
+    86% { transform: rotate(6deg); }
+    96% { transform: rotate(-8deg); }
+  }
+  @keyframes bf-twitch {
+    0%, 70%, 100% { transform: rotate(0deg); }
+    75% { transform: rotate(-7deg); }
+    80% { transform: rotate(4deg); }
+    85% { transform: rotate(0deg); }
+  }
+
+  /* The perch: a soft meadow tint (cosmos pink, lavender, cornflower blue) with a warm
+     glow at the spot where the butterfly sits. --bf-a fades it in and out. */
+  @property --bf-a { syntax: "<number>"; inherits: false; initial-value: 0; }
+  :is(.work-item, .project-card, .writing-row, .skill-group) {
+    --bf-a: 0;
+    --bf-max: 0.5; /* dark theme: keep the tint gentle */
+    transition: --bf-a 0.9s ease;
+  }
+  [data-theme="light"] :is(.work-item, .project-card, .writing-row, .skill-group) { --bf-max: 1; }
+  :is(.work-item, .project-card, .writing-row, .skill-group)[data-bf-perch] { --bf-a: 1; }
+  :is(.work-item, .project-card, .writing-row, .skill-group)[data-bf-perch],
+  :is(.work-item, .project-card, .writing-row, .skill-group)[data-bf-perch]:hover {
+    background-image:
+      radial-gradient(circle at var(--bf-x, 50%) 0%, rgb(255 190 120 / calc(var(--bf-a) * var(--bf-max) * 0.55)), transparent 60%),
+      linear-gradient(120deg,
+        rgb(247 184 222 / calc(var(--bf-a) * var(--bf-max) * 0.5)) 0%,
+        rgb(190 170 240 / calc(var(--bf-a) * var(--bf-max) * 0.42)) 52%,
+        rgb(150 185 245 / calc(var(--bf-a) * var(--bf-max) * 0.42)) 100%);
+  }
+
+  @media (prefers-reduced-motion: reduce) { .butterfly { display: none; } }
+  @media print {
+    .butterfly { display: none; }
+    [data-bf-perch] { background-image: none !important; }
+  }
+</style>
+
+<script>
+  const el = document.getElementById("butterfly") as HTMLElement | null;
+  const svg = document.getElementById("butterfly-svg") as unknown as SVGElement | null;
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+  if (el && svg && !reduce.matches) {
+    // Only boxes that can take the tint.
+    const PERCH_SELECTOR = ".work-item, .project-card, .writing-row, .skill-group";
+    const REST_DELAY = 450; // ms after the last scroll event before landing
+    const BOB = (2 * Math.PI) / 340; // matches the wingbeat period
+    const rand = (a: number, b: number) => a + Math.random() * (b - a);
+    const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+
+    type Perch = { x: number; y: number; box: HTMLElement | null; rx: number };
+
+    let x = rand(80, innerWidth - 80);
+    let y = -40;
+    let vx = 0;
+    let vy = 0;
+    let angle = 0; // tilt, degrees
+    let face = 1; // 1 = facing right, -1 = facing left
+    let heading = rand(0, Math.PI * 2);
+    let target: Perch = { x, y, box: null, rx: 50 };
+    let mode: "perched" | "flying" | "landing" = "perched";
+    let perchBox: HTMLElement | null = null;
+    let raf = 0;
+    let restTimer = 0;
+    let settleTimer = 0;
+    let turnAt = 0;
+    let glideUntil = 0;
+    let nextGlide = 0;
+    let speedBase = 2.6;
+    let t0 = performance.now();
+
+    const render = (bob = 0) => {
+      el.style.transform = `translate3d(${x}px, ${y + bob}px, 0) rotate(${angle}deg)`;
+      svg.style.transform = `scaleX(${face})`;
+    };
+
+    const setState = (s: "flying" | "gliding" | "flaring" | "settling" | "resting" | "") => {
+      for (const c of ["is-gliding", "is-flaring", "is-settling", "is-resting"]) el.classList.remove(c);
+      if (s && s !== "flying") el.classList.add(`is-${s}`);
+    };
+
+    const leaveBox = () => {
+      perchBox?.removeAttribute("data-bf-perch");
+      perchBox = null;
+    };
+
+    // A point on the top edge of a visible box, so its feet touch the border.
+    const pickPerch = (): Perch => {
+      const margin = 24;
+      const boxes = [...document.querySelectorAll<HTMLElement>(PERCH_SELECTOR)]
+        .map((box) => ({ box, r: box.getBoundingClientRect() }))
+        .filter(
+          ({ r }) =>
+            r.width > 80 &&
+            r.top > margin + 80 && // clear of the sticky nav, with room for raised wings
+            r.top < innerHeight - 96 && // clear of the bottom dock on phones
+            r.left < innerWidth - margin &&
+            r.right > margin,
+        );
+      if (!boxes.length) return { x: rand(40, innerWidth - 40), y: rand(140, innerHeight - 110), box: null, rx: 50 };
+      const { box, r } = boxes[Math.floor(Math.random() * boxes.length)];
+      const left = Math.max(r.left, margin) + 18;
+      const right = Math.min(r.right, innerWidth - margin) - 18;
+      const px = rand(left, Math.max(left, right));
+      return { x: px, y: r.top - 19, box, rx: clamp(((px - r.left) / r.width) * 100, 8, 92) };
+    };
+
+    // Next waypoint: a short hop in a loosely held direction, nudged back on screen.
+    const nextWaypoint = (now: number) => {
+      heading += rand(-1.4, 1.4);
+      const dist = rand(90, 240);
+      let tx = x + Math.cos(heading) * dist;
+      let ty = y + Math.sin(heading) * dist * 0.7;
+      if (tx < 40 || tx > innerWidth - 40) {
+        heading = Math.PI - heading;
+        tx = clamp(tx, 40, innerWidth - 40);
+      }
+      if (ty < 100 || ty > innerHeight - 70) {
+        heading = -heading;
+        ty = clamp(ty, 100, innerHeight - 70);
+      }
+      target = { x: tx, y: ty, box: null, rx: 50 };
+      turnAt = now + rand(550, 1300);
+      speedBase = rand(1.6, 3.4);
+      if (now > nextGlide) {
+        glideUntil = now + rand(260, 520);
+        nextGlide = now + rand(1800, 3800);
+      }
+    };
+
+    const step = (now: number) => {
+      const dt = Math.min((now - t0) / 16.67, 3);
+      t0 = now;
+      let bob = 0;
+
+      if (mode === "flying") {
+        if (now > turnAt) nextWaypoint(now);
+        const gliding = now < glideUntil;
+        if (gliding !== el.classList.contains("is-gliding")) setState(gliding ? "gliding" : "flying");
+        // Wingbeats lift it: it rises on each downstroke and sinks between them.
+        bob = gliding ? 0 : Math.sin(now * BOB) * 3.2;
+      }
+
+      const dx = target.x - x;
+      const dy = target.y - y;
+      const dist = Math.hypot(dx, dy) || 1;
+
+      let speed = speedBase;
+      if (mode === "landing") {
+        // Fast far out, a long slow flare at the end.
+        speed = clamp(0.5 + dist * 0.055, 0.5, 4.2);
+        if (dist < 70 && !el.classList.contains("is-flaring")) setState("flaring");
+        bob = dist < 70 ? Math.sin(now * BOB * 1.6) * Math.min(dist / 20, 2.2) : Math.sin(now * BOB) * 2.4;
+      } else if (el.classList.contains("is-gliding")) {
+        speed *= 0.8;
+      }
+
+      // Steer with inertia; a sideways drift makes the path loop and sway.
+      const sway = mode === "landing" ? Math.sin(now / 230) * Math.min(dist / 90, 1.1) : Math.sin(now / 310) * 1.0;
+      const nx = (dx / dist) * speed - (dy / dist) * sway;
+      const ny = (dy / dist) * speed + (dx / dist) * sway;
+      const accel = mode === "landing" ? 0.1 : 0.06;
+      vx += (nx - vx) * accel * dt;
+      vy += (ny - vy) * accel * dt;
+      x += vx * dt;
+      y += vy * dt;
+
+      // Face the way it travels, tilting the nose with vertical motion (and upright when flaring).
+      if (Math.abs(vx) > 0.7) face = vx > 0 ? 1 : -1;
+      const tilt = mode === "landing" && dist < 70 ? 0 : clamp(vy * 5, -24, 24) * face;
+      angle += (tilt - angle) * 0.12 * dt;
+
+      if (mode === "landing" && dist < 2.2) {
+        mode = "perched";
+        vx = vy = 0;
+        x = target.x;
+        y = target.y;
+        angle = rand(-4, 4);
+        render();
+        raf = 0;
+        // Wings sweep up and close, the box takes its tint, then it idles.
+        setState("settling");
+        perchBox = target.box;
+        if (perchBox) {
+          perchBox.style.setProperty("--bf-x", `${target.rx}%`);
+          perchBox.setAttribute("data-bf-perch", "");
+        }
+        clearTimeout(settleTimer);
+        settleTimer = window.setTimeout(() => {
+          if (mode === "perched") setState("resting");
+        }, 1000);
+        return;
+      }
+      render(bob);
+      raf = requestAnimationFrame(step);
+    };
+
+    const run = () => {
+      if (!raf) {
+        t0 = performance.now();
+        raf = requestAnimationFrame(step);
+      }
+    };
+
+    const takeOff = () => {
+      mode = "flying";
+      clearTimeout(settleTimer);
+      leaveBox();
+      setState("flying");
+      // A little hop as it pushes off the edge.
+      vy = -3.2;
+      vx = rand(-1.5, 1.5);
+      nextGlide = performance.now() + rand(900, 2200);
+      glideUntil = 0;
+      nextWaypoint(performance.now());
+      run();
+    };
+
+    const onScroll = () => {
+      if (mode !== "flying") takeOff();
+      clearTimeout(restTimer);
+      restTimer = window.setTimeout(() => {
+        mode = "landing";
+        target = pickPerch();
+        setState("flying");
+        run();
+      }, REST_DELAY);
+    };
+
+    // Entrance: fade in already perched on something visible once the page has settled.
+    const start = () => {
+      const p = pickPerch();
+      x = p.x;
+      y = p.y;
+      angle = rand(-4, 4);
+      face = Math.random() < 0.5 ? 1 : -1;
+      setState("resting");
+      perchBox = p.box;
+      if (perchBox) {
+        perchBox.style.setProperty("--bf-x", `${p.rx}%`);
+        perchBox.setAttribute("data-bf-perch", "");
+      }
+      render();
+      el.classList.add("is-ready");
+    };
+
+    addEventListener("scroll", onScroll, { passive: true });
+    addEventListener("resize", () => {
+      if (mode === "perched") {
+        leaveBox();
+        mode = "landing";
+        target = pickPerch();
+        setState("flying");
+        run();
+      }
+    });
+    reduce.addEventListener("change", () => {
+      if (reduce.matches) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+        clearTimeout(restTimer);
+        clearTimeout(settleTimer);
+        leaveBox();
+      }
+    });
+    if (document.readyState === "complete") start();
+    else addEventListener("load", start, { once: true });
+  }
+</script>
