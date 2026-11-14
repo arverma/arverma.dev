@@ -79,7 +79,7 @@ const structuredData = jsonLd
       (function() {
         let saved = null;
         try { saved = localStorage.getItem('theme'); } catch {}
-        document.documentElement.setAttribute('data-theme', saved || (matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'));
+        document.documentElement.setAttribute('data-theme', saved === 'light' ? 'light' : 'dark');
         if ('IntersectionObserver' in window && !matchMedia('(prefers-reduced-motion: reduce)').matches) document.documentElement.classList.add('js');
       })();
     </script>
