@@ -171,6 +171,8 @@
   if (el && svg && !reduce.matches) {
     // Only boxes that can take the tint.
     const PERCH_SELECTOR = ".work-item, .project-card, .writing-row, .skill-group";
+    // When no card is on screen (top of the page) it may sit on a button, never on body text.
+    const FALLBACK_SELECTOR = ".hero-link";
     const REST_DELAY = 450; // ms after the last scroll event before landing
     const BOB = (2 * Math.PI) / 340; // matches the wingbeat period
     const rand = (a: number, b: number) => a + Math.random() * (b - a);
@@ -212,9 +214,9 @@
     };
 
     // A point on the top edge of a visible box, so its feet touch the border.
-    const pickPerch = (): Perch => {
+    const visibleBoxes = (selector: string) => {
       const margin = 24;
-      const boxes = [...document.querySelectorAll<HTMLElement>(PERCH_SELECTOR)]
+      return [...document.querySelectorAll<HTMLElement>(selector)]
         .map((box) => ({ box, r: box.getBoundingClientRect() }))
         .filter(
           ({ r }) =>
@@ -224,7 +226,20 @@
             r.left < innerWidth - margin &&
             r.right > margin,
         );
-      if (!boxes.length) return { x: rand(40, innerWidth - 40), y: rand(140, innerHeight - 110), box: null, rx: 50 };
+    };
+
+    // A point on the top edge of a visible box, so its feet touch the border. Returns null when
+    // nothing suitable is on screen (so it never lands over running text), unless a fallback
+    // spot is explicitly allowed.
+    const pickPerch = (allowAnywhere = false): Perch | null => {
+      const margin = 24;
+      let boxes = visibleBoxes(PERCH_SELECTOR);
+      if (!boxes.length) boxes = visibleBoxes(FALLBACK_SELECTOR);
+      if (!boxes.length) {
+        return allowAnywhere
+          ? { x: rand(40, innerWidth - 40), y: rand(140, innerHeight - 110), box: null, rx: 50 }
+          : null;
+      }
       const { box, r } = boxes[Math.floor(Math.random() * boxes.length)];
       const left = Math.max(r.left, margin) + 18;
       const right = Math.min(r.right, innerWidth - margin) - 18;
@@ -329,6 +344,14 @@
     };
 
     const takeOff = () => {
+      if (!el.classList.contains("is-ready")) {
+        // Never had a safe spot to start on: fly in from a side edge on the first scroll.
+        x = Math.random() < 0.5 ? -30 : innerWidth + 30;
+        y = rand(140, Math.max(200, innerHeight - 140));
+        face = x < 0 ? 1 : -1;
+        render();
+        el.classList.add("is-ready");
+      }
       mode = "flying";
       clearTimeout(settleTimer);
       leaveBox();
@@ -342,20 +365,30 @@
       run();
     };
 
+    // Land on a safe spot. If none is on screen yet keep flying and look again shortly;
+    // after a few tries any spot will do rather than circling forever.
+    const land = (tries: number) => {
+      const p = pickPerch(tries >= 4);
+      if (!p) {
+        restTimer = window.setTimeout(() => land(tries + 1), 700);
+        return;
+      }
+      mode = "landing";
+      target = p;
+      setState("flying");
+      run();
+    };
+
     const onScroll = () => {
       if (mode !== "flying") takeOff();
       clearTimeout(restTimer);
-      restTimer = window.setTimeout(() => {
-        mode = "landing";
-        target = pickPerch();
-        setState("flying");
-        run();
-      }, REST_DELAY);
+      restTimer = window.setTimeout(() => land(0), REST_DELAY);
     };
 
     // Entrance: fade in already perched on something visible once the page has settled.
     const start = () => {
       const p = pickPerch();
+      if (!p) return; // stays hidden until the first scroll gives it a safe place to land
       x = p.x;
       y = p.y;
       angle = rand(-4, 4);
@@ -372,12 +405,9 @@
 
     addEventListener("scroll", onScroll, { passive: true });
     addEventListener("resize", () => {
-      if (mode === "perched") {
+      if (mode === "perched" && el.classList.contains("is-ready")) {
         leaveBox();
-        mode = "landing";
-        target = pickPerch();
-        setState("flying");
-        run();
+        land(0);
       }
     });
     reduce.addEventListener("change", () => {
