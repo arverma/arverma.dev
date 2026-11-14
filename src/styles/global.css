@@ -577,9 +577,24 @@ a:hover { color: var(--ink); }
   .work-list { gap: 0.5rem; }
   .project-grid, .skill-groups { gap: 0.6rem; }
   .hero { padding-block: 2.5rem 2.25rem; }
-  .hero-top { gap: 1rem; margin-bottom: 0.75rem; }
-  .hero-avatar { width: 4rem; height: 4rem; box-shadow: 0 0 0 3px var(--brand), var(--shadow); }
-  .hero-name { font-size: 1.55rem; }
+  /* Tagline first, full width; then the photo with the name and designation to its right. */
+  .hero-top {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "hook hook"
+      "avatar name"
+      "avatar role";
+    column-gap: 1rem;
+    row-gap: 0;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .hero-top > div { display: contents; } /* lets the h1, hook and role join the grid */
+  .hero-hook { grid-area: hook; margin-bottom: 1.1rem; }
+  .hero-avatar { grid-area: avatar; width: 4rem; height: 4rem; box-shadow: 0 0 0 3px var(--brand), var(--shadow); }
+  .hero-name { grid-area: name; align-self: end; font-size: 1.55rem; margin-bottom: 0.2rem; }
+  .hero-role { grid-area: role; align-self: start; }
   .hero-meta { margin-bottom: 1.5rem; }
 
   /* Bio collapses to three lines (state is set by Hero.astro; no JS means it stays open). */
