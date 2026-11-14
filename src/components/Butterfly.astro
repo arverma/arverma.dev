@@ -142,19 +142,33 @@
   :is(.work-item, .project-card, .writing-row, .skill-group) {
     --bf-a: 0;
     --bf-max: 0.5; /* dark theme: keep the tint gentle */
+    /* dark theme: aurora green, teal and violet with a firefly-yellow glow */
+    --bf-c1: 60 220 150;
+    --bf-c2: 60 190 220;
+    --bf-c3: 150 110 240;
+    --bf-g: 215 255 120;
     transition: --bf-a 0.9s ease;
   }
-  [data-theme="light"] :is(.work-item, .project-card, .writing-row, .skill-group) { --bf-max: 1; }
+  [data-theme="light"] :is(.work-item, .project-card, .writing-row, .skill-group) {
+    --bf-max: 1;
+    --bf-c1: 247 184 222; /* cosmos pink, lavender, cornflower, warm glow */
+    --bf-c2: 190 170 240;
+    --bf-c3: 150 185 245;
+    --bf-g: 255 190 120;
+  }
   :is(.work-item, .project-card, .writing-row, .skill-group)[data-bf-perch] { --bf-a: 1; }
   :is(.work-item, .project-card, .writing-row, .skill-group)[data-bf-perch],
   :is(.work-item, .project-card, .writing-row, .skill-group)[data-bf-perch]:hover {
     background-image:
-      radial-gradient(circle at var(--bf-x, 50%) 0%, rgb(255 190 120 / calc(var(--bf-a) * var(--bf-max) * 0.55)), transparent 60%),
+      radial-gradient(circle at var(--bf-x, 50%) 0%, rgb(var(--bf-g) / calc(var(--bf-a) * var(--bf-max) * 0.55)), transparent 60%),
       linear-gradient(120deg,
-        rgb(247 184 222 / calc(var(--bf-a) * var(--bf-max) * 0.5)) 0%,
-        rgb(190 170 240 / calc(var(--bf-a) * var(--bf-max) * 0.42)) 52%,
-        rgb(150 185 245 / calc(var(--bf-a) * var(--bf-max) * 0.42)) 100%);
+        rgb(var(--bf-c1) / calc(var(--bf-a) * var(--bf-max) * 0.5)) 0%,
+        rgb(var(--bf-c2) / calc(var(--bf-a) * var(--bf-max) * 0.42)) 52%,
+        rgb(var(--bf-c3) / calc(var(--bf-a) * var(--bf-max) * 0.42)) 100%);
   }
+
+  /* The butterfly belongs to the light theme; the dark theme has fireflies instead. */
+  [data-theme="dark"] .butterfly { display: none; }
 
   @media (prefers-reduced-motion: reduce) { .butterfly { display: none; } }
   @media print {
@@ -176,6 +190,7 @@
     const REST_DELAY = 450; // ms after the last scroll event before landing
     const BOB = (2 * Math.PI) / 340; // matches the wingbeat period
     const rand = (a: number, b: number) => a + Math.random() * (b - a);
+    const isLight = () => document.documentElement.dataset.theme === "light";
     const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
     type Perch = { x: number; y: number; box: HTMLElement | null; rx: number };
@@ -380,6 +395,7 @@
     };
 
     const onScroll = () => {
+      if (!isLight()) return;
       if (mode !== "flying") takeOff();
       clearTimeout(restTimer);
       restTimer = window.setTimeout(() => land(0), REST_DELAY);
@@ -387,6 +403,7 @@
 
     // Entrance: fade in already perched on something visible once the page has settled.
     const start = () => {
+      if (!isLight()) return;
       const p = pickPerch();
       if (!p) return; // stays hidden until the first scroll gives it a safe place to land
       x = p.x;
@@ -419,6 +436,20 @@
         leaveBox();
       }
     });
+    // Follow the theme toggle: stand down in dark mode (fireflies take over), return in light.
+    new MutationObserver(() => {
+      if (isLight()) {
+        if (!el.classList.contains("is-ready")) start();
+      } else {
+        cancelAnimationFrame(raf);
+        raf = 0;
+        clearTimeout(restTimer);
+        clearTimeout(settleTimer);
+        leaveBox();
+        mode = "perched";
+        el.classList.remove("is-ready");
+      }
+    }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
     if (document.readyState === "complete") start();
     else addEventListener("load", start, { once: true });
   }
