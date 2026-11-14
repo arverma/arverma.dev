@@ -223,7 +223,7 @@ a:hover { color: var(--ink); }
   line-height: 1.75;
   margin-bottom: 2.5rem;
 }
-@media (min-width: 641px) { .hero-bio { font-size: 0.875rem; line-height: 1.75; } }
+@media (min-width: 641px) { .hero-bio { font-size: 0.875rem; line-height: 1.75; text-align: justify; } }
 .hero-bio a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 .hero-bio a:hover { color: var(--accent); }
 .hero-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
