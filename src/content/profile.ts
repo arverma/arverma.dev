@@ -126,7 +126,7 @@ export const profile = {
       icon: "wifi",
       description:
         "One click wakes a stuck Wi-Fi connection on Airtel, Jio, JioFiber or any broadband when you see no internet.",
-      blurb: "For the days the Wi-Fi shows full bars and nothing loads.",
+      blurb: "I got tired of rebooting the router to fix a connection that said it was fine.",
       url: "https://chromewebstore.google.com/detail/wifi-hammer-fix-airteljio/dbphaafiokokiaocpcnfakompafjoddj",
     },
     {
