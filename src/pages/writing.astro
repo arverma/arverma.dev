@@ -7,9 +7,41 @@ import { getPosts } from "../lib/medium";
 const posts = await getPosts();
 const title = `Writing on Data Engineering by ${profile.name}`;
 const description = `Articles by ${profile.name} on data engineering, data platforms, Apache Iceberg and building developer tools, published on Medium and Towards Data Engineering.`;
+
+const pageUrl = "https://arverma.dev/writing/";
+const person = { "@type": "Person", name: profile.name, url: "https://arverma.dev/" };
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "CollectionPage",
+    name: title,
+    description,
+    url: pageUrl,
+    isPartOf: { "@type": "WebSite", name: profile.name, url: "https://arverma.dev/" },
+    author: person,
+    mainEntity: {
+      "@type": "ItemList",
+      numberOfItems: posts.length,
+      itemListElement: posts.map((post, i) => ({
+        "@type": "ListItem",
+        position: i + 1,
+        name: post.title,
+        url: post.url,
+      })),
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://arverma.dev/" },
+      { "@type": "ListItem", position: 2, name: "Writing", item: pageUrl },
+    ],
+  },
+];
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <section class="section" id="writing">
     <h1 class="section-label"><Icon name="pen-line" size={14} />Writing</h1>
     <ul class="writing-list">
