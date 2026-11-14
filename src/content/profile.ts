@@ -1,3 +1,5 @@
+const MEDIUM_URL = "https://amanranjanverma.medium.com/";
+
 export const profile = {
   name: "Aman Ranjan Verma",
   email: "aman.ranjanverma@gmail.com",
@@ -5,7 +7,7 @@ export const profile = {
     github: "https://github.com/arverma",
     githubRepos: "https://github.com/arverma?tab=repositories",
     linkedin: "https://www.linkedin.com/in/ar-verma/",
-    medium: "https://amanranjanverma.medium.com/",
+    medium: MEDIUM_URL,
   },
 
   work: [
@@ -32,6 +34,7 @@ export const profile = {
       company: "Towards Data Engineering",
       roles: ["Editor-in-Chief"],
       team: "Publication & community",
+      link: { label: "Medium", href: MEDIUM_URL },
       period: "2020 — Present",
     },
   ],

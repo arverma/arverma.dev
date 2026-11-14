@@ -320,6 +320,7 @@ a:hover { color: var(--ink); }
 .work-role-name.is-current { color: var(--accent); font-weight: 550; }
 .work-promo { color: var(--ink-3); }
 .work-team { display: flex; align-items: center; gap: 0.4rem; font-size: 0.75rem; color: var(--ink-3); margin-top: 0.2rem; }
+.work-link { min-height: 0; margin-top: 0.4rem; }
 .work-clients { display: flex; flex-wrap: wrap; gap: 0.3rem; margin-top: 0.5rem; }
 .work-clients li { font-family: var(--mono); font-size: 0.68rem; padding: 0.1rem 0.5rem; border: 1px solid var(--rule); border-radius: 999px; color: var(--ink-2); }
 .work-period {

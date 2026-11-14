@@ -26,6 +26,12 @@ const companyIcons: Record<string, IconName> = {
             ))}
           </div>
           <div class="work-team"><Icon name="users" size={12} />{job.team}</div>
+          {"link" in job && (
+            <a class="writing-all work-link" href={job.link.href} target="_blank" rel="noopener noreferrer">
+              <Icon name="pen-line" size={13} />{job.link.label}<Icon name="arrow-up-right" size={13} />
+              <span class="sr-only">(opens in new tab)</span>
+            </a>
+          )}
           {"clients" in job && (
             <ul class="work-clients" aria-label="Clients worked with">
               {job.clients.map((c) => <li>{c}</li>)}
