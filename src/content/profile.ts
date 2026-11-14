@@ -185,5 +185,3 @@ export const profile = {
     },
   ],
 } as const;
-
-export type Profile = typeof profile;
