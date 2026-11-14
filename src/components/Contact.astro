@@ -1,0 +1,22 @@
+---
+import { profile } from "../content/profile";
+import Icon from "./Icon.astro";
+---
+
+<section class="section contact" id="contact" aria-labelledby="contact-title">
+  <h2 class="contact-title" id="contact-title">Building something with data? Let's talk.</h2>
+  <div class="hero-links">
+    <button type="button" class="hero-link" data-copy-email data-email={profile.email}>
+      <Icon name="mail" size={15} />Email<Icon name="copy" size={13} class="hint" />
+      <span class="sr-only">(copies address to clipboard)</span>
+    </button>
+    <a class="hero-link" href={profile.links.linkedin} target="_blank" rel="noopener noreferrer">
+      <Icon name="linkedin" size={15} />LinkedIn<Icon name="arrow-up-right" size={13} class="hint" />
+      <span class="sr-only">(opens in new tab)</span>
+    </a>
+    <a class="hero-link" href="https://tde.arverma.dev" target="_blank" rel="noopener noreferrer">
+      <Icon name="book-open" size={15} />Towards Data Engineering<Icon name="arrow-up-right" size={13} class="hint" />
+      <span class="sr-only">(opens in new tab)</span>
+    </a>
+  </div>
+</section>

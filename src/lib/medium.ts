@@ -3,6 +3,12 @@ import { profile } from "../content/profile";
 
 export type Post = { title: string; url: string };
 
+/** Drop query/hash (e.g. Medium's ?source=rss tracking) so URLs compare and link cleanly. */
+export function normalizeUrl(url: string): string {
+  const u = new URL(url);
+  return u.origin + u.pathname;
+}
+
 const fallback: Post[] = profile.writing.map((p) => ({ title: p.title, url: p.url }));
 
 let cached: Promise<Post[]> | undefined;
