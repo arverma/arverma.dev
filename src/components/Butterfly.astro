@@ -1,5 +1,8 @@
 ---
-// Decorative butterfly. While the page scrolls it flutters in loose, bobbing
+// Decorative butterflies (light theme): a golden male and a calmer, translucent pink female.
+// Scrolling gives them momentum; when it runs out they ease down onto the edge of a visible card,
+// which picks up a soft meadow tint. Only one sits at a time, the other keeps floating nearby.
+// (Original note:) While the page scrolls it flutters in loose, bobbing
 // curves with the odd glide; when scrolling stops it flares in, settles on the
 // top edge of a visible card and that card picks up a soft meadow tint.
 // Purely cosmetic: aria-hidden, no pointer events, off for reduced motion and print.
@@ -58,6 +61,50 @@
   </svg>
 </div>
 
+<div class="butterfly butterfly--she" id="butterfly-she" aria-hidden="true">
+  <svg class="butterfly__svg" id="butterfly-she-svg" viewBox="0 0 120 108" width="56" height="50" focusable="false">
+    <defs>
+      <linearGradient id="bf2-fore" x1="0.95" y1="0.9" x2="0.1" y2="0.1">
+        <stop offset="0" stop-color="#ffeee6" stop-opacity="0.8" />
+        <stop offset="0.5" stop-color="#fbcbc5" stop-opacity="0.66" />
+        <stop offset="1" stop-color="#f1a0a9" stop-opacity="0.56" />
+      </linearGradient>
+      <linearGradient id="bf2-hind" x1="0.95" y1="0.1" x2="0.15" y2="0.95">
+        <stop offset="0" stop-color="#fff3ec" stop-opacity="0.82" />
+        <stop offset="0.55" stop-color="#fdd9cf" stop-opacity="0.62" />
+        <stop offset="1" stop-color="#f4b0b3" stop-opacity="0.5" />
+      </linearGradient>
+      <linearGradient id="bf2-far" x1="0" y1="1" x2="0.4" y2="0">
+        <stop offset="0" stop-color="#f4b3b6" stop-opacity="0.55" />
+        <stop offset="1" stop-color="#ffe3da" stop-opacity="0.7" />
+      </linearGradient>
+    </defs>
+
+    <g class="bf-wing bf-wing--far">
+      <path class="bf2-edge" fill="url(#bf2-far)" d="M90 58 C94 38 100 20 108 9 C113 4 118 9 115 22 C112 39 101 53 93 62 Z" />
+      <path class="bf2-vein" d="M91 58 C98 42 104 26 110 13 M92 61 C101 47 108 33 113 21" />
+    </g>
+
+    <g class="bf2-legs"><path d="M92 70 L99 78 L104 89 M90 73 L95 83 L96 93" /></g>
+    <ellipse class="bf2-abdomen" cx="86" cy="76" rx="2.1" ry="10.5" transform="rotate(14 86 76)" />
+
+    <g class="bf-wing bf-wing--near">
+      <path class="bf2-edge" fill="url(#bf2-fore)" d="M88 60 C83 35 60 10 28 12 C14 13 8 26 13 40 C20 55 55 64 88 62 Z" />
+      <path class="bf2-edge" fill="url(#bf2-hind)" d="M88 62 C58 58 24 63 17 79 C13 92 24 101 38 100 C48 100 56 98 62 93 C76 88 85 76 88 62 Z" />
+      <path class="bf2-vein" d="M87 60 C70 43 46 25 24 17 M87 60 C68 47 40 36 15 30 M87 61 C68 54 38 49 14 42 M87 61 C70 57 44 56 20 52 M87 62 C62 66 34 73 19 84 M87 63 C65 74 42 90 32 99 M87 63 C70 77 58 90 52 98 M87 62 C75 70 62 82 56 92" />
+    </g>
+
+    <ellipse class="bf2-thorax" cx="91" cy="64" rx="3.8" ry="5.6" />
+    <circle class="bf2-head" cx="96" cy="57" r="3" />
+    <circle class="bf2-eye" cx="97" cy="56.2" r="1.1" />
+    <g class="bf-antennae">
+      <path class="bf2-feeler" d="M97.5 54 C102 47 107 42 111.5 39 M99.5 55 C103 49 106 44 108 41.5" />
+      <circle class="bf2-club" cx="111.8" cy="38.8" r="1.1" />
+      <circle class="bf2-club" cx="108.2" cy="41.2" r="1" />
+    </g>
+  </svg>
+</div>
+
 <style is:global>
   .butterfly {
     position: fixed;
@@ -90,8 +137,8 @@
   .bf-antennae { transform-box: view-box; transform-origin: 98px 54px; }
 
   /* Flying: a wingbeat of ~3 per second, so it flaps unhurriedly like a real butterfly. */
-  .bf-wing--near { animation: bf-near 0.17s ease-in-out infinite alternate; }
-  .bf-wing--far { animation: bf-far 0.17s ease-in-out infinite alternate; }
+  .bf-wing--near { animation: bf-near calc(0.17s * var(--bf-slow, 1)) ease-in-out infinite alternate; }
+  .bf-wing--far { animation: bf-far calc(0.17s * var(--bf-slow, 1)) ease-in-out infinite alternate; }
   @keyframes bf-near { from { transform: rotate(30deg); } to { transform: rotate(-16deg); } }
   @keyframes bf-far { from { transform: rotate(-6deg); } to { transform: rotate(18deg); } }
 
@@ -100,20 +147,20 @@
   .butterfly.is-gliding .bf-wing--far { animation: none; transform: rotate(6deg); }
 
   /* Landing flare: short, shallow, fast beats while it drops onto the perch. */
-  .butterfly.is-flaring .bf-wing--near { animation: bf-near-flare 0.11s ease-in-out infinite alternate; }
-  .butterfly.is-flaring .bf-wing--far { animation: bf-far-flare 0.11s ease-in-out infinite alternate; }
+  .butterfly.is-flaring .bf-wing--near { animation: bf-near-flare calc(0.11s * var(--bf-slow, 1)) ease-in-out infinite alternate; }
+  .butterfly.is-flaring .bf-wing--far { animation: bf-far-flare calc(0.11s * var(--bf-slow, 1)) ease-in-out infinite alternate; }
   @keyframes bf-near-flare { from { transform: rotate(34deg); } to { transform: rotate(6deg); } }
   @keyframes bf-far-flare { from { transform: rotate(-4deg); } to { transform: rotate(10deg); } }
 
   /* Touchdown: wings sweep up and come together once, then idle. */
-  .butterfly.is-settling .bf-wing--near { animation: bf-near-settle 1s cubic-bezier(0.3, 0, 0.3, 1) forwards; }
-  .butterfly.is-settling .bf-wing--far { animation: bf-far-settle 1s cubic-bezier(0.3, 0, 0.3, 1) forwards; }
+  .butterfly.is-settling .bf-wing--near { animation: bf-near-settle calc(1s * var(--bf-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) forwards; }
+  .butterfly.is-settling .bf-wing--far { animation: bf-far-settle calc(1s * var(--bf-slow, 1)) cubic-bezier(0.3, 0, 0.3, 1) forwards; }
   @keyframes bf-near-settle { 0% { transform: rotate(30deg); } 35% { transform: rotate(66deg); } 65% { transform: rotate(44deg); } 100% { transform: rotate(50deg); } }
   @keyframes bf-far-settle { 0% { transform: rotate(-4deg); } 35% { transform: rotate(-10deg); } 100% { transform: rotate(-8deg); } }
 
   /* Perched: wings up and together, an occasional slow open, and a twitch of the antennae. */
-  .butterfly.is-resting .bf-wing--near { animation: bf-near-rest 5s ease-in-out infinite; transform: rotate(50deg); }
-  .butterfly.is-resting .bf-wing--far { animation: bf-far-rest 5s ease-in-out infinite; transform: rotate(-8deg); }
+  .butterfly.is-resting .bf-wing--near { animation: bf-near-rest calc(5s * var(--bf-slow, 1)) ease-in-out infinite; transform: rotate(50deg); }
+  .butterfly.is-resting .bf-wing--far { animation: bf-far-rest calc(5s * var(--bf-slow, 1)) ease-in-out infinite; transform: rotate(-8deg); }
   .butterfly.is-resting .bf-antennae { animation: bf-twitch 3.7s ease-in-out infinite; }
   @keyframes bf-near-rest {
     0%, 60%, 100% { transform: rotate(50deg); }
@@ -167,6 +214,20 @@
         rgb(var(--bf-c3) / calc(var(--bf-a) * var(--bf-max) * 0.42)) 100%);
   }
 
+
+  /* She: calmer wingbeats (about 1.6x slower), translucent pink wings with fine veins, a softer shadow. */
+  .butterfly--she { --bf-slow: 1.6; }
+  .butterfly--she .butterfly__svg { filter: drop-shadow(0 2px 3px rgba(214, 120, 140, 0.28)); }
+  .bf2-edge { stroke: #d9808a; stroke-width: 0.7; stroke-linejoin: round; stroke-opacity: 0.85; }
+  .bf2-vein { fill: none; stroke: #c4707c; stroke-width: 0.45; stroke-linecap: round; opacity: 0.7; }
+  .bf2-legs path { fill: none; stroke: #c4707c; stroke-width: 0.6; stroke-linecap: round; stroke-linejoin: round; opacity: 0.8; }
+  .bf2-abdomen { fill: #efb2a8; stroke: #c4707c; stroke-width: 0.4; }
+  .bf2-thorax { fill: #e8a79f; stroke: #c4707c; stroke-width: 0.4; }
+  .bf2-head { fill: #eeb0a7; stroke: #c4707c; stroke-width: 0.4; }
+  .bf2-eye { fill: #6a3b44; }
+  .bf2-feeler { fill: none; stroke: #b2606c; stroke-width: 0.55; stroke-linecap: round; }
+  .bf2-club { fill: #b2606c; }
+
   /* The butterfly belongs to the light theme; the dark theme has fireflies instead. */
   [data-theme="dark"] .butterfly { display: none; }
 
@@ -178,28 +239,54 @@
 </style>
 
 <script>
-  const el = document.getElementById("butterfly") as HTMLElement | null;
-  const svg = document.getElementById("butterfly-svg") as unknown as SVGElement | null;
   const reduce = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const isLight = () => document.documentElement.dataset.theme === "light";
+  const rand = (a: number, b: number) => a + Math.random() * (b - a);
+  const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
 
-  if (el && svg && !reduce.matches) {
-    // Only boxes that can take the tint.
-    const PERCH_SELECTOR = ".work-item, .project-card, .writing-row, .skill-group";
-    // When no card is on screen (top of the page) it may sit on a button, never on body text.
-    const FALLBACK_SELECTOR = ".hero-link";
-    // Scrolling gives it momentum: every pixel scrolled adds some flight distance, flying spends it,
-    // and it only starts to land once that is used up and the page has stopped moving. So a nudge
-    // earns a short flutter and a long scroll a long flight.
-    const FLIGHT_PER_SCROLL_PX = 0.5; // px of flight earned per px scrolled
-    const MIN_FLIGHT = 110; // even a small nudge earns a short flutter
-    const MAX_FLIGHT = 2600; // a huge scroll still ends with it landing
-    const SETTLE_AFTER = 300; // ms of stillness before landing may begin
-    const BOB = (2 * Math.PI) / 340; // matches the wingbeat period
-    const rand = (a: number, b: number) => a + Math.random() * (b - a);
-    const isLight = () => document.documentElement.dataset.theme === "light";
-    const clamp = (v: number, a: number, b: number) => Math.max(a, Math.min(b, v));
+  // Only boxes that can take the tint.
+  const PERCH_SELECTOR = ".work-item, .project-card, .writing-row, .skill-group";
+  // When no card is on screen (top of the page) one may sit on a button, never on body text.
+  const FALLBACK_SELECTOR = ".hero-link";
+  // Scrolling gives them momentum: every pixel scrolled earns some flight distance, flying spends
+  // it, and landing only begins once it is used up and the page has been still for a moment.
+  const FLIGHT_PER_SCROLL_PX = 0.5; // px of flight earned per px scrolled
+  const MIN_FLIGHT = 110; // even a small nudge earns a short flutter
+  const MAX_FLIGHT = 2600; // a huge scroll still ends with a landing
+  const SETTLE_AFTER = 300; // ms of stillness before landing may begin
+  const TURN_PATIENCE = 9000; // ms one waits for the other's turn to sit before sitting anyway
 
-    type Perch = { x: number; y: number; box: HTMLElement | null; rx: number };
+  type Perch = { x: number; y: number; box: HTMLElement | null; rx: number };
+  type Bf = {
+    el: HTMLElement;
+    isPerched: () => boolean;
+    isActive: () => boolean;
+    isWaiting: () => boolean;
+  };
+
+  // Shared by both butterflies: at most one sits at a time (the other keeps floating), and they
+  // take turns, so the golden one and the pink one each get to rest.
+  const colony: { sitting: Bf | null; turn: Bf | null; all: Bf[] } = { sitting: null, turn: null, all: [] };
+
+  type Personality = {
+    speed: number; // multiplier on cruising speed
+    bobPeriod: number; // ms, matches the wingbeat
+    bobAmp: number; // px
+    sway: number; // multiplier on the sideways weave
+    swayRate: number; // multiplier on the weave frequency (lower = lazier)
+    accel: number; // steering inertia (lower = softer turns)
+    landMax: number; // px/frame, fastest landing approach
+    hop: [number, number]; // ms between waypoint changes
+    glideEvery: [number, number]; // ms between glides
+    glideFor: [number, number]; // ms a glide lasts
+  };
+
+  const create = (id: string, svgId: string, p: Personality): Bf | null => {
+    const el = document.getElementById(id) as HTMLElement | null;
+    const svg = document.getElementById(svgId) as unknown as SVGElement | null;
+    if (!el || !svg) return null;
+
+    const BOB = (2 * Math.PI) / p.bobPeriod;
 
     let x = rand(80, innerWidth - 80);
     let y = -40;
@@ -217,12 +304,22 @@
     let lastScrollY = window.scrollY;
     let scrollV = 0; // smoothed scroll speed, px/s
     let landPending = false;
+    let landReadyAt = 0;
     let settleTimer = 0;
     let turnAt = 0;
     let glideUntil = 0;
     let nextGlide = 0;
     let speedBase = 2.6;
     let t0 = performance.now();
+
+    const self: Bf = {
+      el,
+      isPerched: () => mode === "perched" && el.classList.contains("is-ready"),
+      isActive: () => el.classList.contains("is-ready"),
+      isWaiting: () => landPending,
+    };
+    colony.all.push(self);
+    const other = () => colony.all.find((b) => b !== self) ?? null;
 
     const render = (bob = 0) => {
       el.style.transform = `translate3d(${x}px, ${y + bob}px, 0) rotate(${angle}deg)`;
@@ -237,9 +334,20 @@
     const leaveBox = () => {
       perchBox?.removeAttribute("data-bf-perch");
       perchBox = null;
+      if (colony.sitting === self) colony.sitting = null;
     };
 
-    // A point on the top edge of a visible box, so its feet touch the border.
+    const sit = (box: HTMLElement | null, rx: number) => {
+      colony.sitting = self;
+      colony.turn = other(); // next time it is the other one's turn
+      perchBox = box;
+      if (box) {
+        box.style.setProperty("--bf-x", `${rx}%`);
+        box.setAttribute("data-bf-perch", "");
+      }
+    };
+
+    // ── Choosing a place to sit ────────────────────────────
     const visibleBoxes = (selector: string) => {
       const margin = 24;
       return [...document.querySelectorAll<HTMLElement>(selector)]
@@ -266,7 +374,7 @@
           ? { x: rand(40, innerWidth - 40), y: rand(140, innerHeight - 110), box: null, rx: 50 }
           : null;
       }
-      // Settle on one of the few nearest edges, so it eases down close to where it is fluttering.
+      // One of the few nearest edges, so it eases down close to where it is fluttering.
       const near = [...boxes].sort(
         (a, b) => Math.hypot((a.r.left + a.r.right) / 2 - x, a.r.top - y) - Math.hypot((b.r.left + b.r.right) / 2 - x, b.r.top - y),
       );
@@ -277,9 +385,10 @@
       return { x: px, y: r.top - 19, box, rx: clamp(((px - r.left) / r.width) * 100, 8, 92) };
     };
 
-    // Next waypoint. On wide screens it favours the empty margins either side of the text column
-    // (alternating sides), with the odd visit over the column; on phones, where there are no
-    // margins, it roams the full width in thirds. Hops are unhurried and it never beelines.
+    // ── Where to flutter next ──────────────────────────────
+    // On wide screens it favours the empty margins either side of the text column (alternating
+    // sides, and the side the other butterfly is not on), with the odd visit over the column; on
+    // phones, with no margins, it roams the full width in thirds. Unhurried, never a beeline.
     const nextWaypoint = (now: number, headForMargin = false) => {
       const w = innerWidth;
       const page = document.querySelector(".page")?.getBoundingClientRect();
@@ -289,17 +398,25 @@
       if (colL - 20 - 40 > 90) margins.push([40, colL - 20]); // left margin
       if (w - 40 - (colR + 20) > 90) margins.push([colR + 20, w - 40]); // right margin
 
+      const mate = other();
+      const matePos = mate?.isActive() ? mate.el.getBoundingClientRect() : null;
+      const gapTo = (z: [number, number], px: number) => (px < z[0] ? z[0] - px : px > z[1] ? px - z[1] : 0);
+
       let tx: number;
       if (margins.length && (headForMargin || Math.random() < 0.72)) {
-        const gap = (z: [number, number]) => (x < z[0] ? z[0] - x : x > z[1] ? x - z[1] : 0);
         let zone: [number, number];
         if (headForMargin) {
           // Taking off: head for whichever margin is nearest, so it is out there within a second.
-          zone = margins.reduce((a, c) => (gap(c) < gap(a) ? c : a));
+          zone = margins.reduce((a, c) => (gapTo(c, x) < gapTo(a, x) ? c : a));
         } else {
           // Later hops: over to the margin it is not in, so it drifts from side to side.
-          const other = margins.filter((z) => gap(z) > 0);
-          const pool = other.length ? other : margins;
+          let pool = margins.filter((z) => gapTo(z, x) > 0);
+          if (!pool.length) pool = margins;
+          // ...and where it can, not the one its companion is already floating over.
+          if (matePos && pool.length > 1) {
+            const free = pool.filter((z) => gapTo(z, matePos.left) > 0);
+            if (free.length) pool = free;
+          }
           zone = pool[Math.floor(Math.random() * pool.length)];
         }
         tx = rand(zone[0], zone[1]);
@@ -315,15 +432,16 @@
       let ty = rand(110, Math.max(180, innerHeight - 80));
       if (Math.hypot(tx - x, ty - y) < 140) ty = clamp(y + (y > innerHeight / 2 ? -1 : 1) * rand(140, 260), 110, innerHeight - 80);
       target = { x: tx, y: ty, box: null, rx: 50 };
-      turnAt = now + rand(1900, 3400);
-      // A leisurely flutter: roughly 70 to 125 px/s, a little quicker on very wide screens.
-      speedBase = rand(1.2, 2.1) * clamp(w / 1100, 0.85, 1.3);
+      turnAt = now + rand(p.hop[0], p.hop[1]);
+      // A leisurely flutter, a little quicker on very wide screens.
+      speedBase = rand(1.2, 2.1) * p.speed * clamp(w / 1100, 0.85, 1.3);
       if (now > nextGlide) {
-        glideUntil = now + rand(320, 700);
-        nextGlide = now + rand(1400, 3000);
+        glideUntil = now + rand(p.glideFor[0], p.glideFor[1]);
+        nextGlide = now + rand(p.glideEvery[0], p.glideEvery[1]);
       }
     };
 
+    // ── The frame loop ─────────────────────────────────────
     const step = (now: number) => {
       const dt = Math.min((now - t0) / 16.67, 3);
       t0 = now;
@@ -334,7 +452,7 @@
         const gliding = now < glideUntil;
         if (gliding !== el.classList.contains("is-gliding")) setState(gliding ? "gliding" : "flying");
         // Wingbeats lift it: it rises on each downstroke and sinks between them.
-        bob = gliding ? 0 : Math.sin(now * BOB) * 3.2;
+        bob = gliding ? 0 : Math.sin(now * BOB) * p.bobAmp;
       }
 
       const dx = target.x - x;
@@ -345,10 +463,10 @@
       scrollV *= Math.exp(-0.025 * dt); // momentum fades once the page stops moving
       if (mode === "flying") speed *= 1 + clamp(scrollV / 2500, 0, 0.7); // scroll harder, fly a little faster
       if (mode === "landing") {
-        // Fast far out, a long slow flare at the end.
-        speed = clamp(0.5 + dist * 0.035, 0.5, 2.8);
+        // A long slow flare at the end.
+        speed = clamp(0.5 + dist * 0.035, 0.5, p.landMax);
         if (dist < 70 && !el.classList.contains("is-flaring")) setState("flaring");
-        bob = dist < 70 ? Math.sin(now * BOB * 1.6) * Math.min(dist / 20, 2.2) : Math.sin(now * BOB) * 2.4;
+        bob = dist < 70 ? Math.sin(now * BOB * 1.6) * Math.min(dist / 20, p.bobAmp * 0.7) : Math.sin(now * BOB) * p.bobAmp * 0.75;
       } else if (el.classList.contains("is-gliding")) {
         speed *= 0.8;
       }
@@ -356,11 +474,11 @@
       // Steer with inertia; a sideways drift makes the path loop and sway.
       const sway =
         mode === "landing"
-          ? Math.sin(now / 260) * Math.min(dist / 70, 1.5)
-          : Math.sin(now / 430) * 1.5 + Math.sin(now / 170) * 0.4;
+          ? Math.sin((now / 260) * p.swayRate) * Math.min(dist / 70, 1.5) * p.sway
+          : (Math.sin((now / 430) * p.swayRate) * 1.5 + Math.sin((now / 170) * p.swayRate) * 0.4) * p.sway;
       const nx = (dx / dist) * speed - (dy / dist) * sway;
       const ny = (dy / dist) * speed + (dx / dist) * sway;
-      const accel = mode === "landing" ? 0.08 : 0.045;
+      const accel = mode === "landing" ? p.accel * 1.8 : p.accel;
       vx += (nx - vx) * accel * dt;
       vy += (ny - vy) * accel * dt;
       x += vx * dt;
@@ -370,13 +488,14 @@
         budget -= Math.hypot(vx, vy) * dt;
         if (budget <= 0 && now - lastScrollAt > SETTLE_AFTER && !landPending) {
           landPending = true;
+          landReadyAt = now;
           land(0);
         }
       }
 
       // Face the way it travels, tilting the nose with vertical motion (and upright when flaring).
-      if (Math.abs(vx) > 0.7) face = vx > 0 ? 1 : -1;
-      const tilt = mode === "landing" && dist < 70 ? 0 : clamp(vy * 5, -24, 24) * face;
+      if (Math.abs(vx) > 0.7 * p.speed) face = vx > 0 ? 1 : -1;
+      const tilt = mode === "landing" && dist < 70 ? 0 : clamp(vy * 5 / p.speed, -24, 24) * face;
       angle += (tilt - angle) * 0.12 * dt;
 
       if (mode === "landing" && dist < 2.2) {
@@ -389,15 +508,11 @@
         raf = 0;
         // Wings sweep up and close, the box takes its tint, then it idles.
         setState("settling");
-        perchBox = target.box;
-        if (perchBox) {
-          perchBox.style.setProperty("--bf-x", `${target.rx}%`);
-          perchBox.setAttribute("data-bf-perch", "");
-        }
+        sit(target.box, target.rx);
         clearTimeout(settleTimer);
         settleTimer = window.setTimeout(() => {
           if (mode === "perched") setState("resting");
-        }, 1000);
+        }, 1000 * (p.bobPeriod / 340)); // the settle animation scales with the wingbeat
         return;
       }
       render(bob);
@@ -427,25 +542,40 @@
       leaveBox();
       setState("flying");
       // A little hop as it pushes off the edge.
-      vy = -3.2;
-      vx = rand(-1.5, 1.5);
+      vy = -3.2 * p.speed;
+      vx = rand(-1.5, 1.5) * p.speed;
       nextGlide = performance.now() + rand(900, 2200);
       glideUntil = 0;
       nextWaypoint(performance.now(), true); // first heading: out over a margin
       run();
     };
 
-    // Land on a safe spot. If none is on screen yet keep flying and look again shortly;
-    // after a few tries any spot will do rather than circling forever.
+    // May it sit now? Only if the other is not sitting and it is this one's turn (or the other
+    // has had its chance for a good while, or is not out at all).
+    const maySit = () => {
+      const mate = other();
+      if (mate && mate.isPerched() && colony.sitting !== self) return false;
+      if (mate && mate.isActive() && colony.turn && colony.turn !== self) {
+        return performance.now() - landReadyAt > TURN_PATIENCE;
+      }
+      return true;
+    };
+
+    // Land on a safe spot. If it is not its turn, or nothing suitable is on screen, it keeps
+    // floating and looks again shortly; after a few tries any spot will do.
     const land = (tries: number) => {
-      const p = pickPerch(tries >= 4);
-      if (!p) {
+      if (!maySit()) {
+        restTimer = window.setTimeout(() => land(tries), rand(2200, 4200));
+        return;
+      }
+      const spot = pickPerch(tries >= 4);
+      if (!spot) {
         restTimer = window.setTimeout(() => land(tries + 1), 700);
         return;
       }
       landPending = false;
       mode = "landing";
-      target = p;
+      target = spot;
       setState("flying");
       run();
     };
@@ -468,56 +598,103 @@
       budget = clamp(budget + dy * FLIGHT_PER_SCROLL_PX, 0, MAX_FLIGHT);
     };
 
-    // Entrance: fade in already perched on something visible once the page has settled.
+    // Entrance. The first one out sits on something visible; the other floats until its turn.
     const start = () => {
       if (!isLight()) return;
-      const p = pickPerch();
-      if (!p) return; // stays hidden until the first scroll gives it a safe place to land
-      x = p.x;
-      y = p.y;
-      angle = rand(-4, 4);
-      face = Math.random() < 0.5 ? 1 : -1;
-      setState("resting");
-      perchBox = p.box;
-      if (perchBox) {
-        perchBox.style.setProperty("--bf-x", `${p.rx}%`);
-        perchBox.setAttribute("data-bf-perch", "");
+      const mate = other();
+      const mateSitting = !!(mate && mate.isPerched());
+      const spot = mateSitting ? null : pickPerch();
+      if (spot) {
+        x = spot.x;
+        y = spot.y;
+        angle = rand(-4, 4);
+        face = Math.random() < 0.5 ? 1 : -1;
+        setState("resting");
+        sit(spot.box, spot.rx);
+        render();
+        el.classList.add("is-ready");
+      } else if (mateSitting) {
+        // Float in quietly and wait for a turn.
+        x = rand(60, innerWidth - 60);
+        y = rand(150, Math.max(220, innerHeight - 160));
+        face = Math.random() < 0.5 ? 1 : -1;
+        mode = "flying";
+        budget = 0;
+        landPending = true;
+        landReadyAt = performance.now();
+        setState("flying");
+        nextGlide = performance.now() + rand(900, 2200);
+        nextWaypoint(performance.now());
+        render();
+        el.classList.add("is-ready");
+        run();
+        land(0);
       }
-      render();
-      el.classList.add("is-ready");
+      // Otherwise: stays hidden until the first scroll gives it a safe place to be.
+    };
+
+    const stand_down = () => {
+      cancelAnimationFrame(raf);
+      raf = 0;
+      clearTimeout(restTimer);
+      clearTimeout(settleTimer);
+      leaveBox();
+      landPending = false;
+      mode = "perched";
+      el.classList.remove("is-ready");
     };
 
     addEventListener("scroll", onScroll, { passive: true });
     addEventListener("resize", () => {
-      if (mode === "perched" && el.classList.contains("is-ready")) {
+      if (self.isPerched()) {
         leaveBox();
+        landPending = true;
+        landReadyAt = performance.now();
         land(0);
       }
     });
-    reduce.addEventListener("change", () => {
-      if (reduce.matches) {
-        cancelAnimationFrame(raf);
-        raf = 0;
-        clearTimeout(restTimer);
-        clearTimeout(settleTimer);
-        leaveBox();
-      }
-    });
+    reduce.addEventListener("change", () => reduce.matches && stand_down());
     // Follow the theme toggle: stand down in dark mode (fireflies take over), return in light.
     new MutationObserver(() => {
       if (isLight()) {
         if (!el.classList.contains("is-ready")) start();
       } else {
-        cancelAnimationFrame(raf);
-        raf = 0;
-        clearTimeout(restTimer);
-        clearTimeout(settleTimer);
-        leaveBox();
-        mode = "perched";
-        el.classList.remove("is-ready");
+        stand_down();
       }
     }).observe(document.documentElement, { attributes: true, attributeFilter: ["data-theme"] });
+
     if (document.readyState === "complete") start();
     else addEventListener("load", start, { once: true });
+
+    return self;
+  };
+
+  if (!reduce.matches) {
+    // He: golden, quicker, a lively wingbeat.
+    create("butterfly", "butterfly-svg", {
+      speed: 1,
+      bobPeriod: 340,
+      bobAmp: 3.2,
+      sway: 1,
+      swayRate: 1,
+      accel: 0.045,
+      landMax: 2.8,
+      hop: [1900, 3400],
+      glideEvery: [1400, 3000],
+      glideFor: [320, 700],
+    });
+    // She: calm and composed. About 40% slower, softer turns and weave, a longer wingbeat, more gliding.
+    create("butterfly-she", "butterfly-she-svg", {
+      speed: 0.6,
+      bobPeriod: 340 * 1.6,
+      bobAmp: 2.3,
+      sway: 0.7,
+      swayRate: 0.7,
+      accel: 0.03,
+      landMax: 1.8,
+      hop: [2600, 4400],
+      glideEvery: [900, 2000],
+      glideFor: [500, 1100],
+    });
   }
 </script>
