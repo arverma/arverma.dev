@@ -12,10 +12,18 @@ const companyIcons: Record<string, IconName> = {
   <h2 class="section-label"><Icon name="briefcase" size={14} />Experience</h2>
   <ul class="work-list">
     {profile.work.map((job) => (
-      <li class="work-item">
+      <li class:list={["work-item", "link" in job && "work-item--link"]}>
+        {"link" in job && (
+          <a class="work-item__link" href={job.link.href} target="_blank" rel="noopener noreferrer">
+            <span class="sr-only">{job.company} on {job.link.label} (opens in new tab)</span>
+          </a>
+        )}
         <span class="work-icon"><Icon name={companyIcons[job.company] ?? "building"} size={18} /></span>
         <div class="work-main">
-          <div class="work-company">{job.company}</div>
+          <div class="work-company">
+            {job.company}
+            {"link" in job && <Icon name="arrow-up-right" size={14} class="ext" />}
+          </div>
           <div class="work-role">
             <span class="sr-only">Roles: </span>
             {job.roles.map((role, i) => (
@@ -26,12 +34,6 @@ const companyIcons: Record<string, IconName> = {
             ))}
           </div>
           <div class="work-team"><Icon name="users" size={12} />{job.team}</div>
-          {"link" in job && (
-            <a class="writing-all work-link" href={job.link.href} target="_blank" rel="noopener noreferrer">
-              <Icon name="pen-line" size={13} />{job.link.label}<Icon name="arrow-up-right" size={13} />
-              <span class="sr-only">(opens in new tab)</span>
-            </a>
-          )}
           {"clients" in job && (
             <ul class="work-clients" aria-label="Clients worked with">
               {job.clients.map((c) => <li>{c}</li>)}
