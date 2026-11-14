@@ -35,7 +35,7 @@
   --surface-2:  #ffffff;
   --ink:        #17171a;
   --ink-2:      #4a4a52;
-  --ink-3:      #686872;
+  --ink-3:      #5b5b65;
   --rule:       rgba(0, 0, 0, 0.1);
   /* #FFC700 is ~1.5:1 on this background: fill-only here, never text. */
   --btn-shadow: #17171a;
@@ -63,6 +63,57 @@ body {
   -webkit-font-smoothing: antialiased;
   min-height: 100vh;
   transition: background-color 0.25s ease, color 0.25s ease;
+}
+/* Dark theme backdrop: a very faint northern-lights glow (green, teal and violet curtains with
+   fine vertical rays) that fades out well before the bottom of the screen. Colour only, no
+   image, on a viewport-pinned layer that drifts a few percent over about 90 seconds. */
+[data-theme="dark"] { background-color: var(--bg); }
+[data-theme="dark"] body { background: transparent; }
+[data-theme="dark"] body::before {
+  content: "";
+  position: fixed;
+  inset: -12% -8%;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    repeating-linear-gradient(104deg, transparent 0 46px, rgba(90, 255, 170, 0.011) 46px 52px, transparent 52px 96px),
+    radial-gradient(62% 46% at 22% 10%, rgba(46, 230, 140, 0.19), transparent 70%),
+    radial-gradient(54% 40% at 58% 20%, rgba(70, 200, 230, 0.12), transparent 70%),
+    radial-gradient(58% 44% at 88% 8%, rgba(168, 85, 247, 0.14), transparent 70%),
+    radial-gradient(46% 26% at 48% 76%, rgba(255, 120, 170, 0.04), transparent 70%);
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 42%, transparent 82%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 42%, transparent 82%);
+  animation: aurora-drift 90s ease-in-out infinite alternate;
+  will-change: transform;
+}
+@keyframes aurora-drift {
+  from { transform: translate3d(-2.5%, 0, 0) scale(1); }
+  to { transform: translate3d(3%, 2%, 0) scale(1.08); }
+}
+@media (prefers-reduced-motion: reduce) { [data-theme="dark"] body::before { animation: none; } }
+
+/* Light theme backdrop: a clear sky with soft clouds at the top that warms to cosmos pink and a
+   hint of meadow green at the bottom of the screen. Colour only, no image. It lives on a
+   viewport-pinned layer, so it stays put while the page scrolls (a fixed layer rather than
+   background-attachment: fixed, which iOS Safari ignores). */
+[data-theme="light"] { background-color: #fcfcfe; }
+[data-theme="light"] body { background: transparent; }
+[data-theme="light"] body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(52rem 26rem at 10% -8%, rgba(255, 228, 150, 0.5), transparent 62%),
+    linear-gradient(180deg,
+      #c6e3fa 0%,
+      #d9ecfb 24%,
+      #eef6fd 46%,
+      #fbf8fc 64%,
+      #f9e4f0 82%,
+      #f1d6e6 92%,
+      #e3eed6 100%);
 }
 img { max-width: 100%; display: block; }
 ul { list-style: none; }
@@ -226,6 +277,22 @@ a:hover { color: var(--ink); }
 @media (min-width: 641px) { .hero-bio { font-size: 0.875rem; line-height: 1.75; text-align: justify; } }
 .hero-bio a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 .hero-bio a:hover { color: var(--accent); }
+.bio-toggle {
+  display: none;
+  align-items: center;
+  min-height: 2.75rem;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--mono);
+  font-size: 0.75rem;
+  color: var(--ink-2);
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-underline-offset: 0.25em;
+  cursor: pointer;
+}
+.bio-toggle:hover { color: var(--accent); }
 .hero-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .hero-link {
   display: inline-flex;
@@ -502,9 +569,58 @@ a:hover { color: var(--ink); }
     position: absolute; width: 1px; height: 1px; overflow: hidden;
     clip: rect(0,0,0,0); white-space: nowrap;
   }
-  .nav-links a { padding: 0.45rem; }
+  .nav-links a { padding: 0.6rem; }
   .project-grid, .skill-groups { grid-template-columns: 1fr; }
-  .hero-top { flex-direction: column; align-items: flex-start; }
+
+  /* Phones: denser rhythm and a compact hero so the first screen shows the buttons. */
+  .section { padding-block: 2.25rem; }
+  .work-list { gap: 0.5rem; }
+  .project-grid, .skill-groups { gap: 0.6rem; }
+  .hero { padding-block: 2.5rem 2.25rem; }
+  /* Tagline first, full width; then the photo with the name and designation to its right. */
+  .hero-top {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-areas:
+      "hook hook"
+      "avatar name"
+      "avatar role";
+    column-gap: 1rem;
+    row-gap: 0;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+  .hero-top > div { display: contents; } /* lets the h1, hook and role join the grid */
+  .hero-hook { grid-area: hook; margin-bottom: 1.1rem; }
+  .hero-avatar { grid-area: avatar; width: 4rem; height: 4rem; box-shadow: 0 0 0 3px var(--brand), var(--shadow); }
+  .hero-name { grid-area: name; align-self: end; font-size: 1.55rem; margin-bottom: 0.2rem; }
+  .hero-role { grid-area: role; align-self: start; }
+  .hero-meta { margin-bottom: 1.5rem; }
+
+  /* Bio collapses to three lines (state is set by Hero.astro; no JS means it stays open). */
+  [data-bio-state] .hero-bio { margin-bottom: 0.25rem; }
+  [data-bio-state="collapsed"] .hero-bio {
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    overflow: hidden;
+  }
+  [data-bio-state] .bio-toggle { display: inline-flex; }
+  .bio-toggle { margin-bottom: 1.25rem; }
+
+  /* Hero actions: Resume full width, the rest in an equal row; all 44px tall. */
+  .hero-links--home { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 0.5rem; }
+  .hero-links--home .hero-link.primary { grid-column: 1 / -1; }
+  .hero-links--home .hero-link { justify-content: center; padding-inline: 0.5rem; }
+  .hero-links--home .hint { display: none; }
+  .hero-link { min-height: 2.75rem; }
+
+  /* Tap targets: grow the hit area, not the look. */
+  .nav-links { gap: 0.25rem; }
+  .theme-toggle { width: 2.4rem; height: 2.4rem; }
+  .nav-links a, .theme-toggle { position: relative; }
+  .nav-links a::after, .theme-toggle::after { content: ""; position: absolute; inset: -0.4rem -0.35rem; }
 }
 @media (max-width: 560px) {
   .work-item { grid-template-columns: auto 1fr; }
@@ -542,6 +658,8 @@ a:hover { color: var(--ink); }
 
 /* ─── Print ─────────────────────────────────────── */
 @media print {
+  [data-theme="light"], [data-theme="dark"] { background-color: #fff; }
+  [data-theme="light"] body::before, [data-theme="dark"] body::before { display: none; }
   :root, [data-theme] {
     color-scheme: light;
     --bg: #fff; --bg-2: #fff; --bg-hover: transparent; --surface: #fff; --surface-2: #fff;
@@ -581,7 +699,7 @@ a:hover { color: var(--ink); }
 }
 
 /* ─── Touch targets (WCAG 2.2 AA: >= 24px, aiming for ~40px on text links) ─── */
-.nav-logo, .project-details, .writing-all { min-height: 2.5rem; }
+.nav-logo, .project-details, .writing-all { min-height: 2.75rem; }
 .nav-logo, .project-details, .writing-all { display: inline-flex; align-items: center; }
 
 /* Gradient-clipped text is dropped in forced-colors mode, which would hide the name. */
