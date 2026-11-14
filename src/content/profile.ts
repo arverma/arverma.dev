@@ -36,6 +36,23 @@ export const profile = {
     },
   ],
   jobTitle: "Data Platform Engineer",
+  pinned: [
+    {
+      title: "How a Kafka Connect Rebalance Skipped 2.5 Billion Messages and How I Fixed It",
+      url: "https://medium.com/towards-data-engineering/kafka-connect-how-i-recovered-2-5-44735f7f7fb9",
+      hook: "A routine rebalance, a silent offset jump, and how I got every message back.",
+    },
+    {
+      title: "How I Downscaled a Production OpenSearch Cluster Without Losing Data",
+      url: "https://medium.com/towards-data-engineering/how-i-downscaled-a-production-opensearch-cluster-without-losing-data-or-my-sanity-08ee8e84ac7e",
+      hook: "Cutting cluster cost without a single lost document or a 2am page.",
+    },
+  ],
+  aboutLinks: {
+    kafka: "https://medium.com/towards-data-engineering/kafka-connect-how-i-recovered-2-5-44735f7f7fb9",
+    iceberg: "https://medium.com/towards-data-engineering/how-i-fixed-corrupted-iceberg-partition-files-without-full-table-scans-or-data-loss-f1a328cef12f",
+    opensearch: "https://medium.com/towards-data-engineering/how-i-downscaled-a-production-opensearch-cluster-without-losing-data-or-my-sanity-08ee8e84ac7e",
+  },
   liveProjects: [
     {
       name: "Towards Data Engineering",
@@ -71,6 +88,7 @@ export const profile = {
       icon: "square-pen",
       description:
         "Online Markdown and lightweight code editor that runs in your browser. No account, tracking or ads.",
+      blurb: "No account, no tracking. Just write.",
       url: "https://editor.arverma.dev",
     },
     {
@@ -89,6 +107,7 @@ export const profile = {
       kind: "Web app",
       icon: "notebook",
       description: "BP Diary: a web notebook for Bihar Police diary entries.",
+      blurb: "Built to make daily diary entries faster on basic phones and slow networks.",
       url: "https://bpdiary.arverma.dev",
     },
     {
@@ -107,6 +126,7 @@ export const profile = {
       icon: "wifi",
       description:
         "One click wakes a stuck Wi-Fi connection on Airtel, Jio, JioFiber or any broadband when you see no internet.",
+      blurb: "For the days the Wi-Fi shows full bars and nothing loads.",
       url: "https://chromewebstore.google.com/detail/wifi-hammer-fix-airteljio/dbphaafiokokiaocpcnfakompafjoddj",
     },
     {
@@ -127,6 +147,7 @@ export const profile = {
       icon: "wrench",
       description:
         "Format JSON and SQL, decode Base64 and JWT, convert Unix time and diff text, locally in a Chrome side panel.",
+      blurb: "Built it because I was tired of pasting JSON into random websites.",
       url: "https://chromewebstore.google.com/detail/pjkichifhikfjaoafegdjffemfiknecn",
     },
   ],

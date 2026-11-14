@@ -184,37 +184,39 @@ a:hover { color: var(--ink); }
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.45rem;
 }
+.hero-hook {
+  font-size: clamp(1.4rem, 5vw, 1.75rem);
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--ink);
+  max-width: 26ch;
+  margin-bottom: 0.7rem;
+}
 .hero-role {
   display: flex;
   align-items: center;
   gap: 0.45rem;
   font-family: var(--mono);
-  font-size: 0.75rem;
-  color: var(--accent);
+  font-size: 0.68rem;
+  color: var(--ink-3);
   letter-spacing: 0.06em;
   text-transform: uppercase;
 }
 .hero-meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.4rem;
-  margin-bottom: 1.25rem;
+  gap: 0.3rem 1.1rem;
+  margin-bottom: 1.5rem;
 }
 .hero-meta li {
   display: inline-flex;
   align-items: center;
   gap: 0.4rem;
-  font-size: 0.75rem;
-  padding: 0.25rem 0.65rem;
-  border-radius: 999px;
-  background: var(--surface);
-  border: 1px solid var(--rule);
-  color: var(--ink-2);
+  font-size: 0.72rem;
+  color: var(--ink-3);
 }
-.hero-meta .icon { color: var(--accent-2); }
-/* Light theme: dark pills with yellow text and icons (yellow on #17171a is ~13:1). */
-[data-theme="light"] .hero-meta li { background: #17171a; border-color: #17171a; color: var(--brand); }
-[data-theme="light"] .hero-meta .icon { color: var(--brand); }
+.hero-meta .icon { color: var(--ink-3); }
 .hero-bio {
   color: var(--ink-2);
   font-size: 1rem;
@@ -222,6 +224,8 @@ a:hover { color: var(--ink); }
   max-width: 560px;
   margin-bottom: 1.75rem;
 }
+.hero-bio a { color: var(--ink); text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
+.hero-bio a:hover { color: var(--accent); }
 .hero-links { display: flex; flex-wrap: wrap; gap: 0.5rem; }
 .hero-link {
   display: inline-flex;
@@ -364,6 +368,7 @@ a:hover { color: var(--ink); }
   color: var(--accent-2);
   border: 1px solid color-mix(in srgb, var(--accent-2) 35%, transparent);
 }
+.project-card__blurb { display: block; margin-top: 0.4rem; font-size: 0.76rem; font-style: italic; line-height: 1.5; color: var(--ink-3); }
 .project-card__desc { font-size: 0.8rem; line-height: 1.55; color: var(--ink-2); }
 .ext { color: var(--ink-3); transition: color 0.15s, transform 0.15s; }
 .project-card > .ext { margin-top: 0.1rem; }
@@ -412,6 +417,30 @@ a:hover { color: var(--ink); }
 .skill-chip:hover { border-color: var(--on-brand); color: var(--on-brand); background: var(--brand); }
 
 /* ─── Writing ───────────────────────────────────── */
+.writing-pinned { display: flex; flex-direction: column; gap: 1.5rem; margin-bottom: 2.25rem; }
+.writing-pinned__link { display: block; color: inherit; max-width: 40rem; }
+.writing-pinned__title {
+  display: block;
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.writing-pinned__title .ext { display: inline-block; vertical-align: -0.1em; margin-left: 0.35rem; color: var(--ink-3); transition: color 0.15s, transform 0.15s; }
+.writing-pinned__hook { display: block; margin-top: 0.4rem; font-size: 0.95rem; line-height: 1.6; color: var(--ink-2); }
+.writing-pinned__link:hover .writing-pinned__title { color: var(--accent); }
+.writing-pinned__link:hover .ext { color: var(--accent); transform: translate(2px, -2px); }
+
+/* ─── Contact ───────────────────────────────────── */
+.contact-title {
+  font-size: clamp(1.3rem, 4.5vw, 1.75rem);
+  font-weight: 650;
+  letter-spacing: -0.025em;
+  line-height: 1.25;
+  max-width: 22ch;
+  margin-bottom: 1.5rem;
+}
 .writing-list { display: flex; flex-direction: column; gap: 0.5rem; }
 .writing-row {
   display: flex;
@@ -519,7 +548,7 @@ a:hover { color: var(--ink); }
   }
   body { background: #fff; font-size: 10.5pt; line-height: 1.5; min-height: 0; }
   .nav, .skip-link, .theme-toggle, .toast, .lp-dialog, .hero-link.primary[data-resume-open],
-  #copy-email, .ext, .hint, .project-details, .writing-lead, astro-dev-toolbar { display: none !important; }
+  [data-copy-email], .ext, .hint, .project-details, .writing-lead, astro-dev-toolbar { display: none !important; }
   .page { max-width: none; padding: 0; }
   .section, .hero { padding-block: 1.1rem; break-inside: auto; }
   .work-item, .project-card, .writing-row, .skill-group { box-shadow: none; background: none; break-inside: avoid; }

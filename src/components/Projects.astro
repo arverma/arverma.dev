@@ -21,6 +21,7 @@ import Icon from "./Icon.astro";
               </span>
             </span>
             <span class="project-card__desc">{p.description}</span>
+            {"blurb" in p && <span class="project-card__blurb">{p.blurb}</span>}
           </span>
           <Icon name="arrow-up-right" size={16} class="ext" />
           <span class="sr-only">(opens in new tab)</span>

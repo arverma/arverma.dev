@@ -9,6 +9,7 @@ import Icon from "./Icon.astro";
     <img class="hero-avatar" src={withBase("stickers/me.png")} alt={`Illustrated portrait of ${profile.name}`} width="88" height="88" />
     <div>
       <h1 class="hero-name">{profile.name}</h1>
+      <p class="hero-hook">I build data platforms. Then I write about what works.</p>
       <p class="hero-role"><Icon name="briefcase" size={14} />Senior Data Engineer (SDE-III)</p>
     </div>
   </div>
@@ -19,8 +20,13 @@ import Icon from "./Icon.astro";
     <li><Icon name="graduation-cap" size={14} />MBA · IIM Bodh Gaya '27</li>
   </ul>
   <p class="hero-bio">
-    7+ Years building Data and AI Platforms. Currently at QuillBot, previously
-    Flipkart and Sigmoid. I write weekly on data engineering and mentor aspiring engineers.
+    I'm a Senior Data Engineer at QuillBot, building data and AI platforms. Before that I
+    worked on payments data at Flipkart and data engineering at Sigmoid. Along the way I fixed
+    a{" "}<a href={profile.aboutLinks.kafka} target="_blank" rel="noopener noreferrer">Kafka Connect rebalance<span class="sr-only"> (opens in new tab)</span></a>{" "}that
+    skipped 2.5 billion messages, repaired{" "}<a href={profile.aboutLinks.iceberg} target="_blank" rel="noopener noreferrer">corrupted Iceberg partitions<span class="sr-only"> (opens in new tab)</span></a>{" "}without
+    data loss, and{" "}<a href={profile.aboutLinks.opensearch} target="_blank" rel="noopener noreferrer">downscaled a production OpenSearch cluster<span class="sr-only"> (opens in new tab)</span></a>{" "}without
+    losing data. I write about these every week at Towards Data Engineering and mentor
+    engineers getting into the field.
   </p>
   <div class="hero-links">
     <button type="button" class="hero-link primary" data-resume-open aria-haspopup="dialog">
@@ -39,7 +45,7 @@ import Icon from "./Icon.astro";
       <Icon name="pen-line" size={15} />Medium<Icon name="arrow-up-right" size={13} class="hint" />
       <span class="sr-only">(opens in new tab)</span>
     </a>
-    <button type="button" class="hero-link" id="copy-email" data-email={profile.email}>
+    <button type="button" class="hero-link" data-copy-email data-email={profile.email}>
       <Icon name="mail" size={15} />Email<Icon name="copy" size={13} class="hint" />
       <span class="sr-only">(copies address to clipboard)</span>
     </button>
@@ -52,10 +58,9 @@ import Icon from "./Icon.astro";
 </div>
 
 <script>
-  const btn = document.getElementById('copy-email') as HTMLButtonElement;
   const toast = document.getElementById('copy-toast') as HTMLElement;
 
-  btn?.addEventListener('click', async () => {
+  document.querySelectorAll<HTMLButtonElement>('[data-copy-email]').forEach((btn) => btn.addEventListener('click', async () => {
     const email = btn.dataset.email || '';
     try {
       await navigator.clipboard.writeText(email);
@@ -73,7 +78,7 @@ import Icon from "./Icon.astro";
     // Show toast
     toast.classList.add('is-visible');
     setTimeout(() => toast.classList.remove('is-visible'), 2200);
-  });
+  }));
 </script>
 
 <style is:global>
