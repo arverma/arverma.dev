@@ -1,0 +1,182 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+
+const title = "WiFi troubleshooting guides by Aman Ranjan Verma";
+const description = "Step by step guides to fix WiFi connected but no internet issues on Airtel and Jio. Written by a data engineer who got tired of rebooting the router.";
+
+const guides = [
+  {
+    title: "WiFi connected but no internet: 8 fixes that work",
+    path: "/guides/wifi-connected-no-internet/",
+    description: "The hub guide. Check these 8 things in order when WiFi shows connected but pages will not load.",
+  },
+  {
+    title: "Jio WiFi not working? Fixes for JioFiber and AirFiber",
+    path: "/guides/jio-wifi-not-working/",
+    description: "Troubleshooting for JioFiber, JioAirFiber and JioFi when WiFi says connected but nothing loads.",
+  },
+  {
+    title: "Airtel WiFi not working? Fixes for Xstream Fiber",
+    path: "/guides/airtel-wifi-not-working/",
+    description: "Step by step fixes for Airtel Xstream Fiber when WiFi is connected but no internet.",
+  },
+];
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="section guides-index">
+    <p class="section-label"><Icon name="book-open" size={14} />Guides</p>
+    <h1 class="guides-title">WiFi troubleshooting guides</h1>
+    
+    <div class="guides-intro">
+      <p>
+        WiFi shows connected, but pages will not load. Your device has full bars, but nothing works. 
+        This happens on Airtel Xstream Fiber, JioFiber, JioAirFiber and other home broadband connections 
+        when the router goes idle or loses sync with the network.
+      </p>
+      <p>
+        These guides walk through the fixes that work, in order, from quick restarts to router lights 
+        and stuck connections. Written by someone who got tired of rebooting the router every time 
+        the internet stopped working.
+      </p>
+    </div>
+
+    <div class="guides-list">
+      {guides.map((guide) => (
+        <a class="guide-card" href={guide.path}>
+          <h2 class="guide-card-title">{guide.title}</h2>
+          <p class="guide-card-desc">{guide.description}</p>
+          <span class="guide-card-link">
+            Read guide <Icon name="arrow-right" size={14} />
+          </span>
+        </a>
+      ))}
+    </div>
+
+    <div class="guides-related">
+      <h2 class="guides-related-title">WiFi Hammer</h2>
+      <p>
+        I built <a href="/projects/wifi-hammer/">WiFi Hammer</a>, a Chrome extension that wakes 
+        a stuck WiFi connection with one click. It works with any broadband or router, including 
+        Airtel and Jio. It does not make your internet faster, it only wakes a connection that 
+        says it is connected but will not load pages.
+      </p>
+      <a class="hero-link primary" href="/projects/wifi-hammer/">
+        <Icon name="wifi" size={15} />About WiFi Hammer
+        <Icon name="arrow-right" size={13} class="hint" />
+      </a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .guides-index {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .guides-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0 1.5rem 0;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .guides-intro {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-bottom: 2.5rem;
+  }
+
+  .guides-intro p {
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+
+  .guides-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+  }
+
+  .guide-card {
+    display: block;
+    padding: 1.5rem;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: border-color 0.15s ease, background 0.15s ease;
+  }
+
+  .guide-card:hover {
+    border-color: var(--accent);
+    background: var(--surface-2);
+  }
+
+  .guide-card-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.3;
+  }
+
+  .guide-card-desc {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: var(--ink-2);
+    margin: 0 0 1rem 0;
+  }
+
+  .guide-card-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-family: var(--mono);
+    font-size: 0.75rem;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .guides-related {
+    padding: 1.5rem;
+    background: var(--surface);
+    border-radius: 0.5rem;
+    margin-top: 2rem;
+  }
+
+  .guides-related-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--ink);
+    margin: 0 0 1rem 0;
+  }
+
+  .guides-related p {
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .guides-related a:not(.hero-link) {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .guides-related a:not(.hero-link):hover {
+    color: var(--accent-2);
+  }
+
+  @media (max-width: 640px) {
+    .guides-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>
