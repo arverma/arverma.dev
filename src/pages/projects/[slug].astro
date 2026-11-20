@@ -4,10 +4,12 @@ import Icon from "../../components/Icon.astro";
 import { profile } from "../../content/profile";
 
 export function getStaticPaths() {
-  return profile.liveProjects.map((project) => ({
-    params: { slug: project.slug },
-    props: { project },
-  }));
+  return profile.liveProjects
+    .filter((project) => project.slug !== "wifi-hammer")
+    .map((project) => ({
+      params: { slug: project.slug },
+      props: { project },
+    }));
 }
 
 const { project } = Astro.props;
