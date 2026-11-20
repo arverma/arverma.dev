@@ -31,7 +31,7 @@ Aman Ranjan Verma, Senior Data Engineer at QuillBot. Editor of Towards Data Engi
 - LinkedIn: https://www.linkedin.com/in/ar-verma/
 - GitHub: https://github.com/arverma
 - Medium: https://amanranjanverma.medium.com/
-- DEV: https://dev.to/aman_ranjan_verma_c60af4b
+- DEV: https://dev.to/aman_ranjanverma_c60af4b
 - Hashnode: https://arverma.hashnode.dev
 - X (Twitter): https://x.com/100pebhari
 - Chrome Web Store: https://chromewebstore.google.com/detail/wifi-hammer-fix-airteljio/dbphaafiokokiaocpcnfakompafjoddj
