@@ -26,7 +26,7 @@ const posts = (await getPosts(profile.pinned.length + 5))
   <ul class="writing-list">
     {posts.map((post) => (
       <li>
-        <a class="writing-row" href={post.url} target="_blank" rel="noopener noreferrer">
+        <a class="writing-row" href={normalizeUrl(post.url)} target="_blank" rel="noopener noreferrer">
           <Icon name="file-text" size={16} class="writing-lead" />
           <span class="writing-row-title">{post.title}</span>
           <Icon name="arrow-up-right" size={16} class="ext" />
