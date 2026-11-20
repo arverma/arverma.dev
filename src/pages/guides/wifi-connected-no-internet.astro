@@ -53,7 +53,7 @@ const jsonLd = [
         Wait 2 minutes for everything to connect.
       </p>
       <p>
-        This forces the router to get a fresh connection from the ISP. It works about 70% of the time.
+        This forces the router to get a fresh connection from the ISP.
       </p>
 
       <h2 class="guide-h2"><Icon name="activity" size={16} />Router lights (LOS, PON, internet)</h2>
@@ -86,12 +86,13 @@ const jsonLd = [
       </p>
       <p>
         I built <a href="/projects/wifi-hammer/">WiFi Hammer</a> to fix this. It is a Chrome extension that wakes the 
-        connection with one click. It works by sending a small network request that forces the router to reset the link. 
-        You can also turn on Auto-hammer to keep the connection fresh every 30 minutes.
+        connection with one click by sending real traffic to Fast.com and Netflix servers. Auto-hammer runs a light check 
+        every 5 minutes to 6 hours (30 minutes default, configurable) and only hammers after two failed checks. 
+        Hammer Hard runs a full speed test and can use a lot of data.
       </p>
       <p>
         WiFi Hammer does not make your internet faster. It does not increase your bandwidth or change your plan. 
-        It only wakes a stuck connection. If your internet is working but slow, WiFi Hammer will not help.
+        It does not reset the router. It only wakes a stuck connection. If your internet is working but slow, WiFi Hammer will not help.
       </p>
 
       <h2 class="guide-h2"><Icon name="phone" size={16} />When to call your ISP</h2>
