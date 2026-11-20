@@ -1,0 +1,40 @@
+# arverma.dev
+
+Aman Ranjan Verma is a senior data engineer at QuillBot with 7+ years building data and AI platforms. He writes about practical data engineering, Apache Iceberg, Kafka Connect and platform architecture at Towards Data Engineering, where he also serves as editor. He built WiFi Hammer (a Chrome extension that fixes stuck WiFi connections on Airtel and Jio), BP Diary (a Hindi case diary tool for Bihar Police officers), and ConText Editor (a private Markdown editor).
+
+## Pages
+
+- Home (https://arverma.dev/): Profile, work experience, projects and writing
+- About (https://arverma.dev/about/): Background, work history, education and links
+- Writing (https://arverma.dev/writing/): Data engineering articles on Iceberg, Kafka, platforms and Chrome extensions
+- Projects (https://arverma.dev/projects/): Towards Data Engineering, ConText Editor, BP Diary and WiFi Hammer
+
+### WiFi guides
+
+- WiFi connected but no internet (https://arverma.dev/guides/wifi-connected-no-internet/): 8 fixes for stuck WiFi connections
+- Jio WiFi not working (https://arverma.dev/guides/jio-wifi-not-working/): Troubleshooting for JioFiber, AirFiber and JioFi
+- Airtel WiFi not working (https://arverma.dev/guides/airtel-wifi-not-working/): Troubleshooting for Airtel Xstream Fiber
+
+### Project pages
+
+- WiFi Hammer (https://arverma.dev/projects/wifi-hammer/): Chrome extension that fixes WiFi connected but no internet
+- Bihar Police Notebook (https://arverma.dev/projects/bihar-police-notebook/): Hindi case diary and letter writing web app
+- ConText Editor (https://arverma.dev/projects/markdown-editor/): Private local-first Markdown editor
+- Towards Data Engineering (https://arverma.dev/projects/towards-data-engineering/): Medium publication on data engineering
+
+## Author
+
+Aman Ranjan Verma, Senior Data Engineer at QuillBot. Editor of Towards Data Engineering.
+
+## Links
+
+- LinkedIn: https://www.linkedin.com/in/ar-verma/
+- GitHub: https://github.com/arverma
+- Medium: https://amanranjanverma.medium.com/
+- DEV: https://dev.to/aman_ranjan_verma_c60af4b
+- Hashnode: https://arverma.hashnode.dev
+- X (Twitter): https://x.com/100pebhari
+- Chrome Web Store: https://chromewebstore.google.com/detail/wifi-hammer-fix-airteljio/dbphaafiokokiaocpcnfakompafjoddj
+- Towards Data Engineering site: https://tde.arverma.dev
+- ConText Editor: https://editor.arverma.dev
+- BP Diary: https://bpdiary.arverma.dev

@@ -10,21 +10,46 @@ import Butterfly from "../components/Butterfly.astro";
 import Fireflies from "../components/Fireflies.astro";
 import { profile } from "../content/profile";
 
-const title = `${profile.name}, ${profile.jobTitle}`;
-const description = `${profile.name} is a ${profile.jobTitle} at QuillBot with 7+ years building data and AI platforms. Writes on data engineering at Towards Data Engineering.`;
+const title = "Aman Ranjan Verma | Data Engineer, Data and AI Platforms";
+const description = "Aman Ranjan Verma is a senior data engineer at QuillBot with 7+ years building data and AI platforms. Notes on Iceberg, Kafka and Spark.";
 
 const person = {
   "@context": "https://schema.org",
   "@type": "Person",
+  "@id": "https://arverma.dev/#person",
+  name: profile.name,
+  alternateName: ["Aman Verma"],
+  url: "https://arverma.dev/",
+  jobTitle: "Senior Data Engineer",
+  worksFor: {
+    "@type": "Organization",
+    name: "QuillBot",
+  },
+  alumniOf: {
+    "@type": "EducationalOrganization",
+    name: "IIIT Manipur",
+  },
+  image: "https://arverma.dev/og-image.png",
+  sameAs: [
+    profile.links.linkedin,
+    profile.links.github,
+    profile.links.medium,
+    profile.links.devto,
+    profile.links.hashnode,
+    profile.links.x,
+    "https://chromewebstore.google.com/detail/wifi-hammer-fix-airteljio/dbphaafiokokiaocpcnfakompafjoddj"
+  ],
+};
+
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
   name: profile.name,
   url: "https://arverma.dev/",
-  jobTitle: profile.jobTitle,
-  image: "https://arverma.dev/og-image.png",
-  sameAs: [profile.links.medium, profile.links.github, profile.links.linkedin],
 };
 ---
 
-<BaseLayout title={title} description={description} jsonLd={person}>
+<BaseLayout title={title} description={description} jsonLd={[websiteJsonLd, person]}>
   <Hero />
   <Experience />
   <Projects />

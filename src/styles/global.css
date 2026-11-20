@@ -235,6 +235,12 @@ a:hover { color: var(--ink); }
   -webkit-text-fill-color: transparent;
   margin-bottom: 0.6rem;
 }
+.hero-subtitle {
+  font-size: 0.95rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+  margin-bottom: 0.75rem;
+}
 .hero-hook {
   font-size: clamp(1rem, 4vw, 1.1rem);
   font-weight: 500;
@@ -502,6 +508,25 @@ a:hover { color: var(--ink); }
 .writing-pinned__hook { display: block; margin-top: 0.4rem; font-size: 0.95rem; line-height: 1.6; color: var(--ink-2); }
 .writing-pinned__link:hover .writing-pinned__title { color: var(--accent); }
 .writing-pinned__link:hover .ext { color: var(--accent); transform: translate(2px, -2px); }
+
+.writing-group { margin-bottom: 2.5rem; }
+.writing-group-title {
+  font-size: 1.125rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  line-height: 1.3;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+.writing-group-intro {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin-bottom: 1rem;
+}
 
 /* ─── Contact ───────────────────────────────────── */
 .contact-title {

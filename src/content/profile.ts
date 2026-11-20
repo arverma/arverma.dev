@@ -8,6 +8,9 @@ export const profile = {
     githubRepos: "https://github.com/arverma?tab=repositories",
     linkedin: "https://www.linkedin.com/in/ar-verma/",
     medium: MEDIUM_URL,
+    x: "https://x.com/100pebhari",
+    devto: "https://dev.to/aman_ranjan_verma_c60af4b",
+    hashnode: "https://arverma.hashnode.dev",
   },
 
   work: [
@@ -97,7 +100,7 @@ export const profile = {
     {
       name: "Bihar Police Notebook",
       slug: "bihar-police-notebook",
-      overview: "Bihar Police Notebook at bpdiary.arverma.dev is a bilingual web notebook for preparing Bihar Police case diary entries. It reproduces the official Schedule 47, Form 120A case-diary layout (Rule 164) so entries can be typed in the browser and exported as a PDF.",
+      overview: "BP Diary, also called Bihar Police Notebook, is a Hindi case diary and letter writing web app. Built by Aman Ranjan Verma.",
       audience: "Police personnel who prepare case diaries and want a quick, structured way to write them in Hindi or English.",
       features: [
         { title: "Official diary layout", text: "Case-diary fields such as case number, police station, district, FIR number, date, sections, and the record of investigation." },
@@ -109,14 +112,14 @@ export const profile = {
       ],
       kind: "Web app",
       icon: "notebook",
-      description: "BP Diary: a web notebook for Bihar Police diary entries.",
+      description: "BP Diary, also called Bihar Police Notebook, is a Hindi case diary and letter writing web app. Built by Aman Ranjan Verma.",
       blurb: "Built to make daily diary entries faster on basic phones and slow networks.",
       url: "https://bpdiary.arverma.dev",
     },
     {
       name: "WiFi Hammer",
       slug: "wifi-hammer",
-      overview: "WiFi Hammer is a Chrome extension for the common case where Wi-Fi shows connected but pages will not load. One click wakes a sleeping or stuck connection, with no router reboot. It works with any home broadband or router, including Airtel Xstream Fiber, JioFiber and JioAirFiber.",
+      overview: "WiFi Hammer is a free Chrome extension that wakes a stuck connection when WiFi shows connected but pages will not load. It works with Airtel and Jio.",
       audience: "People on Airtel or Jio broadband who work from home and need a connection that stays up for calls, sync and deep work.",
       features: [
         { title: "One-click hammer", text: "Wake a lazy or sleeping router from your browser." },
@@ -128,7 +131,7 @@ export const profile = {
       kind: "Chrome extension",
       icon: "wifi",
       description:
-        "One click wakes a stuck Wi-Fi connection on Airtel, Jio, JioFiber or any broadband when you see no internet.",
+        "WiFi Hammer is a free Chrome extension that wakes a stuck connection when WiFi shows connected but pages will not load. Works with Airtel and Jio.",
       blurb: "I got tired of rebooting the router to fix a connection that said it was fine.",
       url: "https://chromewebstore.google.com/detail/wifi-hammer-fix-airteljio/dbphaafiokokiaocpcnfakompafjoddj",
     },

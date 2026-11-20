@@ -1,0 +1,129 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Icon from "../components/Icon.astro";
+import { profile } from "../content/profile";
+
+const title = "About Aman Ranjan Verma, Senior Data Engineer";
+const description = "Aman Ranjan Verma is a senior data engineer at QuillBot. He builds data and AI platforms, writes about them and edits Towards Data Engineering.";
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  itemListElement: [
+    { "@type": "ListItem", position: 1, name: "Home", item: "https://arverma.dev/" },
+    { "@type": "ListItem", position: 2, name: "About", item: "https://arverma.dev/about/" },
+  ],
+};
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <article class="section about-page">
+    <h1 class="section-label"><Icon name="user" size={14} />About</h1>
+    <div class="about-content">
+      <p>
+        I am a senior data engineer at QuillBot, where I build data and AI platforms that serve millions of users. 
+        Over 7+ years, I have worked on petabyte-scale data systems, streaming pipelines and lakehouse architectures 
+        at companies including Flipkart and Sigmoid.
+      </p>
+      <p>
+        I write about what works in data engineering at <a href="https://medium.com/towards-data-engineering" target="_blank" rel="noopener noreferrer">Towards Data Engineering<span class="sr-only"> (opens in new tab)</span></a>, 
+        where I also serve as editor. My recent posts cover Apache Iceberg table maintenance, Kafka Connect rebalancing issues, 
+        and OpenSearch cluster optimization.
+      </p>
+      <h2 class="about-h2"><Icon name="briefcase" size={14} />Work</h2>
+      <p>
+        At QuillBot, I work on the data platform team, handling everything from data ingestion and transformation 
+        to serving AI and ML models. Before that, I built fintech data pipelines at Flipkart and worked with 
+        high-stakes clients including Taco Bell, Goldman Sachs and Pizza Hut at Sigmoid.
+      </p>
+      <h2 class="about-h2"><Icon name="graduation-cap" size={14} />Education</h2>
+      <p>
+        I graduated from IIIT Manipur with a B.Tech in Computer Science and Engineering as the gold medalist. 
+        I am currently pursuing an MBA at IIM Bodh Gaya.
+      </p>
+      <h2 class="about-h2"><Icon name="rocket" size={14} />Projects</h2>
+      <p>
+        I build tools to solve real problems. <a href="/projects/wifi-hammer/">WiFi Hammer</a> is a Chrome extension 
+        that fixes stuck WiFi connections on Airtel and Jio. <a href="/projects/bihar-police-notebook/">BP Diary</a> 
+        is a Hindi case diary tool for Bihar Police officers. <a href="/projects/markdown-editor/">ConText Editor</a> 
+        is a private Markdown editor that runs entirely in your browser. I also edit 
+        <a href="/projects/towards-data-engineering/">Towards Data Engineering</a>, a Medium publication on data 
+        engineering, cloud and AI.
+      </p>
+      <h2 class="about-h2"><Icon name="link" size={14} />Links</h2>
+      <ul class="about-links">
+        <li><a href={profile.links.linkedin} target="_blank" rel="noopener noreferrer"><Icon name="linkedin" size={14} />LinkedIn<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+        <li><a href={profile.links.github} target="_blank" rel="noopener noreferrer"><Icon name="github" size={14} />GitHub<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+        <li><a href={profile.links.medium} target="_blank" rel="noopener noreferrer"><Icon name="file-text" size={14} />Medium<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+        <li><a href={profile.links.devto} target="_blank" rel="noopener noreferrer"><Icon name="code" size={14} />DEV Community<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+        <li><a href={profile.links.hashnode} target="_blank" rel="noopener noreferrer"><Icon name="hash" size={14} />Hashnode<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+        <li><a href={profile.links.x} target="_blank" rel="noopener noreferrer"><Icon name="twitter" size={14} />X (Twitter)<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+        <li><a href="https://chromewebstore.google.com/detail/wifi-hammer-fix-airteljio/dbphaafiokokiaocpcnfakompafjoddj" target="_blank" rel="noopener noreferrer"><Icon name="chrome" size={14} />Chrome Web Store<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+        <li><a href="https://tde.arverma.dev" target="_blank" rel="noopener noreferrer"><Icon name="book-open" size={14} />Towards Data Engineering<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+        <li><a href="https://editor.arverma.dev" target="_blank" rel="noopener noreferrer"><Icon name="square-pen" size={14} />ConText Editor<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+        <li><a href="https://bpdiary.arverma.dev" target="_blank" rel="noopener noreferrer"><Icon name="notebook" size={14} />BP Diary<Icon name="arrow-up-right" size={12} /><span class="sr-only"> (opens in new tab)</span></a></li>
+      </ul>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .about-page {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .about-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+  }
+
+  .about-content p {
+    line-height: 1.7;
+    color: var(--ink-2);
+  }
+
+  .about-content a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .about-content a:hover {
+    color: var(--accent-2);
+  }
+
+  .about-h2 {
+    font-size: 1.125rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink);
+  }
+
+  .about-links {
+    list-style: none;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 0.75rem;
+  }
+
+  .about-links li a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.375rem;
+    background: var(--surface);
+    text-decoration: none;
+    transition: background 0.15s ease;
+  }
+
+  .about-links li a:hover {
+    background: var(--surface-2);
+  }
+</style>

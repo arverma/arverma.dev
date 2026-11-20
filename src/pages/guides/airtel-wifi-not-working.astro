@@ -1,0 +1,289 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+
+const title = "Airtel WiFi not working? Fixes for Xstream Fiber";
+const description = "Airtel WiFi connected but no internet? Step by step fixes for Xstream Fiber and Airtel broadband, plus a one click Chrome option.";
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://arverma.dev/" },
+      { "@type": "ListItem", position: 2, name: "Guides", item: "https://arverma.dev/guides/" },
+      { "@type": "ListItem", position: 3, name: "Airtel WiFi not working", item: "https://arverma.dev/guides/airtel-wifi-not-working/" },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <article class="section guide-page">
+    <p class="section-label"><Icon name="book-open" size={14} />Guide</p>
+    <h1 class="guide-title">Airtel WiFi not working? Fixes for Xstream Fiber</h1>
+    
+    <div class="guide-content">
+      <p class="guide-lead">
+        Your Airtel Xstream Fiber WiFi shows connected, but nothing loads. This happens when the connection goes idle, 
+        the router loses sync with the network, or there is a fiber link issue. Here is what to check, in order.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="activity" size={16} />Check the LOS light</h2>
+      <p>
+        Look at the lights on your Airtel router. The most important one is labeled LOS (Loss of Signal) or PON. 
+        If this light is red or blinking, the fiber cable is disconnected or damaged.
+      </p>
+      <p>
+        Check the fiber cable at the back of the router. It should be firmly plugged in. If it is loose, push it in 
+        until you hear a click. Also check where the fiber cable enters your home. If everything looks fine but the 
+        LOS light is still red, call Airtel support.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="smartphone" size={16} />Check plan and balance in Airtel Thanks</h2>
+      <p>
+        Open the Airtel Thanks app. Go to your Xstream Fiber connection and check the plan status. If your plan has 
+        expired or your bill is overdue, the internet will not work even if WiFi is connected.
+      </p>
+      <p>
+        Pay the bill or recharge if needed. It can take 5 to 10 minutes for the connection to come back after payment.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="refresh-cw" size={16} />Restart order</h2>
+      <p>
+        Turn off the router. Wait 30 seconds. Turn it back on and wait 2 minutes for all lights to stabilize. 
+        This clears the connection state and forces the router to get a fresh link from Airtel.
+      </p>
+      <p>
+        If you have a separate ONT (the small box where the fiber cable comes in), restart that first, wait 30 seconds, 
+        then restart the router.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="settings" size={16} />Router admin page (192.168.1.1)</h2>
+      <p>
+        Open a browser and go to <a href="http://192.168.1.1" target="_blank" rel="noopener noreferrer">192.168.1.1<span class="sr-only"> (opens in new tab)</span></a>. 
+        This is the router admin page. The default username is usually <code>admin</code> and the password is on 
+        the sticker on the router.
+      </p>
+      <p>
+        Check the WAN or Internet status. If it says disconnected, the router is not getting an IP from Airtel. 
+        Restart the router and wait 2 minutes. If it still says disconnected, call Airtel support.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="zap" size={16} />Stuck connection and WiFi Hammer</h2>
+      <p>
+        Sometimes the router goes idle and does not wake up when you try to load a page. Airtel Xstream Fiber routers 
+        do this less often than Jio, but it still happens.
+      </p>
+      <p>
+        I built <a href="/projects/wifi-hammer/">WiFi Hammer</a> to fix this. It is a Chrome extension that wakes 
+        the connection with one click. You can also turn on Auto-hammer to keep the connection fresh every 30 minutes. 
+        It works by sending a small network request that forces the router to reset the link.
+      </p>
+      <p>
+        WiFi Hammer does not make your internet faster or increase your plan speed. It only wakes a stuck connection.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="phone" size={16} />Airtel support</h2>
+      <p>
+        If none of the above work, contact Airtel support:
+      </p>
+      <ul>
+        <li>Call <strong>121</strong> from your Airtel mobile number, or <strong>1800-103-4444</strong> from any phone.</li>
+        <li>Use the Airtel Thanks app: Go to Help > Chat with us.</li>
+        <li>Visit the <a href="https://www.airtel.in/broadband/" target="_blank" rel="noopener noreferrer">Airtel Broadband Help Center<span class="sr-only"> (opens in new tab)</span></a>.</li>
+      </ul>
+      <p>
+        When you call, tell them your router lights are on but you cannot load any pages. They can reset your connection 
+        from their side or schedule a technician visit.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="help-circle" size={16} />FAQ</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3 class="faq-q">Why does my Airtel WiFi say connected but nothing loads?</h3>
+          <p class="faq-a">
+            This usually happens when the router goes idle, the fiber link is down, or your plan has expired. 
+            Check the LOS light on the router. If it is red, the fiber cable is disconnected.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What does the LOS light mean on my Airtel router?</h3>
+          <p class="faq-a">
+            LOS stands for Loss of Signal. If the LOS light is red or blinking, the fiber cable is disconnected 
+            or damaged. Check the cable at the back of the router and where it enters your home.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">How do I check my Airtel Xstream Fiber plan status?</h3>
+          <p class="faq-a">
+            Open the Airtel Thanks app, go to your Xstream Fiber connection, and check the plan details. 
+            If your bill is overdue or your plan has expired, pay or recharge in the app.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What is the difference between Airtel Xstream Fiber and V-Fiber?</h3>
+          <p class="faq-a">
+            Xstream Fiber is the current branding for Airtel's fiber broadband service. V-Fiber was the old name. 
+            They are the same product. If you have V-Fiber, these steps still apply.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">Will WiFi Hammer work with Airtel Xstream Fiber?</h3>
+          <p class="faq-a">
+            Yes. WiFi Hammer works with any broadband or router, including Airtel Xstream Fiber. It wakes a stuck 
+            connection when pages will not load even though WiFi says connected.
+          </p>
+        </div>
+      </div>
+
+      <div class="guide-related">
+        <h3 class="guide-related-title">Related guides</h3>
+        <ul class="guide-related-list">
+          <li><a href="/guides/wifi-connected-no-internet/"><Icon name="arrow-right" size={14} />WiFi connected but no internet: 8 fixes that work</a></li>
+          <li><a href="/guides/jio-wifi-not-working/"><Icon name="arrow-right" size={14} />Jio WiFi not working? Fixes for JioFiber and AirFiber</a></li>
+          <li><a href="/projects/wifi-hammer/"><Icon name="arrow-right" size={14} />WiFi Hammer Chrome extension</a></li>
+        </ul>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .guide-page {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .guide-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0 1.5rem 0;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .guide-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .guide-lead {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin: 0;
+  }
+
+  .guide-content p {
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin: 0;
+  }
+
+  .guide-content ul {
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin: 0;
+    padding-left: 1.5rem;
+  }
+
+  .guide-content li {
+    margin-bottom: 0.5rem;
+  }
+
+  .guide-content code {
+    font-family: var(--mono);
+    font-size: 0.9em;
+    background: var(--surface);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+  }
+
+  .guide-content a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .guide-content a:hover {
+    color: var(--accent-2);
+  }
+
+  .guide-h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .faq-item {
+    padding: 1rem;
+    background: var(--surface);
+    border-radius: 0.5rem;
+  }
+
+  .faq-q {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--ink);
+  }
+
+  .faq-a {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  .guide-related {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border-radius: 0.5rem;
+  }
+
+  .guide-related-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: var(--ink);
+  }
+
+  .guide-related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .guide-related-list a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .guide-related-list a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 640px) {
+    .guide-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>

@@ -1,0 +1,69 @@
+name: IndexNow Notification
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'src/**'
+      - 'public/**'
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    if: github.repository == 'arverma/arverma.dev'
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+      
+      - name: Get changed files
+        id: changed-files
+        run: |
+          # Get list of changed files from the last commit
+          CHANGED=$(git diff --name-only HEAD^ HEAD | grep -E '\.(astro|md|ts|js)$' || true)
+          
+          # Build sitemap URLs from changed source files
+          # This is a simple heuristic - in production you'd parse the actual sitemap
+          URLS='["https://arverma.dev/"]'
+          
+          if echo "$CHANGED" | grep -q 'src/pages/index'; then
+            URLS='["https://arverma.dev/"]'
+          fi
+          
+          if echo "$CHANGED" | grep -q 'src/pages/about'; then
+            URLS=$(echo $URLS | jq '. + ["https://arverma.dev/about/"]')
+          fi
+          
+          if echo "$CHANGED" | grep -q 'src/pages/writing'; then
+            URLS=$(echo $URLS | jq '. + ["https://arverma.dev/writing/"]')
+          fi
+          
+          if echo "$CHANGED" | grep -q 'src/pages/projects/wifi-hammer'; then
+            URLS=$(echo $URLS | jq '. + ["https://arverma.dev/projects/wifi-hammer/"]')
+          fi
+          
+          if echo "$CHANGED" | grep -q 'src/pages/guides'; then
+            URLS=$(echo $URLS | jq '. + ["https://arverma.dev/guides/wifi-connected-no-internet/", "https://arverma.dev/guides/jio-wifi-not-working/", "https://arverma.dev/guides/airtel-wifi-not-working/"]')
+          fi
+          
+          # Remove duplicates
+          URLS=$(echo $URLS | jq 'unique')
+          
+          echo "urls=$URLS" >> $GITHUB_OUTPUT
+      
+      - name: Submit to IndexNow
+        continue-on-error: true
+        run: |
+          URLS='${{ steps.changed-files.outputs.urls }}'
+          
+          curl -X POST "https://api.indexnow.org/indexnow" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"host\": \"arverma.dev\",
+              \"key\": \"31d56f7d2f146a1dea205006fdda63e7\",
+              \"keyLocation\": \"https://arverma.dev/31d56f7d2f146a1dea205006fdda63e7.txt\",
+              \"urlList\": $URLS
+            }" || echo "IndexNow submission failed (non-blocking)"

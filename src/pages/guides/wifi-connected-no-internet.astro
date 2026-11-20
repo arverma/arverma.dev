@@ -1,0 +1,269 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+
+const title = "WiFi connected but no internet: 8 fixes that work";
+const description = "Connected to WiFi but nothing loads? Check these 8 things in order, from a quick restart to router lights, DNS and a stuck connection.";
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://arverma.dev/" },
+      { "@type": "ListItem", position: 2, name: "Guides", item: "https://arverma.dev/guides/" },
+      { "@type": "ListItem", position: 3, name: "WiFi connected but no internet", item: "https://arverma.dev/guides/wifi-connected-no-internet/" },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <article class="section guide-page">
+    <p class="section-label"><Icon name="book-open" size={14} />Guide</p>
+    <h1 class="guide-title">WiFi connected but no internet: 8 fixes that work</h1>
+    
+    <div class="guide-content">
+      <p class="guide-lead">
+        Your phone or laptop shows the WiFi icon with full bars. It says connected. But when you try to load a page, 
+        nothing happens. This guide walks through the checks I run every time this happens, in order, starting with 
+        the quickest fixes.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="info" size={16} />What "connected, no internet" means</h2>
+      <p>
+        When your device says connected but no internet, it means your device can talk to the router, but the router 
+        cannot reach the internet. The WiFi link between your device and the router is fine. The problem is somewhere 
+        between the router and your ISP.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="smartphone" size={16} />Check one device or all</h2>
+      <p>
+        First, check if the problem is on one device or every device. If only your laptop cannot load pages but your 
+        phone works fine, the issue is with the laptop, not the router. Restart that device and check its WiFi settings.
+      </p>
+      <p>
+        If every device shows connected but nothing loads, the router or the ISP link is the problem. Keep reading.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="refresh-cw" size={16} />Restart in the right order</h2>
+      <p>
+        A full restart clears most connection issues. Turn off the router and the modem (if you have a separate modem). 
+        Wait 30 seconds. Turn on the modem first, wait until its lights are stable, then turn on the router. 
+        Wait 2 minutes for everything to connect.
+      </p>
+      <p>
+        This forces the router to get a fresh connection from the ISP. It works about 70% of the time.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="activity" size={16} />Router lights (LOS, PON, internet)</h2>
+      <p>
+        Check the lights on your router. Most routers have a light labeled Internet, WAN, or PON. If this light is off 
+        or red, the router is not getting a signal from the ISP. This is usually a fiber cut, a loose cable, or an 
+        account issue.
+      </p>
+      <p>
+        On fiber routers (Airtel, Jio), look for the LOS or PON light. LOS stands for Loss of Signal. If the LOS light 
+        is on or blinking red, the fiber cable is disconnected or damaged. Check the cable at the back of the router 
+        and at the wall outlet. If it looks fine, call your ISP.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="globe" size={16} />DNS and Private DNS</h2>
+      <p>
+        Sometimes the router is fine, but the DNS server it uses is down. DNS translates names like google.com into 
+        IP addresses. If DNS is broken, pages will not load even though the internet connection is working.
+      </p>
+      <p>
+        Try changing your DNS to Google DNS (8.8.8.8 and 8.8.4.4) or Cloudflare DNS (1.1.1.1 and 1.0.0.1). 
+        On Android, go to Settings > Network & Internet > Private DNS and set it to dns.google or one.one.one.one. 
+        On a laptop, change the DNS in your network settings.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="zap" size={16} />Stuck idle connection and how a wake-up helps</h2>
+      <p>
+        Some routers go idle when no one is using the connection. When you try to load a page, the router takes a few 
+        seconds to wake up. Sometimes it does not wake up at all, and you get "connected but no internet."
+      </p>
+      <p>
+        I built <a href="/projects/wifi-hammer/">WiFi Hammer</a> to fix this. It is a Chrome extension that wakes the 
+        connection with one click. It works by sending a small network request that forces the router to reset the link. 
+        You can also turn on Auto-hammer to keep the connection fresh every 30 minutes.
+      </p>
+      <p>
+        WiFi Hammer does not make your internet faster. It does not increase your bandwidth or change your plan. 
+        It only wakes a stuck connection. If your internet is working but slow, WiFi Hammer will not help.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="phone" size={16} />When to call your ISP</h2>
+      <p>
+        If none of the above work, call your ISP. Tell them your router lights are on but you cannot load any pages. 
+        They can check your account, reset your connection from their side, or send a technician if there is a hardware issue.
+      </p>
+      <p>
+        For Jio users, see the <a href="/guides/jio-wifi-not-working/">Jio WiFi not working guide</a> for specific 
+        steps and support numbers. For Airtel users, see the <a href="/guides/airtel-wifi-not-working/">Airtel WiFi 
+        not working guide</a>.
+      </p>
+
+      <h2 class="guide-h2"><Icon name="help-circle" size={16} />FAQ</h2>
+      <div class="faq-list">
+        <div class="faq-item">
+          <h3 class="faq-q">Why does my WiFi show connected but pages will not load?</h3>
+          <p class="faq-a">
+            Your device can reach the router, but the router cannot reach the internet. This is usually a stuck connection, 
+            a DNS issue, or a problem between the router and the ISP.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">How do I know if the problem is my device or the router?</h3>
+          <p class="faq-a">
+            Check if other devices can load pages. If only one device has the problem, restart that device. 
+            If every device shows connected but nothing loads, the router or ISP link is the issue.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">What does the LOS light mean on my fiber router?</h3>
+          <p class="faq-a">
+            LOS stands for Loss of Signal. If the LOS light is on or blinking red, the fiber cable is disconnected 
+            or damaged. Check the cable connections and call your ISP if it looks fine.
+          </p>
+        </div>
+        <div class="faq-item">
+          <h3 class="faq-q">Will WiFi Hammer make my internet faster?</h3>
+          <p class="faq-a">
+            No. WiFi Hammer wakes a stuck connection. It does not increase bandwidth or speed up a slow connection.
+          </p>
+        </div>
+      </div>
+
+      <div class="guide-related">
+        <h3 class="guide-related-title">Related guides</h3>
+        <ul class="guide-related-list">
+          <li><a href="/guides/jio-wifi-not-working/"><Icon name="arrow-right" size={14} />Jio WiFi not working? Fixes for JioFiber and AirFiber</a></li>
+          <li><a href="/guides/airtel-wifi-not-working/"><Icon name="arrow-right" size={14} />Airtel WiFi not working? Fixes for Xstream Fiber</a></li>
+          <li><a href="/projects/wifi-hammer/"><Icon name="arrow-right" size={14} />WiFi Hammer Chrome extension</a></li>
+        </ul>
+      </div>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .guide-page {
+    max-width: 48rem;
+    margin: 0 auto;
+  }
+
+  .guide-title {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0.5rem 0 1.5rem 0;
+    color: var(--ink);
+    line-height: 1.2;
+  }
+
+  .guide-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .guide-lead {
+    font-size: 1.125rem;
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin: 0;
+  }
+
+  .guide-content p {
+    line-height: 1.7;
+    color: var(--ink-2);
+    margin: 0;
+  }
+
+  .guide-content a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .guide-content a:hover {
+    color: var(--accent-2);
+  }
+
+  .guide-h2 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    margin-top: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--ink);
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .faq-item {
+    padding: 1rem;
+    background: var(--surface);
+    border-radius: 0.5rem;
+  }
+
+  .faq-q {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--ink);
+  }
+
+  .faq-a {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  .guide-related {
+    margin-top: 1rem;
+    padding: 1.5rem;
+    background: var(--surface);
+    border-radius: 0.5rem;
+  }
+
+  .guide-related-title {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 1rem 0;
+    color: var(--ink);
+  }
+
+  .guide-related-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  .guide-related-list a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--accent);
+    text-decoration: none;
+  }
+
+  .guide-related-list a:hover {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 640px) {
+    .guide-title {
+      font-size: 1.5rem;
+    }
+  }
+</style>

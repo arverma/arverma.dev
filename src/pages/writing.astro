@@ -5,8 +5,8 @@ import { profile } from "../content/profile";
 import { getPosts } from "../lib/medium";
 
 const posts = await getPosts();
-const title = `Writing on Data Engineering by ${profile.name}`;
-const description = `Articles by ${profile.name} on data engineering, data platforms, Apache Iceberg and building developer tools, published on Medium and Towards Data Engineering.`;
+const title = "Data engineering articles by Aman Ranjan Verma";
+const description = "Practical write-ups on data engineering, Apache Iceberg, Kafka and data platforms by Aman Ranjan Verma, published on Medium.";
 
 const pageUrl = "https://arverma.dev/writing/";
 const person = { "@type": "Person", name: profile.name, url: "https://arverma.dev/" };
@@ -43,19 +43,76 @@ const jsonLd = [
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <section class="section" id="writing">
-    <h1 class="section-label"><Icon name="pen-line" size={14} />Writing</h1>
-    <ul class="writing-list">
-      {posts.map((post) => (
-        <li>
-          <a class="writing-row" href={post.url} target="_blank" rel="noopener noreferrer">
-            <Icon name="file-text" size={16} class="writing-lead" />
-            <span class="writing-row-title">{post.title}</span>
-            <Icon name="arrow-up-right" size={16} class="ext" />
-            <span class="sr-only">(opens in new tab)</span>
-          </a>
-        </li>
-      ))}
-    </ul>
+    <h1 class="section-label"><Icon name="pen-line" size={14} />Writing on data engineering</h1>
+    
+    <div class="writing-group">
+      <h2 class="writing-group-title"><Icon name="database" size={16} />Iceberg and lakehouse</h2>
+      <p class="writing-group-intro">Apache Iceberg table maintenance, partition management and performance tuning in production lakehouses.</p>
+      <ul class="writing-list">
+        {posts.filter(p => p.title.toLowerCase().includes('iceberg')).map((post) => (
+          <li>
+            <a class="writing-row" href={post.url} target="_blank" rel="noopener noreferrer">
+              <Icon name="file-text" size={16} class="writing-lead" />
+              <span class="writing-row-title">{post.title}</span>
+              <Icon name="arrow-up-right" size={16} class="ext" />
+              <span class="sr-only">(opens in new tab)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="writing-group">
+      <h2 class="writing-group-title"><Icon name="activity" size={16} />Kafka and streaming</h2>
+      <p class="writing-group-intro">Kafka Connect troubleshooting, rebalancing and streaming data pipelines at scale.</p>
+      <ul class="writing-list">
+        {posts.filter(p => p.title.toLowerCase().includes('kafka')).map((post) => (
+          <li>
+            <a class="writing-row" href={post.url} target="_blank" rel="noopener noreferrer">
+              <Icon name="file-text" size={16} class="writing-lead" />
+              <span class="writing-row-title">{post.title}</span>
+              <Icon name="arrow-up-right" size={16} class="ext" />
+              <span class="sr-only">(opens in new tab)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="writing-group">
+      <h2 class="writing-group-title"><Icon name="layers" size={16} />Platform and AI</h2>
+      <p class="writing-group-intro">Data platform architecture, OpenSearch optimization, DataHub and infrastructure for AI workloads.</p>
+      <ul class="writing-list">
+        {posts.filter(p => !p.title.toLowerCase().includes('iceberg') && !p.title.toLowerCase().includes('kafka') && !p.title.toLowerCase().includes('chrome') && !p.title.toLowerCase().includes('extension')).map((post) => (
+          <li>
+            <a class="writing-row" href={post.url} target="_blank" rel="noopener noreferrer">
+              <Icon name="file-text" size={16} class="writing-lead" />
+              <span class="writing-row-title">{post.title}</span>
+              <Icon name="arrow-up-right" size={16} class="ext" />
+              <span class="sr-only">(opens in new tab)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
+    <div class="writing-group">
+      <h2 class="writing-group-title"><Icon name="chrome" size={16} />Chrome extensions</h2>
+      <p class="writing-group-intro">Building browser tools and extensions for everyday developer problems.</p>
+      <ul class="writing-list">
+        {posts.filter(p => p.title.toLowerCase().includes('chrome') || p.title.toLowerCase().includes('extension')).map((post) => (
+          <li>
+            <a class="writing-row" href={post.url} target="_blank" rel="noopener noreferrer">
+              <Icon name="file-text" size={16} class="writing-lead" />
+              <span class="writing-row-title">{post.title}</span>
+              <Icon name="arrow-up-right" size={16} class="ext" />
+              <span class="sr-only">(opens in new tab)</span>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+
     <div class="writing-actions">
       <a class="writing-all" href="/">
         <Icon name="arrow-right" size={14} class="flip" /> Back to home
