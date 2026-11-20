@@ -9,7 +9,7 @@ export const profile = {
     linkedin: "https://www.linkedin.com/in/ar-verma/",
     medium: MEDIUM_URL,
     x: "https://x.com/100pebhari",
-    devto: "https://dev.to/aman_ranjanverma_c60af4b",
+    devto: "https://dev.to/amanranjanverma",
     hashnode: "https://arverma.hashnode.dev",
   },
 
