@@ -14,7 +14,10 @@ const { project } = Astro.props;
 const pageUrl = new URL(`/projects/${project.slug}/`, Astro.site).href;
 const isExtension = project.kind === "Chrome extension";
 
-const title = `${project.name}: ${project.kind} by ${profile.name}`;
+const title = project.slug === "bihar-police-notebook" 
+  ? `Bihar Police Notebook (BP Diary) by ${profile.name}`
+  : `${project.name}: ${project.kind} by ${profile.name}`;
+
 // Pack whole sentences into a search-snippet-sized description (<= ~175 chars).
 const description = project.overview
   .split(/(?<=\.)\s+/)

@@ -1,0 +1,192 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import Icon from "../../components/Icon.astro";
+import { profile } from "../../content/profile";
+
+const project = profile.liveProjects.find(p => p.slug === "wifi-hammer")!;
+const pageUrl = "https://arverma.dev/projects/wifi-hammer/";
+
+const title = "WiFi Hammer: fix WiFi connected but no internet";
+const description = "WiFi Hammer is a free Chrome extension that wakes a stuck connection when WiFi shows connected but pages will not load. Works with Airtel and Jio.";
+
+const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    name: "WiFi Hammer",
+    url: project.url,
+    description: description,
+    applicationCategory: "BrowserApplication",
+    operatingSystem: "Chrome",
+    offers: {
+      "@type": "Offer",
+      price: "0",
+      priceCurrency: "USD",
+    },
+    featureList: [
+      "One-click wake for stuck WiFi connections",
+      "Auto-hammer runs every 30 minutes",
+      "24-hour connection history",
+      "On-demand speed test",
+      "Lightweight background checks (192 KB)",
+    ],
+    author: {
+      "@type": "Person",
+      "@id": "https://arverma.dev/#person",
+      name: "Aman Ranjan Verma",
+      url: "https://arverma.dev/",
+    },
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "Home", item: "https://arverma.dev/" },
+      { "@type": "ListItem", position: 2, name: "Projects", item: "https://arverma.dev/projects/" },
+      { "@type": "ListItem", position: 3, name: "WiFi Hammer", item: pageUrl },
+    ],
+  },
+];
+---
+
+<BaseLayout title={title} description={description} jsonLd={jsonLd}>
+  <article class="section project-page">
+    <p class="section-label"><Icon name="rocket" size={14} />Hobby Project · Chrome extension</p>
+    <div class="project-page__head">
+      <span class="project-card__icon"><Icon name="wifi" size={22} /></span>
+      <h1 class="project-page__title">WiFi Hammer: wake a stuck WiFi connection</h1>
+    </div>
+    
+    <h2 class="project-page__h"><Icon name="alert-circle" size={14} />WiFi connected but no internet?</h2>
+    <p class="project-page__text">
+      You see the WiFi icon showing full bars. Your device says it is connected. But nothing loads. 
+      This happens on Airtel Xstream Fiber, JioFiber, JioAirFiber and other home broadband connections 
+      when the router goes idle and forgets to wake up.
+    </p>
+    <p class="project-page__text">
+      WiFi Hammer fixes this in one click. It sends a small request that wakes the router without a reboot. 
+      You can also turn on Auto-hammer to keep the connection fresh every 30 minutes.
+    </p>
+
+    <h2 class="project-page__h"><Icon name="info" size={14} />How it works</h2>
+    <p class="project-page__text">
+      When you click Hammer, the extension makes a quick network request to wake the idle connection. 
+      The Hammer Hard option also runs a speed test to fully reset the link. Auto-hammer runs these 
+      checks in the background on a schedule you set.
+    </p>
+    <p class="project-page__text">
+      The extension only accesses fast.com and nflxvideo.net (Netflix's speed test service). 
+      It sends anonymous usage events to Google Analytics so I can see how often people use the tool.
+    </p>
+
+    <h2 class="project-page__h"><Icon name="users" size={14} />Who it is for</h2>
+    <p class="project-page__text">
+      People on Airtel or Jio broadband who work from home and need a connection that stays up for calls, 
+      sync and deep work. If you see "connected but no internet" more than once a week, WiFi Hammer will 
+      save you time.
+    </p>
+
+    <h2 class="project-page__h"><Icon name="help-circle" size={14} />Common questions</h2>
+    <div class="faq-list">
+      <div class="faq-item">
+        <h3 class="faq-q">Does WiFi Hammer make my internet faster?</h3>
+        <p class="faq-a">
+          No. WiFi Hammer wakes a stuck connection. It does not speed up your plan or change your bandwidth. 
+          If your connection is working but slow, this tool will not help.
+        </p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-q">Does it use my data?</h3>
+        <p class="faq-a">
+          Hammer Hard uses a speed test, which downloads about 25 MB. Auto-hammer and the quick Hammer 
+          use tiny packets (about 192 KB per check), so they are safe to run every 30 minutes.
+        </p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-q">Is it safe? What can it access?</h3>
+        <p class="faq-a">
+          WiFi Hammer only accesses fast.com and nflxvideo.net (Netflix's speed test servers). 
+          It cannot read your browsing history, passwords or any other site data. The Chrome Web Store 
+          listing shows the exact permissions.
+        </p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-q">What does it send to Google Analytics?</h3>
+        <p class="faq-a">
+          WiFi Hammer sends anonymous usage events (like "user clicked Hammer" or "auto check passed") 
+          to Google Analytics. No personal data or browsing history is sent. This helps me understand 
+          how the tool is used and where to focus improvements.
+        </p>
+      </div>
+      <div class="faq-item">
+        <h3 class="faq-q">Will it work with my ISP?</h3>
+        <p class="faq-a">
+          WiFi Hammer works with any home broadband or router. It was built and tested on Airtel Xstream Fiber, 
+          JioFiber and JioAirFiber, but the method is universal. If WiFi says connected but nothing loads, 
+          WiFi Hammer can help.
+        </p>
+      </div>
+    </div>
+
+    <p class="project-page__text">
+      For detailed troubleshooting, see the guides on 
+      <a href="/guides/wifi-connected-no-internet/">WiFi connected but no internet</a>, 
+      <a href="/guides/jio-wifi-not-working/">Jio WiFi not working</a>, and 
+      <a href="/guides/airtel-wifi-not-working/">Airtel WiFi not working</a>.
+    </p>
+
+    <h2 class="project-page__h"><Icon name="download" size={14} />Install from the Chrome Web Store</h2>
+    <p class="project-page__text">
+      WiFi Hammer is free and open source. Install it from the Chrome Web Store to start using it today.
+    </p>
+
+    <div class="hero-links">
+      <a class="hero-link primary" href={project.url} target="_blank" rel="noopener noreferrer">
+        Open in Chrome Web Store
+        <Icon name="arrow-up-right" size={13} class="hint" />
+        <span class="sr-only">(opens in new tab)</span>
+      </a>
+      <a class="hero-link" href="/projects/">
+        <Icon name="arrow-right" size={14} class="flip" />All projects
+      </a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 1rem;
+  }
+
+  .faq-item {
+    padding: 1rem;
+    background: var(--surface);
+    border-radius: 0.5rem;
+  }
+
+  .faq-q {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 0.5rem 0;
+    color: var(--ink);
+  }
+
+  .faq-a {
+    margin: 0;
+    line-height: 1.6;
+    color: var(--ink-2);
+  }
+
+  .project-page__text a {
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+  }
+
+  .project-page__text a:hover {
+    color: var(--accent-2);
+  }
+</style>
