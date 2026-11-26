@@ -2,18 +2,70 @@
 import BaseLayout from "../../layouts/BaseLayout.astro";
 import Icon from "../../components/Icon.astro";
 
-const title = "Airtel WiFi not working? Fixes for Xstream Fiber";
-const description = "Airtel WiFi connected but no internet? Step by step fixes for Xstream Fiber and Airtel broadband, plus a one click Chrome option.";
+const title = "Airtel WiFi red light blinking? LOS fix for Xstream Fiber";
+const description = "Red LOS light on your Airtel Xstream Fiber router means no fiber signal. Check the cable, restart in the right order, and know when to call Airtel.";
+const pageUrl = "https://arverma.dev/guides/airtel-wifi-not-working/";
+
+const faqItems = [
+  {
+    question: "Why does my Airtel WiFi say connected but nothing loads?",
+    answer: "This usually happens when the router goes idle, the fiber link is down, or your plan has expired. Check the LOS light on the router. If it is red, the fiber cable is disconnected.",
+  },
+  {
+    question: "What does the LOS light mean on my Airtel router?",
+    answer: "LOS stands for Loss of Signal. If the LOS light is red or blinking, the fiber cable is disconnected or damaged. Check the cable at the back of the router and where it enters your home.",
+  },
+  {
+    question: "What does the red light on my Airtel WiFi router mean?",
+    answer: "It is the LOS (Loss of Signal) light. Red or blinking means the router gets no signal on the fiber line, usually a loose or damaged cable or an outage in your area.",
+  },
+  {
+    question: "My Airtel router shows a red light but WiFi is connected. Why no internet?",
+    answer: "WiFi only links your phone to the router. With LOS red, the router itself has no internet, so check the fiber cable and then call Airtel.",
+  },
+  {
+    question: "How do I check my Airtel Xstream Fiber plan status?",
+    answer: "Open the Airtel Thanks app, go to your Xstream Fiber connection, and check the plan details. If your bill is overdue or your plan has expired, pay or recharge in the app.",
+  },
+  {
+    question: "What is the difference between Airtel Xstream Fiber and V-Fiber?",
+    answer: "Xstream Fiber is the current branding for Airtel's fiber broadband service. V-Fiber was the old name. They are the same product. If you have V-Fiber, these steps still apply.",
+  },
+  {
+    question: "Will WiFi Hammer work with Airtel Xstream Fiber?",
+    answer: "Yes. WiFi Hammer works with any broadband or router, including Airtel Xstream Fiber. It wakes a stuck connection when pages will not load even though WiFi says connected.",
+  },
+];
 
 const jsonLd = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: title,
+    description,
+    url: pageUrl,
+    dateModified: "2026-11-26",
+  },
   {
     "@context": "https://schema.org",
     "@type": "BreadcrumbList",
     itemListElement: [
       { "@type": "ListItem", position: 1, name: "Home", item: "https://arverma.dev/" },
       { "@type": "ListItem", position: 2, name: "Guides", item: "https://arverma.dev/guides/" },
-      { "@type": "ListItem", position: 3, name: "Airtel WiFi not working", item: "https://arverma.dev/guides/airtel-wifi-not-working/" },
+      { "@type": "ListItem", position: 3, name: "Airtel WiFi not working", item: pageUrl },
     ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
   },
 ];
 ---
@@ -21,7 +73,7 @@ const jsonLd = [
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <article class="section guide-page">
     <p class="section-label"><Icon name="book-open" size={14} />Guide</p>
-    <h1 class="guide-title">Airtel WiFi not working? Fixes for Xstream Fiber</h1>
+    <h1 class="guide-title">Airtel WiFi red light or not working? Fixes for Xstream Fiber</h1>
     
     <div class="guide-content">
       <p class="guide-lead">
@@ -29,7 +81,7 @@ const jsonLd = [
         the router loses sync with the network, or there is a fiber link issue. Here is what to check, in order.
       </p>
 
-      <h2 class="guide-h2"><Icon name="activity" size={16} />Check the LOS light</h2>
+      <h2 class="guide-h2" id="check-the-los-light"><Icon name="activity" size={16} />Red or blinking LOS light on the Airtel router</h2>
       <p>
         Look at the lights on your Airtel router. The most important one is labeled LOS (Loss of Signal) or PON. 
         If this light is red or blinking, the fiber cable is disconnected or damaged.
@@ -102,41 +154,12 @@ const jsonLd = [
 
       <h2 class="guide-h2"><Icon name="help-circle" size={16} />FAQ</h2>
       <div class="faq-list">
-        <div class="faq-item">
-          <h3 class="faq-q">Why does my Airtel WiFi say connected but nothing loads?</h3>
-          <p class="faq-a">
-            This usually happens when the router goes idle, the fiber link is down, or your plan has expired. 
-            Check the LOS light on the router. If it is red, the fiber cable is disconnected.
-          </p>
-        </div>
-        <div class="faq-item">
-          <h3 class="faq-q">What does the LOS light mean on my Airtel router?</h3>
-          <p class="faq-a">
-            LOS stands for Loss of Signal. If the LOS light is red or blinking, the fiber cable is disconnected 
-            or damaged. Check the cable at the back of the router and where it enters your home.
-          </p>
-        </div>
-        <div class="faq-item">
-          <h3 class="faq-q">How do I check my Airtel Xstream Fiber plan status?</h3>
-          <p class="faq-a">
-            Open the Airtel Thanks app, go to your Xstream Fiber connection, and check the plan details. 
-            If your bill is overdue or your plan has expired, pay or recharge in the app.
-          </p>
-        </div>
-        <div class="faq-item">
-          <h3 class="faq-q">What is the difference between Airtel Xstream Fiber and V-Fiber?</h3>
-          <p class="faq-a">
-            Xstream Fiber is the current branding for Airtel's fiber broadband service. V-Fiber was the old name. 
-            They are the same product. If you have V-Fiber, these steps still apply.
-          </p>
-        </div>
-        <div class="faq-item">
-          <h3 class="faq-q">Will WiFi Hammer work with Airtel Xstream Fiber?</h3>
-          <p class="faq-a">
-            Yes. WiFi Hammer works with any broadband or router, including Airtel Xstream Fiber. It wakes a stuck 
-            connection when pages will not load even though WiFi says connected.
-          </p>
-        </div>
+        {faqItems.map((item) => (
+          <div class="faq-item">
+            <h3 class="faq-q">{item.question}</h3>
+            <p class="faq-a">{item.answer}</p>
+          </div>
+        ))}
       </div>
 
       <div class="guide-related">
