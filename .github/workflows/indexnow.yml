@@ -22,36 +22,44 @@ jobs:
       - name: Get changed files
         id: changed-files
         run: |
-          # Get list of changed files from the last commit
-          CHANGED=$(git diff --name-only HEAD^ HEAD | grep -E '\.(astro|md|ts|js)$' || true)
-          
+          # Prefer a parent diff; if HEAD^ is missing (shallow clone / root), notify sitemap URLs.
+          if git rev-parse --verify HEAD^ >/dev/null 2>&1; then
+            CHANGED=$(git diff --name-only HEAD^ HEAD | grep -E '\.(astro|md|ts|js)$' || true)
+          else
+            echo "No parent commit available; falling back to sitemap URLs"
+            CHANGED=""
+            URLS='["https://arverma.dev/","https://arverma.dev/about/","https://arverma.dev/writing/","https://arverma.dev/projects/","https://arverma.dev/projects/wifi-hammer/","https://arverma.dev/guides/","https://arverma.dev/guides/wifi-connected-no-internet/","https://arverma.dev/guides/jio-wifi-not-working/","https://arverma.dev/guides/airtel-wifi-not-working/"]'
+            echo "urls=$(echo "$URLS" | jq -c 'unique')" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+
           # Build sitemap URLs from changed source files
           # This is a simple heuristic - in production you'd parse the actual sitemap
           URLS='["https://arverma.dev/"]'
-          
+
           if echo "$CHANGED" | grep -q 'src/pages/index'; then
             URLS='["https://arverma.dev/"]'
           fi
-          
+
           if echo "$CHANGED" | grep -q 'src/pages/about'; then
             URLS=$(echo $URLS | jq '. + ["https://arverma.dev/about/"]')
           fi
-          
+
           if echo "$CHANGED" | grep -q 'src/pages/writing'; then
             URLS=$(echo $URLS | jq '. + ["https://arverma.dev/writing/"]')
           fi
-          
+
           if echo "$CHANGED" | grep -q 'src/pages/projects/wifi-hammer'; then
             URLS=$(echo $URLS | jq '. + ["https://arverma.dev/projects/wifi-hammer/"]')
           fi
-          
+
           if echo "$CHANGED" | grep -q 'src/pages/guides'; then
             URLS=$(echo $URLS | jq '. + ["https://arverma.dev/guides/wifi-connected-no-internet/", "https://arverma.dev/guides/jio-wifi-not-working/", "https://arverma.dev/guides/airtel-wifi-not-working/"]')
           fi
-          
+
           # Remove duplicates
           URLS=$(echo $URLS | jq 'unique')
-          
+
           echo "urls=$URLS" >> $GITHUB_OUTPUT
       
       - name: Submit to IndexNow
