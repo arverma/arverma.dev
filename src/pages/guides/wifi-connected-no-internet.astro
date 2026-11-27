@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import GuideBreadcrumb from "../../components/GuideBreadcrumb.astro";
 import Icon from "../../components/Icon.astro";
 
 const title = "WiFi connected but no internet: 8 fixes that work";
@@ -20,6 +21,7 @@ const jsonLd = [
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <article class="section guide-page">
+    <GuideBreadcrumb current="WiFi connected but no internet" />
     <p class="section-label"><Icon name="book-open" size={14} />Guide</p>
     <h1 class="guide-title">WiFi connected but no internet: 8 fixes that work</h1>
     
