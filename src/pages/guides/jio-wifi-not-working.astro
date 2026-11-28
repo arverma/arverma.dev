@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import GuideBreadcrumb from "../../components/GuideBreadcrumb.astro";
 import Icon from "../../components/Icon.astro";
 
 const title = "Jio WiFi not working? Fixes for JioFiber and AirFiber";
@@ -20,6 +21,7 @@ const jsonLd = [
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <article class="section guide-page">
+    <GuideBreadcrumb current="Jio WiFi not working" />
     <p class="section-label"><Icon name="book-open" size={14} />Guide</p>
     <h1 class="guide-title">Jio WiFi not working? Fixes for JioFiber and AirFiber</h1>
     

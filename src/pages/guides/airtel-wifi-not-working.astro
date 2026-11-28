@@ -1,5 +1,6 @@
 ---
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import GuideBreadcrumb from "../../components/GuideBreadcrumb.astro";
 import Icon from "../../components/Icon.astro";
 
 const title = "Airtel WiFi red light blinking? LOS fix for Xstream Fiber";
@@ -72,6 +73,7 @@ const jsonLd = [
 
 <BaseLayout title={title} description={description} jsonLd={jsonLd}>
   <article class="section guide-page">
+    <GuideBreadcrumb current="Airtel WiFi not working" />
     <p class="section-label"><Icon name="book-open" size={14} />Guide</p>
     <h1 class="guide-title">Airtel WiFi red light or not working? Fixes for Xstream Fiber</h1>
     

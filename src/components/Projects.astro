@@ -29,6 +29,11 @@ import Icon from "./Icon.astro";
         <a class="project-details" href={`/projects/${p.slug}/`}>
           About {p.name} <Icon name="arrow-right" size={12} />
         </a>
+        {p.slug === "wifi-hammer" && (
+          <a class="project-details" href="/guides/">
+            Wi-Fi fix guides <Icon name="arrow-right" size={12} />
+          </a>
+        )}
       </li>
     ))}
   </ul>
